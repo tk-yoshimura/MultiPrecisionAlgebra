@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MultiPrecisionAlgebra", "MultiPrecisionAlgebra\MultiPrecisionAlgebra.csproj", "{228A9E7A-3285-4FC6-A4A9-1671C5AAFEAA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiPrecisionAlgebraTests", "MultiPrecisionAlgebraTests\MultiPrecisionAlgebraTests.csproj", "{9C96186A-57F5-4DEC-8242-396976ADD57A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{228A9E7A-3285-4FC6-A4A9-1671C5AAFEAA} = {228A9E7A-3285-4FC6-A4A9-1671C5AAFEAA}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
