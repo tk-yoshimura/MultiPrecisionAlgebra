@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32014.148
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MultiPrecisionAlgebra", "MultiPrecisionAlgebra\MultiPrecisionAlgebra.csproj", "{228A9E7A-3285-4FC6-A4A9-1671C5AAFEAA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiPrecisionAlgebraTests", "MultiPrecisionAlgebraTests\MultiPrecisionAlgebraTests.csproj", "{9C96186A-57F5-4DEC-8242-396976ADD57A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{228A9E7A-3285-4FC6-A4A9-1671C5AAFEAA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{228A9E7A-3285-4FC6-A4A9-1671C5AAFEAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{228A9E7A-3285-4FC6-A4A9-1671C5AAFEAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{228A9E7A-3285-4FC6-A4A9-1671C5AAFEAA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9C96186A-57F5-4DEC-8242-396976ADD57A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C96186A-57F5-4DEC-8242-396976ADD57A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C96186A-57F5-4DEC-8242-396976ADD57A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C96186A-57F5-4DEC-8242-396976ADD57A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {49E5FB3C-587D-4EF2-9B8C-7DE47DA77635}
+	EndGlobalSection
+EndGlobal
