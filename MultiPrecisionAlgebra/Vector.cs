@@ -10,19 +10,7 @@ namespace MultiPrecisionAlgebra {
         internal readonly MultiPrecision<N>[] v;
 
         /// <summary>コンストラクタ</summary>
-        public Vector(double[] v) : this(v.Length) {
-            for (int i = 0; i < v.Length; i++) {
-                this.v[i] = v[i];
-            }
-        }
-
-        /// <summary>コンストラクタ</summary>
-        public Vector(MultiPrecision<N>[] v) {
-            this.v = (MultiPrecision<N>[])v.Clone();
-        }
-
-        /// <summary>コンストラクタ</summary>
-        public Vector(int size) {
+        protected Vector(int size) {
             this.v = new MultiPrecision<N>[size];
 
             for (int i = 0; i < v.Length; i++) {
@@ -30,10 +18,48 @@ namespace MultiPrecisionAlgebra {
             }
         }
 
+        /// <summary>コンストラクタ</summary>
+        public Vector(params MultiPrecision<N>[] v) {
+            this.v = (MultiPrecision<N>[])v.Clone();
+        }
+
+        /// <summary>コンストラクタ</summary>
+        public Vector(params double[] v) : this(v.Length) {
+            for (int i = 0; i < v.Length; i++) {
+                this.v[i] = v[i];
+            }
+        }
+
         /// <summary>インデクサ</summary>
         public MultiPrecision<N> this[int index] {
             get => v[index];
             set => v[index] = value;
+        }
+
+        /// <summary>領域インデクサ</summary>
+        public Vector<N> this[Range range] {
+            get {
+                (int index, int counts) = range.GetOffsetAndLength(Dim);
+
+                MultiPrecision<N>[] ret = new MultiPrecision<N>[counts];
+                for (int i = 0; i < counts; i++) {
+                    ret[i] = v[i + index];
+                }
+
+                return new(ret);
+            }
+
+            set {
+                (int index, int counts) = range.GetOffsetAndLength(Dim);
+
+                if (value.Dim != counts) {
+                    throw new ArgumentOutOfRangeException(nameof(range));
+                }
+
+                for (int i = 0; i < counts; i++) {
+                    v[i + index] = value.v[i];
+                }
+            }
         }
 
         /// <summary>X成分</summary>
@@ -91,7 +117,7 @@ namespace MultiPrecisionAlgebra {
         /// <summary>行ベクトル</summary>
         public Matrix<N> Horizontal {
             get {
-                Matrix<N> ret = new(1, Dim);
+                Matrix<N> ret = Matrix<N>.Zero(1, Dim);
                 for (int i = 0; i < Dim; i++) {
                     ret.e[0, i] = v[i];
                 }
@@ -103,7 +129,7 @@ namespace MultiPrecisionAlgebra {
         /// <summary>列ベクトル</summary>
         public Matrix<N> Vertical {
             get {
-                Matrix<N> ret = new(Dim, 1);
+                Matrix<N> ret = Matrix<N>.Zero(Dim, 1);
                 for (int i = 0; i < Dim; i++) {
                     ret.e[i, 0] = v[i];
                 }
@@ -133,7 +159,7 @@ namespace MultiPrecisionAlgebra {
         /// <summary>ベクトル加算</summary>
         public static Vector<N> operator +(Vector<N> vector1, Vector<N> vector2) {
             if (vector1.Dim != vector2.Dim) {
-                throw new ArgumentException("unmatch size", $"{vector1},{vector2}");
+                throw new ArgumentException("mismatch size", $"{nameof(vector1)},{nameof(vector2)}");
             }
 
             int size = vector1.Dim;
@@ -149,7 +175,7 @@ namespace MultiPrecisionAlgebra {
         /// <summary>ベクトル減算</summary>
         public static Vector<N> operator -(Vector<N> vector1, Vector<N> vector2) {
             if (vector1.Dim != vector2.Dim) {
-                throw new ArgumentException("unmatch size", $"{vector1},{vector2}");
+                throw new ArgumentException("mismatch size", $"{nameof(vector1)},{nameof(vector2)}");
             }
 
             int size = vector1.Dim;
@@ -157,6 +183,38 @@ namespace MultiPrecisionAlgebra {
 
             for (int i = 0; i < size; i++) {
                 v[i] = vector1.v[i] - vector2.v[i];
+            }
+
+            return new Vector<N>(v);
+        }
+
+        /// <summary>ベクトル乗算</summary>
+        public static Vector<N> operator *(Vector<N> vector1, Vector<N> vector2) {
+            if (vector1.Dim != vector2.Dim) {
+                throw new ArgumentException("mismatch size", $"{nameof(vector1)},{nameof(vector2)}");
+            }
+
+            int size = vector1.Dim;
+            MultiPrecision<N>[] v = new MultiPrecision<N>[size];
+
+            for (int i = 0; i < size; i++) {
+                v[i] = vector1.v[i] * vector2.v[i];
+            }
+
+            return new Vector<N>(v);
+        }
+
+        /// <summary>ベクトル除算</summary>
+        public static Vector<N> operator /(Vector<N> vector1, Vector<N> vector2) {
+            if (vector1.Dim != vector2.Dim) {
+                throw new ArgumentException("mismatch size", $"{nameof(vector1)},{nameof(vector2)}");
+            }
+
+            int size = vector1.Dim;
+            MultiPrecision<N>[] v = new MultiPrecision<N>[size];
+
+            for (int i = 0; i < size; i++) {
+                v[i] = vector1.v[i] / vector2.v[i];
             }
 
             return new Vector<N>(v);
@@ -196,7 +254,7 @@ namespace MultiPrecisionAlgebra {
         /// <summary>ベクトル内積</summary>
         public static MultiPrecision<N> InnerProduct(Vector<N> vector1, Vector<N> vector2) {
             if (vector1.Dim != vector2.Dim) {
-                throw new ArgumentException("unmatch size", $"{vector1},{vector2}");
+                throw new ArgumentException("mismatch size", $"{nameof(vector1)},{nameof(vector2)}");
             }
 
             MultiPrecision<N> sum = 0;
