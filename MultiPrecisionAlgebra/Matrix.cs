@@ -334,7 +334,7 @@ namespace MultiPrecisionAlgebra {
 
         /// <summary>行列スカラー逆数倍</summary>
         public static Matrix<N> operator /(Matrix<N> matrix, MultiPrecision<N> r) {
-            return (1d / r) * matrix;
+            return (1 / r) * matrix;
         }
 
         /// <summary>行列が等しいか</summary>
@@ -553,7 +553,7 @@ namespace MultiPrecisionAlgebra {
         public static bool IsZero(Matrix<N> matrix) {
             for (int i = 0, j; i < matrix.Rows; i++) {
                 for (j = 0; j < matrix.Columns; j++) {
-                    if (matrix.e[i, j] != 0d) {
+                    if (!matrix.e[i, j].IsZero) {
                         return false;
                     }
                 }
@@ -571,12 +571,12 @@ namespace MultiPrecisionAlgebra {
             for (int i = 0, j; i < matrix.Rows; i++) {
                 for (j = 0; j < matrix.Columns; j++) {
                     if (i == j) {
-                        if (matrix.e[i, j] != 1d) {
+                        if (matrix.e[i, j] != 1) {
                             return false;
                         }
                     }
                     else {
-                        if (matrix.e[i, j] != 0d) {
+                        if (matrix.e[i, j] != 0) {
                             return false;
                         }
                     }
