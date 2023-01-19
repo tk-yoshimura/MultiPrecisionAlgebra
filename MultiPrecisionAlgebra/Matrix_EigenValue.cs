@@ -6,7 +6,7 @@ namespace MultiPrecisionAlgebra {
     public partial class Matrix<N> where N : struct, IConstant {
         /// <summary>固有値計算</summary>
         /// <param name="precision_level">精度(収束ループを回す回数)</param>
-        public MultiPrecision<N>[] CalculateEigenValues(int precision_level = 28) {
+        public MultiPrecision<N>[] CalculateEigenValues(int precision_level = 32) {
             Matrix<N> m = Copy();
             for (int i = 0; i < precision_level; i++) {
                 (Matrix<N> q, Matrix<N> r) = m.QRDecomposition();

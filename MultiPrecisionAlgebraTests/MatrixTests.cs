@@ -477,8 +477,8 @@ namespace MultiPrecisionAlgebra.Tests {
             Matrix<Pow2.N4> matrix = new(new double[,] { { 1, 2 }, { 4, 5 } });
             MultiPrecision<Pow2.N4>[] eigen_values = matrix.CalculateEigenValues();
 
-            Assert.IsTrue(MultiPrecision<Pow2.N4>.Abs(eigen_values[0] - (3 + 2 * MultiPrecision<Pow2.N4>.Sqrt(3))) < 1e-20);
-            Assert.IsTrue(MultiPrecision<Pow2.N4>.Abs(eigen_values[1] - (3 - 2 * MultiPrecision<Pow2.N4>.Sqrt(3))) < 1e-20);
+            Assert.IsTrue(MultiPrecision<Pow2.N4>.Abs(eigen_values[0] - (3 + 2 * MultiPrecision<Pow2.N4>.Sqrt(3))) < 1e-35);
+            Assert.IsTrue(MultiPrecision<Pow2.N4>.Abs(eigen_values[1] - (3 - 2 * MultiPrecision<Pow2.N4>.Sqrt(3))) < 1e-35);
         }
 
         [TestMethod()]

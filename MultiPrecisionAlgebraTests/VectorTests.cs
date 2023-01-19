@@ -240,11 +240,11 @@ namespace MultiPrecisionAlgebra.Tests {
         [TestMethod()]
         public void ToStringTest() {
             Vector<Pow2.N4> vector1 = new(1, 2, 3);
-            Vector<Pow2.N4> vector2 = new(0);
+            Vector<Pow2.N4> vector2 = new(new double[0]);
             Vector<Pow2.N4> vector3 = new(1);
 
             Assert.AreEqual("1,2,3", vector1.ToString());
-            Assert.AreEqual("0", vector2.ToString());
+            Assert.AreEqual(string.Empty, vector2.ToString());
             Assert.AreEqual("1", vector3.ToString());
         }
 
