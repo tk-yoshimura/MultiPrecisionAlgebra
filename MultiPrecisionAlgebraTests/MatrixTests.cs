@@ -57,6 +57,16 @@ namespace MultiPrecisionAlgebra.Tests {
             Assert.AreEqual(new Matrix<Pow2.N4>(new double[,] { { 2, 3, 4 }, { 7, 8, 9 }, { 12, 13, 14 }, { 17, 18, 19 } }), matrix[.., 1..^1]);
 
             Assert.AreEqual(new Matrix<Pow2.N4>(new double[,] { { 7, 8, 9 }, { 12, 13, 14 } }), matrix[1..^1, 1..^1]);
+
+            Assert.AreEqual(new Vector<Pow2.N4>(6, 7, 8, 9, 10), matrix[1, ..]);
+            Assert.AreEqual(new Vector<Pow2.N4>(7, 8, 9, 10), matrix[1, 1..]);
+            Assert.AreEqual(new Vector<Pow2.N4>(6, 7, 8, 9), matrix[1, ..^1]);
+            Assert.AreEqual(new Vector<Pow2.N4>(7, 8, 9), matrix[1, 1..^1]);
+
+            Assert.AreEqual(new Vector<Pow2.N4>(3, 8, 13, 18), matrix[.., 2]);
+            Assert.AreEqual(new Vector<Pow2.N4>(8, 13, 18), matrix[1.., 2]);
+            Assert.AreEqual(new Vector<Pow2.N4>(3, 8, 13), matrix[..^1, 2]);
+            Assert.AreEqual(new Vector<Pow2.N4>(8, 13), matrix[1..^1, 2]);
         }
 
         [TestMethod()]

@@ -91,6 +91,62 @@ namespace MultiPrecisionAlgebra {
             }
         }
 
+        /// <summary>領域インデクサ</summary>
+        /// <param name="row_range">行</param>
+        /// <param name="column_index">列</param>
+        public Vector<N> this[Range row_range, int column_index] {
+            get {
+                (int ri, int rn) = row_range.GetOffsetAndLength(Rows);
+
+                MultiPrecision<N>[] m = new MultiPrecision<N>[rn];
+                for (int i = 0; i < rn; i++) {
+                    m[i] = e[i + ri, column_index];
+                }
+
+                return new(m);
+            }
+
+            set {
+                (int ri, int rn) = row_range.GetOffsetAndLength(Rows);
+
+                if (value.Dim != rn) {
+                    throw new ArgumentOutOfRangeException($"{nameof(row_range)}");
+                }
+
+                for (int i = 0; i < rn; i++) {
+                    e[i + ri, column_index] = value.v[i];
+                }
+            }
+        }
+
+        /// <summary>領域インデクサ</summary>
+        /// <param name="row_index">行</param>
+        /// <param name="column_range">列</param>
+        public Vector<N> this[int row_index, Range column_range] {
+            get {
+                (int ci, int cn) = column_range.GetOffsetAndLength(Columns);
+
+                MultiPrecision<N>[] m = new MultiPrecision<N>[cn];
+                for (int j = 0; j < cn; j++) {
+                    m[j] = e[row_index, j + ci];
+                }
+
+                return new(m);
+            }
+
+            set {
+                (int ci, int cn) = column_range.GetOffsetAndLength(Columns);
+
+                if (value.Dim != cn) {
+                    throw new ArgumentOutOfRangeException($"{nameof(column_range)}");
+                }
+
+                for (int j = 0; j < cn; j++) {
+                    e[row_index, j + ci] = value.v[j];
+                }
+            }
+        }
+
         /// <summary>行数</summary>
         public int Rows => e.GetLength(0);
 
