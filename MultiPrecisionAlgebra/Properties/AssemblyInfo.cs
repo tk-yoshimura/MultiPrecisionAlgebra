@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("MultiPrecisionAlgebra")]
-[assembly: AssemblyCopyright("Copyright © T.Yoshimura 2022")]
+[assembly: AssemblyCopyright("Copyright © T.Yoshimura 2022-2023")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
