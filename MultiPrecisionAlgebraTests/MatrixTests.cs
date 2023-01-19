@@ -227,6 +227,12 @@ namespace MultiPrecisionAlgebra.Tests {
 
             Assert.IsTrue((matrix5.Inverse.Inverse - matrix5).Norm < 1e-24);
             Assert.IsTrue((matrix6.Inverse.Inverse - matrix6).Norm < 1e-24);
+
+            Assert.IsTrue(((matrix5 * "1e+1000").Inverse.Inverse - (matrix5 * "1e+1000")).Norm < "1e+976");
+            Assert.IsTrue(((matrix6 * "1e+1000").Inverse.Inverse - (matrix6 * "1e+1000")).Norm < "1e+976");
+
+            Assert.IsTrue(((matrix5 * "1e-1000").Inverse.Inverse - (matrix5 * "1e-1000")).Norm < "1e-1024");
+            Assert.IsTrue(((matrix6 * "1e-1000").Inverse.Inverse - (matrix6 * "1e-1000")).Norm < "1e-1024");
         }
 
         [TestMethod()]

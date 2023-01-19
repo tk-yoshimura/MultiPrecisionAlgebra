@@ -22,7 +22,7 @@ namespace MultiPrecisionAlgebra {
         /// <param name="precision_level">精度(収束ループを回す回数)</param>
         public (MultiPrecision<N>[] eigen_values, Vector<N>[] eigen_vectors) CalculateEigenValueVectors(int precision_level = 32) {
             if (!IsSquare(this)) {
-                throw new InvalidOperationException();
+                throw new InvalidOperationException("not square matrix");
             }
 
             MultiPrecision<N>[] eigen_values = null;

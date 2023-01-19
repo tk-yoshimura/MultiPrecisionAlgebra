@@ -7,7 +7,7 @@ namespace MultiPrecisionAlgebra {
         /// <summary>LU分解</summary>
         public (Matrix<N> lower_matrix, Matrix<N> upper_matrix) LUDecomposition() {
             if (!IsSquare(this)) {
-                throw new InvalidOperationException();
+                throw new InvalidOperationException("not square matrix");
             }
 
             Matrix<N> m = Copy();

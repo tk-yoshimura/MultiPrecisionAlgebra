@@ -7,7 +7,7 @@ namespace MultiPrecisionAlgebra {
         /// <summary>QR分解</summary>
         public (Matrix<N> orthogonal_matrix, Matrix<N> triangular_matrix) QRDecomposition() {
             if (!IsSquare(this)) {
-                throw new InvalidOperationException();
+                throw new InvalidOperationException("not square matrix");
             }
 
             Matrix<N> q = new(Size, Size), r = new(Size, Size);

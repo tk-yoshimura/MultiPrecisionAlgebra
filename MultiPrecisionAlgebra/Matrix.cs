@@ -101,7 +101,7 @@ namespace MultiPrecisionAlgebra {
         public int Size {
             get {
                 if (!IsSquare(this)) {
-                    throw new InvalidOperationException();
+                    throw new InvalidOperationException("not square matrix");
                 }
 
                 return Rows;
@@ -379,6 +379,36 @@ namespace MultiPrecisionAlgebra {
             }
         }
 
+        /// <summary>最大指数</summary>
+        public long MaxExponent {
+            get {
+                long max_exponent = long.MinValue;
+
+                for (int i = 0, j; i < Rows; i++) {
+                    for (j = 0; j < Columns; j++) {
+                        if (e[i, j].IsFinite) {
+                            max_exponent = Math.Max(e[i, j].Exponent, max_exponent);
+                        }
+                    }
+                }
+
+                return max_exponent;
+            }
+        }
+
+        /// <summary>2べき乗スケーリング</summary>
+        public static Matrix<N> ScaleB(Matrix<N> matrix, long n) {
+            Matrix<N> ret = matrix.Copy();
+
+            for (int i = 0, j; i < ret.Rows; i++) {
+                for (j = 0; j < ret.Columns; j++) {
+                    ret.e[i, j] = MultiPrecision<N>.Ldexp(ret.e[i, j], n);
+                }
+            }
+
+            return ret;
+        }
+
         /// <summary>行ベクトル</summary>
         /// <param name="row_index">行</param>
         public Vector<N> Horizontal(int row_index) {
@@ -543,7 +573,7 @@ namespace MultiPrecisionAlgebra {
         public MultiPrecision<N>[] Diagonals {
             get {
                 if (!IsSquare(this)) {
-                    throw new InvalidOperationException();
+                    throw new InvalidOperationException("not square matrix");
                 }
 
                 MultiPrecision<N>[] diagonals = new MultiPrecision<N>[Size];

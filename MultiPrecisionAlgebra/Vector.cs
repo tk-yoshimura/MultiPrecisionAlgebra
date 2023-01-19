@@ -265,6 +265,32 @@ namespace MultiPrecisionAlgebra {
             return sum;
         }
 
+        /// <summary>最大指数</summary>
+        public long MaxExponent {
+            get {
+                long max_exponent = long.MinValue;
+
+                for (int i = 0; i < Dim; i++) {
+                    if (v[i].IsFinite) {
+                        max_exponent = Math.Max(v[i].Exponent, max_exponent);
+                    }
+                }
+
+                return max_exponent;
+            }
+        }
+
+        /// <summary>2べき乗スケーリング</summary>
+        public static Vector<N> ScaleB(Vector<N> vector, long n) {
+            Vector<N> ret = vector.Copy();
+
+            for (int i = 0; i < ret.Dim; i++) {
+                ret.v[i] = MultiPrecision<N>.Ldexp(ret.v[i], n);
+            }
+
+            return ret;
+        }
+
         /// <summary>ゼロベクトル</summary>
         public static Vector<N> Zero(int size) {
             return new Vector<N>(size);
