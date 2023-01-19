@@ -28,7 +28,7 @@ namespace MultiPrecisionAlgebra {
                 }
 
                 //ピボットが閾値以下ならばMは正則行列でないので逆行列は存在しない
-                if (pivot.Exponent < -MultiPrecision<N>.Bits) {
+                if (pivot.Exponent <= -MultiPrecision<N>.Bits + 4) {
                     return Invalid(v.Rows, v.Columns);
                 }
 

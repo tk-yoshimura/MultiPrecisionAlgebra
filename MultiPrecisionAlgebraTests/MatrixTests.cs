@@ -205,34 +205,34 @@ namespace MultiPrecisionAlgebra.Tests {
             Assert.AreEqual(matrix3.Rows, matrix3.Transpose.Columns);
             Assert.AreEqual(matrix3.Columns, matrix3.Transpose.Rows);
 
-            Assert.IsTrue((matrix1 * matrix1.Inverse * matrix1 - matrix1).Norm < 1e-24);
-            Assert.IsTrue((matrix2 * matrix2.Inverse * matrix2 - matrix2).Norm < 1e-24);
-            Assert.IsTrue((matrix3 * matrix3.Inverse * matrix3 - matrix3).Norm < 1e-24);
+            Assert.IsTrue((matrix1 * matrix1.Inverse * matrix1 - matrix1).Norm < 1e-35);
+            Assert.IsTrue((matrix2 * matrix2.Inverse * matrix2 - matrix2).Norm < 1e-35);
+            Assert.IsTrue((matrix3 * matrix3.Inverse * matrix3 - matrix3).Norm < 1e-35);
 
-            Assert.IsTrue((matrix1.Inverse * matrix1 * matrix1.Inverse - matrix1.Inverse).Norm < 1e-24);
-            Assert.IsTrue((matrix2.Inverse * matrix2 * matrix2.Inverse - matrix2.Inverse).Norm < 1e-24);
-            Assert.IsTrue((matrix3.Inverse * matrix3 * matrix3.Inverse - matrix3.Inverse).Norm < 1e-24);
+            Assert.IsTrue((matrix1.Inverse * matrix1 * matrix1.Inverse - matrix1.Inverse).Norm < 1e-35);
+            Assert.IsTrue((matrix2.Inverse * matrix2 * matrix2.Inverse - matrix2.Inverse).Norm < 1e-35);
+            Assert.IsTrue((matrix3.Inverse * matrix3 * matrix3.Inverse - matrix3.Inverse).Norm < 1e-35);
 
-            Assert.IsTrue(((matrix1 * matrix1.Inverse).Transpose - matrix1 * matrix1.Inverse).Norm < 1e-24);
-            Assert.IsTrue(((matrix2 * matrix2.Inverse).Transpose - matrix2 * matrix2.Inverse).Norm < 1e-24);
-            Assert.IsTrue(((matrix3 * matrix3.Inverse).Transpose - matrix3 * matrix3.Inverse).Norm < 1e-24);
+            Assert.IsTrue(((matrix1 * matrix1.Inverse).Transpose - matrix1 * matrix1.Inverse).Norm < 1e-35);
+            Assert.IsTrue(((matrix2 * matrix2.Inverse).Transpose - matrix2 * matrix2.Inverse).Norm < 1e-35);
+            Assert.IsTrue(((matrix3 * matrix3.Inverse).Transpose - matrix3 * matrix3.Inverse).Norm < 1e-35);
 
-            Assert.IsTrue(((matrix1.Inverse * matrix1).Transpose - matrix1.Inverse * matrix1).Norm < 1e-24);
-            Assert.IsTrue(((matrix2.Inverse * matrix2).Transpose - matrix2.Inverse * matrix2).Norm < 1e-24);
-            Assert.IsTrue(((matrix3.Inverse * matrix3).Transpose - matrix3.Inverse * matrix3).Norm < 1e-24);
+            Assert.IsTrue(((matrix1.Inverse * matrix1).Transpose - matrix1.Inverse * matrix1).Norm < 1e-35);
+            Assert.IsTrue(((matrix2.Inverse * matrix2).Transpose - matrix2.Inverse * matrix2).Norm < 1e-35);
+            Assert.IsTrue(((matrix3.Inverse * matrix3).Transpose - matrix3.Inverse * matrix3).Norm < 1e-35);
 
             Assert.IsFalse(Matrix<Pow2.N4>.IsValid(matrix4.Inverse));
             Assert.IsFalse(Matrix<Pow2.N4>.IsValid(Matrix<Pow2.N4>.Zero(2, 2).Inverse));
             Assert.IsTrue(Matrix<Pow2.N4>.IsIdentity(Matrix<Pow2.N4>.Identity(2).Inverse));
 
-            Assert.IsTrue((matrix5.Inverse.Inverse - matrix5).Norm < 1e-24);
-            Assert.IsTrue((matrix6.Inverse.Inverse - matrix6).Norm < 1e-24);
+            Assert.IsTrue((matrix5.Inverse.Inverse - matrix5).Norm < 1e-35);
+            Assert.IsTrue((matrix6.Inverse.Inverse - matrix6).Norm < 1e-35);
 
-            Assert.IsTrue(((matrix5 * "1e+1000").Inverse.Inverse - (matrix5 * "1e+1000")).Norm < "1e+976");
-            Assert.IsTrue(((matrix6 * "1e+1000").Inverse.Inverse - (matrix6 * "1e+1000")).Norm < "1e+976");
+            Assert.IsTrue(((matrix5 * "1e+1000").Inverse.Inverse - (matrix5 * "1e+1000")).Norm < "1e+965");
+            Assert.IsTrue(((matrix6 * "1e+1000").Inverse.Inverse - (matrix6 * "1e+1000")).Norm < "1e+965");
 
-            Assert.IsTrue(((matrix5 * "1e-1000").Inverse.Inverse - (matrix5 * "1e-1000")).Norm < "1e-1024");
-            Assert.IsTrue(((matrix6 * "1e-1000").Inverse.Inverse - (matrix6 * "1e-1000")).Norm < "1e-1024");
+            Assert.IsTrue(((matrix5 * "1e-1000").Inverse.Inverse - (matrix5 * "1e-1000")).Norm < "1e-1035");
+            Assert.IsTrue(((matrix6 * "1e-1000").Inverse.Inverse - (matrix6 * "1e-1000")).Norm < "1e-1035");
         }
 
         [TestMethod()]
@@ -449,7 +449,7 @@ namespace MultiPrecisionAlgebra.Tests {
                 Assert.AreEqual(1, diagonal);
             }
 
-            Assert.IsTrue((matrix - lower * upper).Norm < 1e-24);
+            Assert.IsTrue((matrix - lower * upper).Norm < 1e-35);
         }
 
         [TestMethod()]
@@ -459,7 +459,7 @@ namespace MultiPrecisionAlgebra.Tests {
             (Matrix<Pow2.N4> q, Matrix<Pow2.N4> r) = matrix.QRDecomposition();
 
             Assert.IsTrue((matrix - q * r).Norm < 1e-12);
-            Assert.IsTrue((q * q.Transpose - Matrix<Pow2.N4>.Identity(matrix.Size)).Norm < 1e-24);
+            Assert.IsTrue((q * q.Transpose - Matrix<Pow2.N4>.Identity(matrix.Size)).Norm < 1e-35);
         }
 
         [TestMethod()]
