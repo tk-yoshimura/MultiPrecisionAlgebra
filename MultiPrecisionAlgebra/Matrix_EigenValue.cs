@@ -6,7 +6,9 @@ namespace MultiPrecisionAlgebra {
     public partial class Matrix<N> where N : struct, IConstant {
         /// <summary>固有値計算</summary>
         /// <param name="precision_level">精度(収束ループを回す回数)</param>
-        public MultiPrecision<N>[] CalculateEigenValues(int precision_level = 32) {
+        public MultiPrecision<N>[] CalculateEigenValues(int precision_level = -1) {
+            precision_level = precision_level >= 0 ? precision_level : MultiPrecision<N>.Length * 8;
+
             Matrix<N> m = Copy();
             for (int i = 0; i < precision_level; i++) {
                 (Matrix<N> q, Matrix<N> r) = m.QRDecomposition();
@@ -20,10 +22,12 @@ namespace MultiPrecisionAlgebra {
         /// <param name="eigen_values">固有値</param>
         /// <param name="eigen_vectors">固有ベクトル</param>
         /// <param name="precision_level">精度(収束ループを回す回数)</param>
-        public (MultiPrecision<N>[] eigen_values, Vector<N>[] eigen_vectors) CalculateEigenValueVectors(int precision_level = 32) {
+        public (MultiPrecision<N>[] eigen_values, Vector<N>[] eigen_vectors) CalculateEigenValueVectors(int precision_level = -1) {
             if (!IsSquare(this)) {
                 throw new InvalidOperationException("not square matrix");
             }
+
+            precision_level = precision_level >= 0 ? precision_level : MultiPrecision<N>.Length * 8;
 
             MultiPrecision<N>[] eigen_values = null;
             Vector<N>[] eigen_vectors = new Vector<N>[Size];
