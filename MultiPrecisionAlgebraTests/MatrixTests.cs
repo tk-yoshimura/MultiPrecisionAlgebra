@@ -7,17 +7,39 @@ namespace MultiPrecisionAlgebra.Tests {
     public class MatrixTests {
         [TestMethod()]
         public void MatrixTest() {
-            Matrix<Pow2.N4> matrix1 = new(new double[,] { { 1, 2 }, { 3, 4 } });
+            Matrix<Pow2.N4> matrix1 = new(new double[,] { { 1, 2, 3 }, { 4, 5, 6 } });
             Matrix<Pow2.N4> matrix2 = Matrix<Pow2.N4>.Zero(3, 2);
 
             Assert.AreEqual(1, matrix1[0, 0]);
             Assert.AreEqual(2, matrix1[0, 1]);
-            Assert.AreEqual(3, matrix1[1, 0]);
-            Assert.AreEqual(4, matrix1[1, 1]);
+            Assert.AreEqual(3, matrix1[0, 2]);
+            Assert.AreEqual(4, matrix1[1, 0]);
+            Assert.AreEqual(5, matrix1[1, 1]);
+            Assert.AreEqual(6, matrix1[1, 2]);
 
-            Assert.AreEqual(2, matrix1.Columns);
+            Assert.AreEqual(1, matrix1[^2, ^3]);
+            Assert.AreEqual(2, matrix1[^2, ^2]);
+            Assert.AreEqual(3, matrix1[^2, ^1]);
+            Assert.AreEqual(4, matrix1[^1, ^3]);
+            Assert.AreEqual(5, matrix1[^1, ^2]);
+            Assert.AreEqual(6, matrix1[^1, ^1]);
+
+            matrix1[0, 0] = 4;
+            matrix1[0, 1] = 5;
+            matrix1[^2, 2] = 6;
+            matrix1[1, ^3] = 1;
+            matrix1[^1, 1] = 2;
+            matrix1[1, ^1] = 3;
+
+            Assert.AreEqual(4, matrix1[0, 0]);
+            Assert.AreEqual(5, matrix1[0, 1]);
+            Assert.AreEqual(6, matrix1[^2, 2]);
+            Assert.AreEqual(1, matrix1[1, ^3]);
+            Assert.AreEqual(2, matrix1[^1, 1]);
+            Assert.AreEqual(3, matrix1[1, ^1]);
+
             Assert.AreEqual(2, matrix1.Rows);
-            Assert.AreEqual(2, matrix1.Size);
+            Assert.AreEqual(3, matrix1.Columns);
 
             Assert.AreEqual(0, matrix2[0, 0]);
             Assert.AreEqual(0, matrix2[0, 1]);
@@ -28,6 +50,12 @@ namespace MultiPrecisionAlgebra.Tests {
 
             Assert.AreEqual(3, matrix2.Rows);
             Assert.AreEqual(2, matrix2.Columns);
+
+            Assert.AreEqual(2, Matrix<Pow2.N4>.Zero(2, 2).Size);
+
+            Assert.ThrowsException<InvalidOperationException>(() => {
+                int n = Matrix<Pow2.N4>.Zero(2, 3).Size;
+            });
         }
 
         [TestMethod()]
@@ -63,10 +91,20 @@ namespace MultiPrecisionAlgebra.Tests {
             Assert.AreEqual(new Vector<Pow2.N4>(6, 7, 8, 9), matrix[1, ..^1]);
             Assert.AreEqual(new Vector<Pow2.N4>(7, 8, 9), matrix[1, 1..^1]);
 
+			Assert.AreEqual(new Vector<Pow2.N4>(6, 7, 8, 9, 10), matrix[^3, ..]);
+            Assert.AreEqual(new Vector<Pow2.N4>(7, 8, 9, 10), matrix[^3, 1..]);
+            Assert.AreEqual(new Vector<Pow2.N4>(6, 7, 8, 9), matrix[^3, ..^1]);
+            Assert.AreEqual(new Vector<Pow2.N4>(7, 8, 9), matrix[^3, 1..^1]);
+
             Assert.AreEqual(new Vector<Pow2.N4>(3, 8, 13, 18), matrix[.., 2]);
             Assert.AreEqual(new Vector<Pow2.N4>(8, 13, 18), matrix[1.., 2]);
             Assert.AreEqual(new Vector<Pow2.N4>(3, 8, 13), matrix[..^1, 2]);
             Assert.AreEqual(new Vector<Pow2.N4>(8, 13), matrix[1..^1, 2]);
+
+            Assert.AreEqual(new Vector<Pow2.N4>(3, 8, 13, 18), matrix[.., ^3]);
+            Assert.AreEqual(new Vector<Pow2.N4>(8, 13, 18), matrix[1.., ^3]);
+            Assert.AreEqual(new Vector<Pow2.N4>(3, 8, 13), matrix[..^1, ^3]);
+            Assert.AreEqual(new Vector<Pow2.N4>(8, 13), matrix[1..^1, ^3]);
         }
 
         [TestMethod()]
@@ -149,6 +187,22 @@ namespace MultiPrecisionAlgebra.Tests {
             matrix_dst = Matrix<Pow2.N4>.Zero(matrix_src.Rows, matrix_src.Columns);
             matrix_dst[0..^2, 0..^2] = matrix_src[1..^1, 1..^1];
             Assert.AreEqual(new Matrix<Pow2.N4>(new double[,] { { 7, 8, 9, 0, 0 }, { 12, 13, 14, 0, 0 }, { 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0 } }), matrix_dst);
+
+            matrix_dst = matrix_src.Copy();
+            matrix_dst[1, ..] = new Vector<Pow2.N4>(-1, -2, -3, -4, -5);
+            Assert.AreEqual(new Matrix<Pow2.N4>(new double[,] { { 1, 2, 3, 4, 5 }, { -1, -2, -3, -4, -5 }, { 11, 12, 13, 14, 15 }, { 16, 17, 18, 19, 20 } }), matrix_dst);
+
+            matrix_dst = matrix_src.Copy();
+            matrix_dst[^2, ..] = new Vector<Pow2.N4>(-1, -2, -3, -4, -5);
+            Assert.AreEqual(new Matrix<Pow2.N4>(new double[,] { { 1, 2, 3, 4, 5 }, { 6, 7, 8, 9, 10 }, { -1, -2, -3, -4, -5 }, { 16, 17, 18, 19, 20 } }), matrix_dst);
+
+            matrix_dst = matrix_src.Copy();
+            matrix_dst[.., 1] = new Vector<Pow2.N4>(-1, -2, -3, -4);
+            Assert.AreEqual(new Matrix<Pow2.N4>(new double[,] { { 1, -1, 3, 4, 5 }, { 6, -2, 8, 9, 10 }, { 11, -3, 13, 14, 15 }, { 16, -4, 18, 19, 20 } }), matrix_dst);
+
+            matrix_dst = matrix_src.Copy();
+            matrix_dst[.., ^2] = new Vector<Pow2.N4>(-1, -2, -3, -4);
+            Assert.AreEqual(new Matrix<Pow2.N4>(new double[,] { { 1, 2, 3, -1, 5 }, { 6, 7, 8, -2, 10 }, { 11, 12, 13, -3, 15 }, { 16, 17, 18, -4, 20 } }), matrix_dst);
 
             Assert.ThrowsException<ArgumentOutOfRangeException>(() => {
                 matrix_dst = Matrix<Pow2.N4>.Zero(matrix_src.Rows, matrix_src.Columns);

@@ -36,6 +36,12 @@ namespace MultiPrecisionAlgebra {
             set => v[index] = value;
         }
 
+        /// <summary>インデクサ</summary>
+        public MultiPrecision<N> this[Index index] {
+            get => v[index.GetOffset(Dim)];
+            set => v[index.GetOffset(Dim)] = value;
+        }
+
         /// <summary>領域インデクサ</summary>
         public Vector<N> this[Range range] {
             get {
@@ -63,24 +69,28 @@ namespace MultiPrecisionAlgebra {
         }
 
         /// <summary>X成分</summary>
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public MultiPrecision<N> X {
             get => v[0];
             set => v[0] = value;
         }
 
         /// <summary>Y成分</summary>
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public MultiPrecision<N> Y {
             get => v[1];
             set => v[1] = value;
         }
 
         /// <summary>Z成分</summary>
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public MultiPrecision<N> Z {
             get => v[2];
             set => v[2] = value;
         }
 
         /// <summary>W成分</summary>
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public MultiPrecision<N> W {
             get => v[3];
             set => v[3] = value;
@@ -100,9 +110,11 @@ namespace MultiPrecisionAlgebra {
         }
 
         /// <summary>ノルム</summary>
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public MultiPrecision<N> Norm => MultiPrecision<N>.Sqrt(SquareNorm);
 
         /// <summary>ノルム2乗</summary>
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public MultiPrecision<N> SquareNorm {
             get {
                 MultiPrecision<N> norm = 0;
@@ -115,6 +127,7 @@ namespace MultiPrecisionAlgebra {
         }
 
         /// <summary>行ベクトル</summary>
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Matrix<N> Horizontal {
             get {
                 Matrix<N> ret = Matrix<N>.Zero(1, Dim);
@@ -127,6 +140,7 @@ namespace MultiPrecisionAlgebra {
         }
 
         /// <summary>列ベクトル</summary>
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Matrix<N> Vertical {
             get {
                 Matrix<N> ret = Matrix<N>.Zero(Dim, 1);
@@ -139,6 +153,7 @@ namespace MultiPrecisionAlgebra {
         }
 
         /// <summary>正規化</summary>
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Vector<N> Normal => this / Norm;
 
         /// <summary>単項プラス</summary>
@@ -266,6 +281,7 @@ namespace MultiPrecisionAlgebra {
         }
 
         /// <summary>最大指数</summary>
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public long MaxExponent {
             get {
                 long max_exponent = long.MinValue;

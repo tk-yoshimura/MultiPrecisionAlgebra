@@ -57,6 +57,14 @@ namespace MultiPrecisionAlgebra {
             set => e[row_index, column_index] = value;
         }
 
+        /// <summary>インデクサ</summary>
+        /// <param name="row_index">行</param>
+        /// <param name="column_index">列</param>
+        public MultiPrecision<N> this[Index row_index, Index column_index] {
+            get => e[row_index.GetOffset(Rows), column_index.GetOffset(Columns)];
+            set => e[row_index.GetOffset(Rows), column_index.GetOffset(Columns)] = value;
+        }
+
         /// <summary>領域インデクサ</summary>
         /// <param name="row_range">行</param>
         /// <param name="column_range">列</param>
@@ -94,19 +102,21 @@ namespace MultiPrecisionAlgebra {
         /// <summary>領域インデクサ</summary>
         /// <param name="row_range">行</param>
         /// <param name="column_index">列</param>
-        public Vector<N> this[Range row_range, int column_index] {
+        public Vector<N> this[Range row_range, Index column_index] {
             get {
+                int c = column_index.GetOffset(Columns);
                 (int ri, int rn) = row_range.GetOffsetAndLength(Rows);
 
                 MultiPrecision<N>[] m = new MultiPrecision<N>[rn];
                 for (int i = 0; i < rn; i++) {
-                    m[i] = e[i + ri, column_index];
+                    m[i] = e[i + ri, c];
                 }
 
                 return new(m);
             }
 
             set {
+                int c = column_index.GetOffset(Columns);
                 (int ri, int rn) = row_range.GetOffsetAndLength(Rows);
 
                 if (value.Dim != rn) {
@@ -114,7 +124,7 @@ namespace MultiPrecisionAlgebra {
                 }
 
                 for (int i = 0; i < rn; i++) {
-                    e[i + ri, column_index] = value.v[i];
+                    e[i + ri, c] = value.v[i];
                 }
             }
         }
@@ -122,19 +132,21 @@ namespace MultiPrecisionAlgebra {
         /// <summary>領域インデクサ</summary>
         /// <param name="row_index">行</param>
         /// <param name="column_range">列</param>
-        public Vector<N> this[int row_index, Range column_range] {
+        public Vector<N> this[Index row_index, Range column_range] {
             get {
+                int r = row_index.GetOffset(Rows);
                 (int ci, int cn) = column_range.GetOffsetAndLength(Columns);
 
                 MultiPrecision<N>[] m = new MultiPrecision<N>[cn];
                 for (int j = 0; j < cn; j++) {
-                    m[j] = e[row_index, j + ci];
+                    m[j] = e[r, j + ci];
                 }
 
                 return new(m);
             }
 
             set {
+                int r = row_index.GetOffset(Rows);
                 (int ci, int cn) = column_range.GetOffsetAndLength(Columns);
 
                 if (value.Dim != cn) {
@@ -142,7 +154,7 @@ namespace MultiPrecisionAlgebra {
                 }
 
                 for (int j = 0; j < cn; j++) {
-                    e[row_index, j + ci] = value.v[j];
+                    e[r, j + ci] = value.v[j];
                 }
             }
         }
@@ -154,6 +166,7 @@ namespace MultiPrecisionAlgebra {
         public int Columns => e.GetLength(1);
 
         /// <summary>サイズ(正方行列のときのみ有効)</summary>
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public int Size {
             get {
                 if (!IsSquare(this)) {
@@ -387,6 +400,7 @@ namespace MultiPrecisionAlgebra {
         }
 
         /// <summary>転置</summary>
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Matrix<N> Transpose {
             get {
                 Matrix<N> ret = new(Columns, Rows);
@@ -402,6 +416,7 @@ namespace MultiPrecisionAlgebra {
         }
 
         /// <summary>逆行列</summary>
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Matrix<N> Inverse {
             get {
                 if (IsZero(this) || !IsValid(this)) {
@@ -422,6 +437,7 @@ namespace MultiPrecisionAlgebra {
         }
 
         /// <summary>行列ノルム</summary>
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public MultiPrecision<N> Norm {
             get {
                 MultiPrecision<N> sum_sq = 0;
@@ -436,6 +452,7 @@ namespace MultiPrecisionAlgebra {
         }
 
         /// <summary>最大指数</summary>
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public long MaxExponent {
             get {
                 long max_exponent = long.MinValue;
@@ -626,6 +643,7 @@ namespace MultiPrecisionAlgebra {
         }
 
         /// <summary>対角成分</summary>
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public MultiPrecision<N>[] Diagonals {
             get {
                 if (!IsSquare(this)) {
