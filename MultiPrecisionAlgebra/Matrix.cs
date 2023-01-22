@@ -4,7 +4,7 @@ using System.Diagnostics;
 
 namespace MultiPrecisionAlgebra {
     /// <summary>行列クラス</summary>
-    [DebuggerDisplay("{ToString(),nq}")]
+    [DebuggerDisplay("{Convert<MultiPrecision.Pow2.N4>().ToString(),nq}")]
     public partial class Matrix<N> : ICloneable where N : struct, IConstant {
         internal readonly MultiPrecision<N>[,] e;
 
@@ -687,6 +687,19 @@ namespace MultiPrecisionAlgebra {
             str += " ]";
 
             return str;
+        }
+
+        /// <summary>精度変更</summary>
+        public Matrix<M> Convert<M>() where M : struct, IConstant {
+            MultiPrecision<M>[,] ret = new MultiPrecision<M>[Rows, Columns];
+
+            for (int i = 0; i < Rows; i++) {
+                for (int j = 0; j < Columns; j++) {
+                    ret[i, j] = e[i, j].Convert<M>();
+                }
+            }
+
+            return ret;
         }
     }
 }

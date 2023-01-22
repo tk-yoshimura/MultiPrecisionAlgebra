@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace MultiPrecisionAlgebra {
     ///<summary>ベクトルクラス</summary>
-    [DebuggerDisplay("{ToString(),nq}")]
+    [DebuggerDisplay("{Convert<MultiPrecision.Pow2.N4>().ToString(),nq}")]
     public class Vector<N> : ICloneable where N : struct, IConstant {
         internal readonly MultiPrecision<N>[] v;
 
@@ -394,6 +394,17 @@ namespace MultiPrecisionAlgebra {
             }
 
             return str;
+        }
+
+        /// <summary>精度変更</summary>
+        public Vector<M> Convert<M>() where M : struct, IConstant {
+            MultiPrecision<M>[] ret = new MultiPrecision<M>[Dim];
+
+            for (int i = 0; i < Dim; i++) {
+                ret[i] = v[i].Convert<M>();
+            }
+
+            return ret;
         }
     }
 }
