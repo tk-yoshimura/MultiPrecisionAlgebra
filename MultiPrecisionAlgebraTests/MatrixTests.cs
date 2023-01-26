@@ -322,8 +322,8 @@ namespace MultiPrecisionAlgebra.Tests {
 
             Matrix<Pow2.N4> matrix = new(new double[,] { { 1, 2, 3 }, { 4, 5, 6 } });
 
-            Assert.AreEqual(new Vector<Pow2.N4>(new MultiPrecision<Pow2.N4>[] { 1, 2, 3 }), matrix.Horizontal(0));
-            Assert.AreEqual(new Vector<Pow2.N4>(new MultiPrecision<Pow2.N4>[] { 4, 5, 6 }), matrix.Horizontal(1));
+            Assert.AreEqual(new Vector<Pow2.N4>(1, 2, 3), matrix.Horizontal(0));
+            Assert.AreEqual(new Vector<Pow2.N4>(4, 5, 6), matrix.Horizontal(1));
         }
 
         [TestMethod()]
@@ -334,9 +334,9 @@ namespace MultiPrecisionAlgebra.Tests {
 
             Matrix<Pow2.N4> matrix = new(new double[,] { { 1, 2, 3 }, { 4, 5, 6 } });
 
-            Assert.AreEqual(new Vector<Pow2.N4>(new MultiPrecision<Pow2.N4>[] { 1, 4 }), matrix.Vertical(0));
-            Assert.AreEqual(new Vector<Pow2.N4>(new MultiPrecision<Pow2.N4>[] { 2, 5 }), matrix.Vertical(1));
-            Assert.AreEqual(new Vector<Pow2.N4>(new MultiPrecision<Pow2.N4>[] { 3, 6 }), matrix.Vertical(2));
+            Assert.AreEqual(new Vector<Pow2.N4>(1, 4), matrix.Vertical(0));
+            Assert.AreEqual(new Vector<Pow2.N4>(2, 5), matrix.Vertical(1));
+            Assert.AreEqual(new Vector<Pow2.N4>(3, 6), matrix.Vertical(2));
         }
 
         [TestMethod()]
@@ -362,13 +362,12 @@ namespace MultiPrecisionAlgebra.Tests {
             Assert.AreEqual(new Matrix<Pow2.N4>(new double[,] { { 9, 12, 15 }, { 19, 26, 33 }, { 29, 40, 51 } }), matrix3 * matrix1);
 
             Assert.AreEqual(new Matrix<Pow2.N4>(new double[,] { { 7, 16, 27 }, { 4, 10, 18 } }), Matrix<Pow2.N4>.ElementwiseMul(matrix1, matrix2));
-            Assert.AreEqual(new Matrix<Pow2.N4>(new MultiPrecision<Pow2.N4>[,] { { 7, 4, 3 }, { 0.25, "0.4", 0.5 } }), Matrix<Pow2.N4>.ElementwiseDiv(matrix2, matrix1)); ;
+            Assert.AreEqual(new Matrix<Pow2.N4>(new MultiPrecision<Pow2.N4>[,] { { 7, 4, 3 }, { 0.25, "0.4", 0.5 } }), Matrix<Pow2.N4>.ElementwiseDiv(matrix2, matrix1));
 
             Assert.AreEqual(new Matrix<Pow2.N4>(new double[,] { { 2, 4, 6 }, { 8, 10, 12 } }), matrix1 * 2);
             Assert.AreEqual(new Matrix<Pow2.N4>(new double[,] { { 2, 4, 6 }, { 8, 10, 12 } }), 2 * matrix1);
             Assert.AreEqual(new Matrix<Pow2.N4>(new double[,] { { 0.5, 1, 1.5 }, { 2, 2.5, 3 } }), matrix1 / 2);
             Assert.AreEqual(new Matrix<Pow2.N4>(new MultiPrecision<Pow2.N4>[,] { { 2, 1, MultiPrecision<Pow2.N4>.Div(2, 3) }, { 0.5, "0.4", MultiPrecision<Pow2.N4>.Div(2, 6) } }), 2 / matrix1);
-
 
             Assert.AreEqual(new Vector<Pow2.N4>(22, 58), matrix1 * vector1);
             Assert.AreEqual(new Vector<Pow2.N4>(32, 44), vector1 * matrix3);
