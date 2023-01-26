@@ -51,116 +51,6 @@ namespace MultiPrecisionAlgebra {
             this.e = (MultiPrecision<N>[,])m.Clone();
         }
 
-        /// <summary>インデクサ</summary>
-        /// <param name="row_index">行</param>
-        /// <param name="column_index">列</param>
-        public MultiPrecision<N> this[int row_index, int column_index] {
-            get => e[row_index, column_index];
-            set => e[row_index, column_index] = value;
-        }
-
-        /// <summary>インデクサ</summary>
-        /// <param name="row_index">行</param>
-        /// <param name="column_index">列</param>
-        public MultiPrecision<N> this[Index row_index, Index column_index] {
-            get => e[row_index.GetOffset(Rows), column_index.GetOffset(Columns)];
-            set => e[row_index.GetOffset(Rows), column_index.GetOffset(Columns)] = value;
-        }
-
-        /// <summary>領域インデクサ</summary>
-        /// <param name="row_range">行</param>
-        /// <param name="column_range">列</param>
-        public Matrix<N> this[Range row_range, Range column_range] {
-            get {
-                (int ri, int rn) = row_range.GetOffsetAndLength(Rows);
-                (int ci, int cn) = column_range.GetOffsetAndLength(Columns);
-
-                MultiPrecision<N>[,] m = new MultiPrecision<N>[rn, cn];
-                for (int i = 0; i < rn; i++) {
-                    for (int j = 0; j < cn; j++) {
-                        m[i, j] = e[i + ri, j + ci];
-                    }
-                }
-
-                return new(m);
-            }
-
-            set {
-                (int ri, int rn) = row_range.GetOffsetAndLength(Rows);
-                (int ci, int cn) = column_range.GetOffsetAndLength(Columns);
-
-                if (value.Rows != rn || value.Columns != cn) {
-                    throw new ArgumentOutOfRangeException($"{nameof(row_range)},{nameof(column_range)}");
-                }
-
-                for (int i = 0; i < rn; i++) {
-                    for (int j = 0; j < cn; j++) {
-                        e[i + ri, j + ci] = value.e[i, j];
-                    }
-                }
-            }
-        }
-
-        /// <summary>領域インデクサ</summary>
-        /// <param name="row_range">行</param>
-        /// <param name="column_index">列</param>
-        public Vector<N> this[Range row_range, Index column_index] {
-            get {
-                int c = column_index.GetOffset(Columns);
-                (int ri, int rn) = row_range.GetOffsetAndLength(Rows);
-
-                MultiPrecision<N>[] m = new MultiPrecision<N>[rn];
-                for (int i = 0; i < rn; i++) {
-                    m[i] = e[i + ri, c];
-                }
-
-                return new(m);
-            }
-
-            set {
-                int c = column_index.GetOffset(Columns);
-                (int ri, int rn) = row_range.GetOffsetAndLength(Rows);
-
-                if (value.Dim != rn) {
-                    throw new ArgumentOutOfRangeException($"{nameof(row_range)}");
-                }
-
-                for (int i = 0; i < rn; i++) {
-                    e[i + ri, c] = value.v[i];
-                }
-            }
-        }
-
-        /// <summary>領域インデクサ</summary>
-        /// <param name="row_index">行</param>
-        /// <param name="column_range">列</param>
-        public Vector<N> this[Index row_index, Range column_range] {
-            get {
-                int r = row_index.GetOffset(Rows);
-                (int ci, int cn) = column_range.GetOffsetAndLength(Columns);
-
-                MultiPrecision<N>[] m = new MultiPrecision<N>[cn];
-                for (int j = 0; j < cn; j++) {
-                    m[j] = e[r, j + ci];
-                }
-
-                return new(m);
-            }
-
-            set {
-                int r = row_index.GetOffset(Rows);
-                (int ci, int cn) = column_range.GetOffsetAndLength(Columns);
-
-                if (value.Dim != cn) {
-                    throw new ArgumentOutOfRangeException($"{nameof(column_range)}");
-                }
-
-                for (int j = 0; j < cn; j++) {
-                    e[r, j + ci] = value.v[j];
-                }
-            }
-        }
-
         /// <summary>行数</summary>
         public int Rows => e.GetLength(0);
 
@@ -187,218 +77,6 @@ namespace MultiPrecisionAlgebra {
         /// <summary>キャスト</summary>
         public static implicit operator Matrix<N>(MultiPrecision<N>[,] arr) {
             return new Matrix<N>(arr);
-        }
-
-        /// <summary>単項プラス</summary>
-        public static Matrix<N> operator +(Matrix<N> matrix) {
-            return matrix.Copy();
-        }
-
-        /// <summary>単項マイナス</summary>
-        public static Matrix<N> operator -(Matrix<N> matrix) {
-            Matrix<N> ret = matrix.Copy();
-
-            for (int i = 0; i < ret.Rows; i++) {
-                for (int j = 0; j < ret.Columns; j++) {
-                    ret.e[i, j] = -ret.e[i, j];
-                }
-            }
-
-            return ret;
-        }
-
-        /// <summary>行列加算</summary>
-        public static Matrix<N> operator +(Matrix<N> matrix1, Matrix<N> matrix2) {
-            if (!IsEqualSize(matrix1, matrix2)) {
-                throw new ArgumentException("mismatch size", $"{nameof(matrix1)},{nameof(matrix2)}");
-            }
-
-            Matrix<N> ret = new(matrix1.Rows, matrix1.Columns);
-
-            for (int i = 0, j; i < ret.Rows; i++) {
-                for (j = 0; j < ret.Columns; j++) {
-                    ret.e[i, j] = matrix1.e[i, j] + matrix2.e[i, j];
-                }
-            }
-
-            return ret;
-        }
-
-        /// <summary>行列減算</summary>
-        public static Matrix<N> operator -(Matrix<N> matrix1, Matrix<N> matrix2) {
-            if (!IsEqualSize(matrix1, matrix2)) {
-                throw new ArgumentException("mismatch size", $"{nameof(matrix1)},{nameof(matrix2)}");
-            }
-
-            Matrix<N> ret = new(matrix1.Rows, matrix1.Columns);
-
-            for (int i = 0, j; i < ret.Rows; i++) {
-                for (j = 0; j < ret.Columns; j++) {
-                    ret.e[i, j] = matrix1.e[i, j] - matrix2.e[i, j];
-                }
-            }
-
-            return ret;
-        }
-
-        /// <summary>要素ごとに積算</summary>
-        public static Matrix<N> ElementwiseMul(Matrix<N> matrix1, Matrix<N> matrix2) {
-            if (!IsEqualSize(matrix1, matrix2)) {
-                throw new ArgumentException("mismatch size", $"{nameof(matrix1)},{nameof(matrix2)}");
-            }
-
-            Matrix<N> ret = new(matrix1.Rows, matrix1.Columns);
-
-            for (int i = 0, j; i < ret.Rows; i++) {
-                for (j = 0; j < ret.Columns; j++) {
-                    ret.e[i, j] = matrix1.e[i, j] * matrix2.e[i, j];
-                }
-            }
-
-            return ret;
-        }
-
-        /// <summary>要素ごとに除算</summary>
-        public static Matrix<N> ElementwiseDiv(Matrix<N> matrix1, Matrix<N> matrix2) {
-            if (!IsEqualSize(matrix1, matrix2)) {
-                throw new ArgumentException("mismatch size", $"{nameof(matrix1)},{nameof(matrix2)}");
-            }
-
-            Matrix<N> ret = new(matrix1.Rows, matrix1.Columns);
-
-            for (int i = 0, j; i < ret.Rows; i++) {
-                for (j = 0; j < ret.Columns; j++) {
-                    ret.e[i, j] = matrix1.e[i, j] / matrix2.e[i, j];
-                }
-            }
-
-            return ret;
-        }
-
-        /// <summary>行列乗算</summary>
-        public static Matrix<N> operator *(Matrix<N> matrix1, Matrix<N> matrix2) {
-            if (matrix1.Columns != matrix2.Rows) {
-                throw new ArgumentException($"mismatch {nameof(matrix1.Columns)} {nameof(matrix2.Rows)}", $"{nameof(matrix1)},{nameof(matrix2)}");
-            }
-
-            Matrix<N> ret = new(matrix1.Rows, matrix2.Columns);
-            int c = matrix1.Columns;
-
-            for (int i = 0, j, k; i < ret.Rows; i++) {
-                for (j = 0; j < ret.Columns; j++) {
-                    for (k = 0; k < c; k++) {
-                        ret.e[i, j] += matrix1.e[i, k] * matrix2.e[k, j];
-                    }
-                }
-            }
-
-            return ret;
-        }
-
-        /// <summary>行列・列ベクトル乗算</summary>
-        public static Vector<N> operator *(Matrix<N> matrix, Vector<N> vector) {
-            if (matrix.Columns != vector.Dim) {
-                throw new ArgumentException($"mismatch {nameof(matrix.Columns)} {nameof(vector.Dim)}", $"{nameof(matrix)},{nameof(vector)}");
-            }
-
-            Vector<N> ret = Vector<N>.Zero(matrix.Rows);
-
-            for (int i = 0, j; i < matrix.Rows; i++) {
-                for (j = 0; j < matrix.Columns; j++) {
-                    ret.v[i] += matrix.e[i, j] * vector.v[j];
-                }
-            }
-
-            return ret;
-        }
-
-        /// <summary>行列・行ベクトル乗算</summary>
-        public static Vector<N> operator *(Vector<N> vector, Matrix<N> matrix) {
-            if (vector.Dim != matrix.Rows) {
-                throw new ArgumentException($"mismatch {nameof(vector.Dim)} {nameof(matrix.Rows)}", $"{nameof(vector)},{nameof(matrix)}");
-            }
-
-            Vector<N> ret = Vector<N>.Zero(matrix.Columns);
-
-            for (int j = 0, i; j < matrix.Columns; j++) {
-                for (i = 0; i < matrix.Rows; i++) {
-                    ret.v[j] += vector.v[i] * matrix.e[i, j];
-                }
-            }
-
-            return ret;
-        }
-
-        /// <summary>行列スカラー倍</summary>
-        public static Matrix<N> operator *(MultiPrecision<N> r, Matrix<N> matrix) {
-            Matrix<N> ret = new(matrix.Rows, matrix.Columns);
-
-            for (int i = 0, j; i < ret.Rows; i++) {
-                for (j = 0; j < ret.Columns; j++) {
-                    ret.e[i, j] = matrix.e[i, j] * r;
-                }
-            }
-
-            return ret;
-        }
-
-        /// <summary>行列スカラー倍</summary>
-        public static Matrix<N> operator *(Matrix<N> matrix, MultiPrecision<N> r) {
-            return r * matrix;
-        }
-
-        /// <summary>行列スカラー逆数倍</summary>
-        public static Matrix<N> operator /(Matrix<N> matrix, MultiPrecision<N> r) {
-            return (1 / r) * matrix;
-        }
-
-        /// <summary>行列が等しいか</summary>
-        public static bool operator ==(Matrix<N> matrix1, Matrix<N> matrix2) {
-            if (ReferenceEquals(matrix1, matrix2)) {
-                return true;
-            }
-            if (matrix1 is null || matrix2 is null) {
-                return false;
-            }
-
-            if (!IsEqualSize(matrix1, matrix2)) {
-                return false;
-            }
-
-            for (int i = 0, j; i < matrix1.Rows; i++) {
-                for (j = 0; j < matrix2.Columns; j++) {
-                    if (matrix1.e[i, j] != matrix2.e[i, j]) {
-                        return false;
-                    }
-                }
-            }
-
-            return true;
-        }
-
-        /// <summary>行列が異なるか判定</summary>
-        public static bool operator !=(Matrix<N> matrix1, Matrix<N> matrix2) {
-            return !(matrix1 == matrix2);
-        }
-
-        /// <summary>等しいか判定</summary>
-        public override bool Equals(object obj) {
-            return (obj is not null) && obj is Matrix<N> matrix && matrix == this;
-        }
-
-        /// <summary>ハッシュ値</summary>
-        public override int GetHashCode() {
-            return e[0, 0].GetHashCode();
-        }
-
-        /// <summary>クローン</summary>
-        public object Clone() {
-            return new Matrix<N>(e);
-        }
-
-        /// <summary>ディープコピー</summary>
-        public Matrix<N> Copy() {
-            return new Matrix<N>(e);
         }
 
         /// <summary>転置</summary>
@@ -523,6 +201,24 @@ namespace MultiPrecisionAlgebra {
             }
 
             return ret;
+        }
+
+        /// <summary>対角成分</summary>
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public MultiPrecision<N>[] Diagonals {
+            get {
+                if (!IsSquare(this)) {
+                    throw new InvalidOperationException("not square matrix");
+                }
+
+                MultiPrecision<N>[] diagonals = new MultiPrecision<N>[Size];
+
+                for (int i = 0; i < Size; i++) {
+                    diagonals[i] = e[i, i];
+                }
+
+                return diagonals;
+            }
         }
 
         /// <summary>ゼロ行列</summary>
@@ -663,22 +359,24 @@ namespace MultiPrecisionAlgebra {
             return IsValid(matrix.Inverse);
         }
 
-        /// <summary>対角成分</summary>
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public MultiPrecision<N>[] Diagonals {
-            get {
-                if (!IsSquare(this)) {
-                    throw new InvalidOperationException("not square matrix");
-                }
+        /// <summary>等しいか判定</summary>
+        public override bool Equals(object obj) {
+            return (obj is not null) && obj is Matrix<N> matrix && matrix == this;
+        }
 
-                MultiPrecision<N>[] diagonals = new MultiPrecision<N>[Size];
+        /// <summary>ハッシュ値</summary>
+        public override int GetHashCode() {
+            return e[0, 0].GetHashCode();
+        }
 
-                for (int i = 0; i < Size; i++) {
-                    diagonals[i] = e[i, i];
-                }
+        /// <summary>クローン</summary>
+        public object Clone() {
+            return new Matrix<N>(e);
+        }
 
-                return diagonals;
-            }
+        /// <summary>ディープコピー</summary>
+        public Matrix<N> Copy() {
+            return new Matrix<N>(e);
         }
 
         /// <summary>文字列化</summary>
