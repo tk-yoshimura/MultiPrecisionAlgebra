@@ -1,11 +1,13 @@
 ﻿using MultiPrecision;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace MultiPrecisionAlgebra {
     /// <summary>行列クラス</summary>
     [DebuggerDisplay("{Convert<MultiPrecision.Pow2.N4>().ToString(),nq}")]
-    public partial class Matrix<N> : ICloneable where N : struct, IConstant {
+    public partial class Matrix<N> : ICloneable, IEnumerable<(int row_index, int column_index, MultiPrecision<N> val)> where N : struct, IConstant {
         internal readonly MultiPrecision<N>[,] e;
 
         /// <summary>コンストラクタ</summary>
@@ -701,5 +703,15 @@ namespace MultiPrecisionAlgebra {
 
             return ret;
         }
+
+        public IEnumerator<(int row_index, int column_index, MultiPrecision<N> val)> GetEnumerator() {
+            for (int i = 0; i < Rows; i++) {
+                for (int j = 0; j < Columns; j++) {
+                    yield return (i, j, e[i, j]);
+                }
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 }

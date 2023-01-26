@@ -1,12 +1,14 @@
 ﻿using MultiPrecision;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
 namespace MultiPrecisionAlgebra {
     ///<summary>ベクトルクラス</summary>
     [DebuggerDisplay("{Convert<MultiPrecision.Pow2.N4>().ToString(),nq}")]
-    public class Vector<N> : ICloneable where N : struct, IConstant {
+    public class Vector<N> : ICloneable, IEnumerable<(int index, MultiPrecision<N> val)> where N : struct, IConstant {
         internal readonly MultiPrecision<N>[] v;
 
         /// <summary>コンストラクタ</summary>
@@ -29,6 +31,14 @@ namespace MultiPrecisionAlgebra {
                 this.v[i] = v[i];
             }
         }
+
+        /// <summary>コンストラクタ</summary>
+        public Vector(IEnumerable<MultiPrecision<N>> v) {
+            this.v = v.ToArray();
+        }
+
+        /// <summary>コンストラクタ</summary>
+        public Vector(IEnumerable<double> v) : this(v.ToArray()) { }
 
         /// <summary>インデクサ</summary>
         public MultiPrecision<N> this[int index] {
@@ -406,5 +416,13 @@ namespace MultiPrecisionAlgebra {
 
             return ret;
         }
+
+        public IEnumerator<(int index, MultiPrecision<N> val)> GetEnumerator() {
+            for (int i = 0; i < Dim; i++) {
+                yield return (i, v[i]);
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 }

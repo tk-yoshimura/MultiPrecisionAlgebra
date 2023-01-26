@@ -50,6 +50,13 @@ namespace MultiPrecisionAlgebra.Tests {
             Assert.AreEqual(2, vector[^2]);
             Assert.AreEqual(3, vector[^3]);
             Assert.AreEqual(4, vector[^4]);
+
+            string str = string.Empty;
+            foreach ((int index, MultiPrecision<Pow2.N4> val) in vector) {
+                str += $"({index},{val}),";
+            }
+
+            Assert.AreEqual("(0,4),(1,3),(2,2),(3,1),", str);
         }
 
         [TestMethod()]

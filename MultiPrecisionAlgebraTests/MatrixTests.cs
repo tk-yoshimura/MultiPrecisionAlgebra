@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MultiPrecision;
 using System;
+using System.Numerics;
 
 namespace MultiPrecisionAlgebra.Tests {
     [TestClass()]
@@ -56,6 +57,13 @@ namespace MultiPrecisionAlgebra.Tests {
             Assert.ThrowsException<InvalidOperationException>(() => {
                 int n = Matrix<Pow2.N4>.Zero(2, 3).Size;
             });
+
+            string str = string.Empty;
+            foreach ((int row_index, int col_index, MultiPrecision<Pow2.N4> val) in matrix1) {
+                str += $"({row_index},{col_index},{val}),";
+            }
+
+            Assert.AreEqual("(0,0,4),(0,1,5),(0,2,6),(1,0,1),(1,1,2),(1,2,3),", str);
         }
 
         [TestMethod()]
