@@ -141,6 +141,13 @@ namespace MultiPrecisionAlgebra.Tests {
         }
 
         [TestMethod()]
+        public void SumTest() {
+            Vector<Pow2.N4> vector = new(1, 2, 3, 4);
+
+            Assert.AreEqual(10, vector.Sum);
+        }
+
+        [TestMethod()]
         public void NormalTest() {
             Vector<Pow2.N4> vector = new(1, 2, -3);
 

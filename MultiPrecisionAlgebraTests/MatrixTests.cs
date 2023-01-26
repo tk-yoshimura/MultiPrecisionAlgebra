@@ -237,6 +237,14 @@ namespace MultiPrecisionAlgebra.Tests {
             Matrix<Pow2.N4> matrix = new(new double[,] { { 1, 2 }, { 3, 4 } });
 
             Assert.AreEqual(MultiPrecision<Pow2.N4>.Sqrt(30), matrix.Norm);
+            Assert.AreEqual(30, matrix.SquareNorm);
+        }
+
+        [TestMethod()]
+        public void SumTest() {
+            Matrix<Pow2.N4> matrix = new(new double[,] { { 1, 2 }, { 3, 4 } });
+
+            Assert.AreEqual(10, matrix.Sum);
         }
 
         [TestMethod()]
