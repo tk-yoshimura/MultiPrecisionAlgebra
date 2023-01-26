@@ -11,7 +11,7 @@ namespace MultiPrecisionAlgebra {
 
             Matrix<N> m = Copy();
             for (int i = 0; i < precision_level; i++) {
-                (Matrix<N> q, Matrix<N> r) = m.QRDecomposition();
+                (Matrix<N> q, Matrix<N> r) = m.QRDecompose();
                 m = r * q;
             }
 
@@ -46,7 +46,7 @@ namespace MultiPrecisionAlgebra {
             x_init /= x_init.Norm;
 
             for (int i = 0; i < precision_level; i++) {
-                (Matrix<N> q, Matrix<N> r) = m.QRDecomposition();
+                (Matrix<N> q, Matrix<N> r) = m.QRDecompose();
                 m = r * q;
 
                 eigen_values = m.Diagonals;

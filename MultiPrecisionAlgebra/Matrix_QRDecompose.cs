@@ -5,7 +5,7 @@ namespace MultiPrecisionAlgebra {
     /// <summary>行列クラス</summary>
     public partial class Matrix<N> where N : struct, IConstant {
         /// <summary>QR分解</summary>
-        public (Matrix<N> orthogonal_matrix, Matrix<N> triangular_matrix) QRDecomposition() {
+        public (Matrix<N> orthogonal_matrix, Matrix<N> triangular_matrix) QRDecompose() {
             if (!IsSquare(this)) {
                 throw new InvalidOperationException("not square matrix");
             }

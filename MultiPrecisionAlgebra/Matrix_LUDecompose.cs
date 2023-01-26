@@ -5,7 +5,7 @@ namespace MultiPrecisionAlgebra {
     /// <summary>行列クラス</summary>
     public partial class Matrix<N> where N : struct, IConstant {
         /// <summary>LU分解</summary>
-        public (Matrix<N> lower_matrix, Matrix<N> upper_matrix) LUDecomposition() {
+        public (Matrix<N> lower_matrix, Matrix<N> upper_matrix) LUDecompose() {
             if (!IsSquare(this)) {
                 throw new InvalidOperationException("not square matrix");
             }

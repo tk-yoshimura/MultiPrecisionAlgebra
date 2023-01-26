@@ -512,10 +512,10 @@ namespace MultiPrecisionAlgebra.Tests {
         }
 
         [TestMethod()]
-        public void LUDecompositionTest() {
+        public void LUDecomposeTest() {
             Matrix<Pow2.N4> matrix = new(new double[,] { { 2, 3, 1, 2 }, { 4, 1, 3, -2 }, { 2, 2, -3, 1 }, { 1, -3, 2, 4 } });
 
-            (Matrix<Pow2.N4> lower, Matrix<Pow2.N4> upper) = matrix.LUDecomposition();
+            (Matrix<Pow2.N4> lower, Matrix<Pow2.N4> upper) = matrix.LUDecompose();
 
             foreach (var diagonal in lower.Diagonals) {
                 Assert.AreEqual(1, diagonal);
@@ -525,10 +525,10 @@ namespace MultiPrecisionAlgebra.Tests {
         }
 
         [TestMethod()]
-        public void QRDecompositionTest() {
+        public void QRDecomposeTest() {
             Matrix<Pow2.N4> matrix = new(new double[,] { { 12, -51, 4 }, { 6, 167, -68 }, { -4, 24, -41 } });
 
-            (Matrix<Pow2.N4> q, Matrix<Pow2.N4> r) = matrix.QRDecomposition();
+            (Matrix<Pow2.N4> q, Matrix<Pow2.N4> r) = matrix.QRDecompose();
 
             Assert.IsTrue((matrix - q * r).Norm < 1e-12);
             Assert.IsTrue((q * q.Transpose - Matrix<Pow2.N4>.Identity(matrix.Size)).Norm < 1e-35);

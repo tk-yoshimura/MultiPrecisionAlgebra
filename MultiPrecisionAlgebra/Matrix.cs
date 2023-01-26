@@ -440,7 +440,7 @@ namespace MultiPrecisionAlgebra {
 
         /// <summary>ノルム</summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public MultiPrecision<N> Norm => MultiPrecision<N>.Sqrt(Norm);
+        public MultiPrecision<N> Norm => MultiPrecision<N>.Sqrt(SquareNorm);
 
         /// <summary>ノルム2乗</summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

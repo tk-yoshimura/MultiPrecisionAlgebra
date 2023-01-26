@@ -8,7 +8,7 @@ namespace MultiPrecisionAlgebra {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public MultiPrecision<N> Det {
             get {
-                (_, Matrix<N> upper) = LUDecomposition();
+                (_, Matrix<N> upper) = LUDecompose();
 
                 MultiPrecision<N> prod = 1;
                 foreach (var diagonal in upper.Diagonals) {
