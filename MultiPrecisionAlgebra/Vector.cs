@@ -249,6 +249,38 @@ namespace MultiPrecisionAlgebra {
             return new Vector<N>(v);
         }
 
+        /// <summary>スカラー加算</summary>
+        public static Vector<N> operator +(MultiPrecision<N> r, Vector<N> vector) {
+            MultiPrecision<N>[] v = new MultiPrecision<N>[vector.Dim];
+
+            for (int i = 0; i < vector.Dim; i++) {
+                v[i] = r + vector.v[i];
+            }
+
+            return new Vector<N>(v);
+        }
+
+        /// <summary>スカラー加算</summary>
+        public static Vector<N> operator +(Vector<N> vector, MultiPrecision<N> r) {
+            return r + vector;
+        }
+
+        /// <summary>スカラー減算</summary>
+        public static Vector<N> operator -(MultiPrecision<N> r, Vector<N> vector) {
+            MultiPrecision<N>[] v = new MultiPrecision<N>[vector.Dim];
+
+            for (int i = 0; i < vector.Dim; i++) {
+                v[i] = r - vector.v[i];
+            }
+
+            return new Vector<N>(v);
+        }
+
+        /// <summary>スカラー減算</summary>
+        public static Vector<N> operator -(Vector<N> vector, MultiPrecision<N> r) {
+            return (-r) + vector;
+        }
+
         /// <summary>スカラー倍</summary>
         public static Vector<N> operator *(MultiPrecision<N> r, Vector<N> vector) {
             MultiPrecision<N>[] v = new MultiPrecision<N>[vector.Dim];
@@ -265,7 +297,18 @@ namespace MultiPrecisionAlgebra {
             return r * vector;
         }
 
-        /// <summary>スカラー逆数倍</summary>
+        /// <summary>スカラー除算</summary>
+        public static Vector<N> operator /(MultiPrecision<N> r, Vector<N> vector) {
+            MultiPrecision<N>[] v = new MultiPrecision<N>[vector.Dim];
+
+            for (int i = 0; i < vector.Dim; i++) {
+                v[i] = r / vector.v[i];
+            }
+
+            return new Vector<N>(v);
+        }
+
+        /// <summary>スカラー除算</summary>
         public static Vector<N> operator /(Vector<N> vector, MultiPrecision<N> r) {
             return (1 / r) * vector;
         }

@@ -158,11 +158,16 @@ namespace MultiPrecisionAlgebra.Tests {
             Assert.AreEqual(new Vector<Pow2.N4>(-1, -2), -vector1);
             Assert.AreEqual(new Vector<Pow2.N4>(4, 6), vector1 + vector2);
             Assert.AreEqual(new Vector<Pow2.N4>(4, 6), vector2 + vector1);
+            Assert.AreEqual(new Vector<Pow2.N4>(4, 5), vector1 + 3);
+            Assert.AreEqual(new Vector<Pow2.N4>(4, 5), 3 + vector1);
             Assert.AreEqual(new Vector<Pow2.N4>(-2, -2), vector1 - vector2);
             Assert.AreEqual(new Vector<Pow2.N4>(2, 2), vector2 - vector1);
+            Assert.AreEqual(new Vector<Pow2.N4>(-2, -1), vector1 - 3);
+            Assert.AreEqual(new Vector<Pow2.N4>(2, 1), 3 - vector1);
             Assert.AreEqual(new Vector<Pow2.N4>(2, 4), vector1 * 2);
             Assert.AreEqual(new Vector<Pow2.N4>(2, 4), 2 * vector1);
             Assert.AreEqual(new Vector<Pow2.N4>(0.5, 1), vector1 / 2);
+            Assert.AreEqual(new Vector<Pow2.N4>(2, 1), 2 / vector1);
             Assert.AreEqual(new Vector<Pow2.N4>(3, 8), vector1 * vector2);
             Assert.AreEqual(new Vector<Pow2.N4>(MultiPrecision<Pow2.N4>.Div(1, 3), 0.5), vector1 / vector2);
             Assert.AreEqual(new Vector<Pow2.N4>(3, 2), vector2 / vector1);
