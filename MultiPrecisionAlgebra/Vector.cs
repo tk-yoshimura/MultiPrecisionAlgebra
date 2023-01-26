@@ -136,6 +136,10 @@ namespace MultiPrecisionAlgebra {
             }
         }
 
+        /// <summary>合計</summary>
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public MultiPrecision<N> Sum => v.Sum();
+
         /// <summary>行ベクトル</summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Matrix<N> Horizontal {

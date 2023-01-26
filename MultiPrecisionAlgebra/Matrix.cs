@@ -438,9 +438,13 @@ namespace MultiPrecisionAlgebra {
             }
         }
 
-        /// <summary>行列ノルム</summary>
+        /// <summary>ノルム</summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public MultiPrecision<N> Norm {
+        public MultiPrecision<N> Norm => MultiPrecision<N>.Sqrt(Norm);
+
+        /// <summary>ノルム2乗</summary>
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public MultiPrecision<N> SquareNorm {
             get {
                 MultiPrecision<N> sum_sq = 0;
                 for (int i = 0, j; i < Rows; i++) {
@@ -449,7 +453,22 @@ namespace MultiPrecisionAlgebra {
                     }
                 }
 
-                return MultiPrecision<N>.Sqrt(sum_sq);
+                return sum_sq;
+            }
+        }
+
+        /// <summary>合計</summary>
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public MultiPrecision<N> Sum {
+            get {
+                MultiPrecision<N> sum = 0;
+                for (int i = 0, j; i < Rows; i++) {
+                    for (j = 0; j < Columns; j++) {
+                        sum += e[i, j];
+                    }
+                }
+
+                return sum;
             }
         }
 
