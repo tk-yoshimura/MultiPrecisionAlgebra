@@ -38,7 +38,15 @@ namespace MultiPrecisionAlgebra {
         }
 
         /// <summary>コンストラクタ</summary>
+        public Vector(IReadOnlyCollection<MultiPrecision<N>> v) {
+            this.v = v.ToArray();
+        }
+
+        /// <summary>コンストラクタ</summary>
         public Vector(IEnumerable<double> v) : this(v.ToArray()) { }
+
+        /// <summary>コンストラクタ</summary>
+        public Vector(IReadOnlyCollection<double> v) : this(v.ToArray()) { }
 
         /// <summary>X成分</summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
