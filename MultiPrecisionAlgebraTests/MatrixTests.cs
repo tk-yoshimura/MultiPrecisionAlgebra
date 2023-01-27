@@ -315,6 +315,42 @@ namespace MultiPrecisionAlgebra.Tests {
         }
 
         [TestMethod()]
+        public void SolveTest() {
+            Matrix<Pow2.N4> matrix1 = new(new double[,] { { 1, 2 }, { 3, 4 } });
+            Matrix<Pow2.N4> matrix2 = new(new double[,] { { 0, 1 }, { 0, 0 } });
+            Matrix<Pow2.N4> matrix3 = new(new double[,] { { 1, 2, -3 }, { 2, -1, 3 }, { -3, 2, 1 } });
+            Matrix<Pow2.N4> matrix4 = new(new double[,] { { 2, 1, 1, 2 }, { 4, 2, 3, 1 }, { -2, -2, 0, -1 }, { 1, 1, 2, 6 } });
+            Matrix<Pow2.N4> matrix5 = new(new double[,] {
+                { 1, 0, 0, 0, 1, 0, 0, 0 },
+                { 0, 1, 0, 0, 1, 1, 0, 0 },
+                { 0, 0, 1, 0, 2, 1, 1, 0 },
+                { 0, 0, 0, 1, 4, 2, 1, 1 },
+                { 0, 0, 0, 0, 5, 4, 2, 1 },
+                { 0, 0, 0, 0, 7, 5, 4, 2 },
+                { 0, 0, 0, 0, 6, 7, 5, 4 },
+                { 0, 0, 0, 0, 8, 6, 7, 5 },
+            });
+
+            Vector<Pow2.N4> vector1 = new(4, 3);
+            Vector<Pow2.N4> vector2 = new(3, 1);
+            Vector<Pow2.N4> vector3 = new(5, 4, 1);
+            Vector<Pow2.N4> vector4 = new(1, -2, 3, 2);
+            Vector<Pow2.N4> vector5 = new(5, -3, 1, -2, 6, 2, 4, 2);
+
+            Assert.IsTrue((matrix1.Inverse * vector1 - Matrix<Pow2.N4>.Solve(matrix1, vector1)).Norm < 1e-35, $"{Matrix<Pow2.N4>.Solve(matrix1, vector1)}");
+            Assert.IsTrue((matrix3.Inverse * vector3 - Matrix<Pow2.N4>.Solve(matrix3, vector3)).Norm < 1e-35);
+            Assert.IsFalse(Vector<Pow2.N4>.IsValid(Matrix<Pow2.N4>.Solve(matrix2, vector2)));
+            Assert.IsTrue((matrix4.Inverse * vector4 - Matrix<Pow2.N4>.Solve(matrix4, vector4)).Norm < 1e-35);
+            Assert.IsTrue((matrix5.Inverse * vector5 - Matrix<Pow2.N4>.Solve(matrix5, vector5)).Norm < 1e-35);
+
+            Assert.IsTrue(((matrix4 * "1e+1000").Inverse * vector4 - Matrix<Pow2.N4>.Solve(matrix4 * "1e+1000", vector4)).Norm < "1e-1035");
+            Assert.IsTrue(((matrix5 * "1e+1000").Inverse * vector5 - Matrix<Pow2.N4>.Solve(matrix5 * "1e+1000", vector5)).Norm < "1e-1035");
+
+            Assert.IsTrue(((matrix4 * "1e-1000").Inverse * vector4 - Matrix<Pow2.N4>.Solve(matrix4 * "1e-1000", vector4)).Norm < "1e+965");
+            Assert.IsTrue(((matrix5 * "1e-1000").Inverse * vector5 - Matrix<Pow2.N4>.Solve(matrix5 * "1e-1000", vector5)).Norm < "1e+965");
+        }
+
+        [TestMethod()]
         public void HorizontalTest() {
             Vector<Pow2.N4> vector = new(1, 2, 3);
 
