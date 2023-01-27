@@ -55,7 +55,7 @@ namespace MultiPrecisionAlgebra {
 
                 for (int j = i + 1; j < n; j++) {
                     MultiPrecision<N> mul = u.e[j, i];
-                    u.e[j, i] = 0;
+                    u.e[j, i] = MultiPrecision<N>.Zero;
                     for (int k = i + 1; k < n; k++) {
                         u.e[j, k] -= u.e[i, k] * mul;
                     }
@@ -70,7 +70,7 @@ namespace MultiPrecisionAlgebra {
                 for (int j = i - 1; j >= 0; j--) {
                     MultiPrecision<N> mul = u.e[j, i];
                     for (int k = i; k < n; k++) {
-                        u.e[j, k] = 0;
+                        u.e[j, k] = MultiPrecision<N>.Zero;
                     }
                     for (int k = 0; k < v.Columns; k++) {
                         v.e[j, k] -= v.e[i, k] * mul;
@@ -123,7 +123,7 @@ namespace MultiPrecisionAlgebra {
 
                 // 前進消去
                 MultiPrecision<N> inv_mii = 1 / u.e[i, i];
-                u.e[i, i] = 1;
+                u.e[i, i] = MultiPrecision<N>.One;
                 for (int j = i + 1; j < n; j++) {
                     u.e[i, j] *= inv_mii;
                 }
@@ -131,7 +131,7 @@ namespace MultiPrecisionAlgebra {
 
                 for (int j = i + 1; j < n; j++) {
                     MultiPrecision<N> mul = u.e[j, i];
-                    u.e[j, i] = 0;
+                    u.e[j, i] = MultiPrecision<N>.Zero;
                     for (int k = i + 1; k < n; k++) {
                         u.e[j, k] -= u.e[i, k] * mul;
                     }
@@ -144,7 +144,7 @@ namespace MultiPrecisionAlgebra {
                 for (int j = i - 1; j >= 0; j--) {
                     MultiPrecision<N> mul = u.e[j, i];
                     for (int k = i; k < n; k++) {
-                        u.e[j, k] = 0;
+                        u.e[j, k] = MultiPrecision<N>.Zero;
                     }
                     v[j] -= v[i] * mul;
                 }

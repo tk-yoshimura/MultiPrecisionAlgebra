@@ -16,7 +16,7 @@ namespace MultiPrecisionAlgebra {
             this.v = new MultiPrecision<N>[size];
 
             for (int i = 0; i < v.Length; i++) {
-                this.v[i] = 0;
+                this.v[i] = MultiPrecision<N>.Zero;
             }
         }
 
@@ -127,7 +127,7 @@ namespace MultiPrecisionAlgebra {
                 throw new ArgumentException("mismatch size", $"{nameof(vector1)},{nameof(vector2)}");
             }
 
-            MultiPrecision<N> sum = 0;
+            MultiPrecision<N> sum = MultiPrecision<N>.Zero;
             for (int i = 0, dim = vector1.Dim; i < dim; i++) {
                 sum += vector1.v[i] * vector2.v[i];
             }
@@ -143,7 +143,7 @@ namespace MultiPrecisionAlgebra {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public MultiPrecision<N> SquareNorm {
             get {
-                MultiPrecision<N> norm = 0;
+                MultiPrecision<N> norm = MultiPrecision<N>.Zero;
                 foreach (var vi in v) {
                     norm += vi * vi;
                 }

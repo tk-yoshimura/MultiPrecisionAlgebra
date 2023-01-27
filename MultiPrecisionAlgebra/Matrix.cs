@@ -22,7 +22,7 @@ namespace MultiPrecisionAlgebra {
 
             for (int i = 0; i < Rows; i++) {
                 for (int j = 0; j < Columns; j++) {
-                    e[i, j] = 0;
+                    e[i, j] = MultiPrecision<N>.Zero;
                 }
             }
         }
@@ -124,7 +124,7 @@ namespace MultiPrecisionAlgebra {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public MultiPrecision<N> SquareNorm {
             get {
-                MultiPrecision<N> sum_sq = 0;
+                MultiPrecision<N> sum_sq = MultiPrecision<N>.Zero;
                 for (int i = 0, j; i < Rows; i++) {
                     for (j = 0; j < Columns; j++) {
                         sum_sq += e[i, j] * e[i, j];
@@ -139,7 +139,7 @@ namespace MultiPrecisionAlgebra {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public MultiPrecision<N> Sum {
             get {
-                MultiPrecision<N> sum = 0;
+                MultiPrecision<N> sum = MultiPrecision<N>.Zero;
                 for (int i = 0, j; i < Rows; i++) {
                     for (j = 0; j < Columns; j++) {
                         sum += e[i, j];

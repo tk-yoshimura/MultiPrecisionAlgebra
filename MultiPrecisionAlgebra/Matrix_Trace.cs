@@ -10,7 +10,7 @@ namespace MultiPrecisionAlgebra {
             get {
                 (_, Matrix<N> upper) = LUDecompose();
 
-                MultiPrecision<N> sum = 0;
+                MultiPrecision<N> sum = MultiPrecision<N>.Zero;
                 foreach (var diagonal in upper.Diagonals) {
                     sum += diagonal;
                 }
