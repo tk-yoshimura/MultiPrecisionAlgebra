@@ -11,6 +11,10 @@ namespace MultiPrecisionAlgebra {
     public partial class Vector<N> : ICloneable, IEnumerable<(int index, MultiPrecision<N> val)> where N : struct, IConstant {
         internal readonly MultiPrecision<N>[] v;
 
+        protected Vector(MultiPrecision<N>[] v, bool cloning) {
+            this.v = cloning ? (MultiPrecision<N>[])v.Clone() : v;
+        }
+
         /// <summary>コンストラクタ</summary>
         protected Vector(int size) {
             this.v = new MultiPrecision<N>[size];
@@ -21,9 +25,7 @@ namespace MultiPrecisionAlgebra {
         }
 
         /// <summary>コンストラクタ</summary>
-        public Vector(params MultiPrecision<N>[] v) {
-            this.v = (MultiPrecision<N>[])v.Clone();
-        }
+        public Vector(params MultiPrecision<N>[] v) : this(v, cloning: true) { }
 
         /// <summary>コンストラクタ</summary>
         public Vector(params double[] v) : this(v.Length) {
@@ -196,15 +198,71 @@ namespace MultiPrecisionAlgebra {
             return new Vector<N>(size);
         }
 
-        /// <summary>ゼロベクトルか判定</summary>
-        public static bool IsZero(Vector<N> vector) {
-            for (int i = 0; i < vector.Dim; i++) {
-                if (!vector.v[i].IsZero) {
-                    return false;
-                }
+        /// <summary>定数ベクトル</summary>
+        public static Vector<N> Fill(int size, MultiPrecision<N> value) {
+            MultiPrecision<N>[] v = new MultiPrecision<N>[size];
+
+            for (int i = 0; i < v.Length; i++) {
+                v[i] = value;
             }
 
-            return true;
+            return new Vector<N>(v, cloning: false);
+        }
+
+        /// <summary>射影</summary>
+        public static Vector<N> Func(Vector<N> vector, Func<MultiPrecision<N>, MultiPrecision<N>> f) {
+            MultiPrecision<N>[] x = vector.v, v = new MultiPrecision<N>[vector.Dim];
+
+            for (int i = 0; i < v.Length; i++) {
+                v[i] = f(x[i]);
+            }
+
+            return new Vector<N>(v, cloning: false);
+        }
+
+        /// <summary>射影</summary>
+        public static Vector<N> Func(Vector<N> vector1, Vector<N> vector2, Func<MultiPrecision<N>, MultiPrecision<N>, MultiPrecision<N>> f) {
+            if (vector1.Dim != vector2.Dim) {
+                throw new ArgumentException("mismatch size", $"{nameof(vector1)},{nameof(vector2)}");
+            }
+
+            MultiPrecision<N>[] x = vector1.v, y = vector2.v, v = new MultiPrecision<N>[vector1.Dim];
+
+            for (int i = 0; i < v.Length; i++) {
+                v[i] = f(x[i], y[i]);
+            }
+
+            return new Vector<N>(v, cloning: false);
+        }
+
+        /// <summary>射影</summary>
+        public static Vector<N> Func(Vector<N> vector1, Vector<N> vector2, Vector<N> vector3, Func<MultiPrecision<N>, MultiPrecision<N>, MultiPrecision<N>, MultiPrecision<N>> f) {
+            if (vector1.Dim != vector2.Dim || vector1.Dim != vector3.Dim) {
+                throw new ArgumentException("mismatch size", $"{nameof(vector1)},{nameof(vector2)},{nameof(vector3)}");
+            }
+
+            MultiPrecision<N>[] x = vector1.v, y = vector2.v, z = vector3.v, v = new MultiPrecision<N>[vector1.Dim];
+
+            for (int i = 0; i < v.Length; i++) {
+                v[i] = f(x[i], y[i], z[i]);
+            }
+
+            return new Vector<N>(v, cloning: false);
+        }
+
+        /// <summary>射影</summary>
+        public static Vector<N> Func(Vector<N> vector1, Vector<N> vector2, Vector<N> vector3, Vector<N> vector4, Func<MultiPrecision<N>, MultiPrecision<N>, MultiPrecision<N>, MultiPrecision<N>, MultiPrecision<N>> f) {
+            if (vector1.Dim != vector2.Dim || vector1.Dim != vector3.Dim || vector1.Dim != vector4.Dim) {
+                throw new ArgumentException("mismatch size", $"{nameof(vector1)},{nameof(vector2)},{nameof(vector3)},{nameof(vector4)}");
+            }
+
+            MultiPrecision<N>[] x = vector1.v, y = vector2.v, z = vector3.v, w = vector4.v, v = new MultiPrecision<N>[vector1.Dim];
+
+            for (int i = 0; i < v.Length; i++) {
+                v[i] = f(x[i], y[i], z[i], w[i]);
+            }
+
+            return new Vector<N>(v, cloning: false);
         }
 
         /// <summary>不正なベクトル</summary>
@@ -221,6 +279,17 @@ namespace MultiPrecisionAlgebra {
         public static bool IsValid(Vector<N> vector) {
             for (int i = 0; i < vector.Dim; i++) {
                 if (!vector.v[i].IsFinite) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>ゼロベクトルか判定</summary>
+        public static bool IsZero(Vector<N> vector) {
+            for (int i = 0; i < vector.Dim; i++) {
+                if (!vector.v[i].IsZero) {
                     return false;
                 }
             }

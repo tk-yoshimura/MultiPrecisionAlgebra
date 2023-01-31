@@ -211,14 +211,12 @@ namespace MultiPrecisionAlgebra.Tests {
         }
 
         [TestMethod()]
-        public void IsZeroTest() {
-            Vector<Pow2.N4> vector = Vector<Pow2.N4>.Zero(3);
+        public void FillTest() {
+            Vector<Pow2.N4> vector = Vector<Pow2.N4>.Fill(3, value: 7);
 
-            Assert.IsTrue(Vector<Pow2.N4>.IsZero(vector));
-
-            vector.X = 1;
-
-            Assert.IsFalse(Vector<Pow2.N4>.IsZero(vector));
+            Assert.AreEqual(7, vector.X);
+            Assert.AreEqual(7, vector.Y);
+            Assert.AreEqual(7, vector.Z);
         }
 
         [TestMethod()]
@@ -228,6 +226,17 @@ namespace MultiPrecisionAlgebra.Tests {
             Assert.IsTrue(vector.X.IsNaN);
             Assert.IsTrue(vector.Y.IsNaN);
             Assert.IsTrue(vector.Z.IsNaN);
+        }
+
+        [TestMethod()]
+        public void IsZeroTest() {
+            Vector<Pow2.N4> vector = Vector<Pow2.N4>.Zero(3);
+
+            Assert.IsTrue(Vector<Pow2.N4>.IsZero(vector));
+
+            vector.X = 1;
+
+            Assert.IsFalse(Vector<Pow2.N4>.IsZero(vector));
         }
 
         [TestMethod()]
@@ -267,14 +276,54 @@ namespace MultiPrecisionAlgebra.Tests {
         }
 
         [TestMethod()]
-        public void ToStringTest() {
-            Vector<Pow2.N4> vector1 = new(1, 2, 3);
-            Vector<Pow2.N4> vector2 = new(new double[0]);
-            Vector<Pow2.N4> vector3 = new(1);
+        public void FuncTest() {
+            Vector<Pow2.N4> vector1 = new(1, 2, 4, 8);
+            Vector<Pow2.N4> vector2 = new(2, 3, 5, 9);
+            Vector<Pow2.N4> vector3 = new(3, 4, 6, 10);
+            Vector<Pow2.N4> vector4 = new(4, 5, 7, 11);
+            Vector<Pow2.N4> vector5 = new(5, 6, 8, 12, 20);
 
-            Assert.AreEqual("1,2,3", vector1.ToString());
-            Assert.AreEqual(string.Empty, vector2.ToString());
-            Assert.AreEqual("1", vector3.ToString());
+            Assert.AreEqual(new Vector<Pow2.N4>(2, 4, 8, 16), Vector<Pow2.N4>.Func(vector1, v => 2 * v));
+            Assert.AreEqual(new Vector<Pow2.N4>(5, 8, 14, 26), Vector<Pow2.N4>.Func(vector1, vector2, (v1, v2) => v1 + 2 * v2));
+            Assert.AreEqual(new Vector<Pow2.N4>(17, 24, 38, 66), Vector<Pow2.N4>.Func(vector1, vector2, vector3, (v1, v2, v3) => v1 + 2 * v2 + 4 * v3));
+            Assert.AreEqual(new Vector<Pow2.N4>(49, 64, 94, 154), Vector<Pow2.N4>.Func(vector1, vector2, vector3, vector4, (v1, v2, v3, v4) => v1 + 2 * v2 + 4 * v3 + 8 * v4));
+            Assert.AreEqual(new Vector<Pow2.N4>(49, 64, 94, 154), Vector<Pow2.N4>.Func(vector1, vector2, vector3, vector4, (v1, v2, v3, v4) => v1 + 2 * v2 + 4 * v3 + 8 * v4));
+
+            Assert.ThrowsException<ArgumentException>(() => {
+                Vector<Pow2.N4>.Func(vector1, vector5, (v1, v2) => v1 + 2 * v2);
+            });
+
+            Assert.ThrowsException<ArgumentException>(() => {
+                Vector<Pow2.N4>.Func(vector5, vector1, (v1, v2) => v1 + 2 * v2);
+            });
+
+            Assert.ThrowsException<ArgumentException>(() => {
+                Vector<Pow2.N4>.Func(vector1, vector2, vector5, (v1, v2, v3) => v1 + 2 * v2 + 4 * v3);
+            });
+
+            Assert.ThrowsException<ArgumentException>(() => {
+                Vector<Pow2.N4>.Func(vector1, vector5, vector2, (v1, v2, v3) => v1 + 2 * v2 + 4 * v3);
+            });
+
+            Assert.ThrowsException<ArgumentException>(() => {
+                Vector<Pow2.N4>.Func(vector5, vector1, vector2, (v1, v2, v3) => v1 + 2 * v2 + 4 * v3);
+            });
+
+            Assert.ThrowsException<ArgumentException>(() => {
+                Vector<Pow2.N4>.Func(vector1, vector2, vector3, vector5, (v1, v2, v3, v4) => v1 + 2 * v2 + 4 * v3 + 8 * v4);
+            });
+
+            Assert.ThrowsException<ArgumentException>(() => {
+                Vector<Pow2.N4>.Func(vector1, vector2, vector5, vector3, (v1, v2, v3, v4) => v1 + 2 * v2 + 4 * v3 + 8 * v4);
+            });
+
+            Assert.ThrowsException<ArgumentException>(() => {
+                Vector<Pow2.N4>.Func(vector1, vector5, vector2, vector3, (v1, v2, v3, v4) => v1 + 2 * v2 + 4 * v3 + 8 * v4);
+            });
+
+            Assert.ThrowsException<ArgumentException>(() => {
+                Vector<Pow2.N4>.Func(vector5, vector1, vector2, vector3, (v1, v2, v3, v4) => v1 + 2 * v2 + 4 * v3 + 8 * v4);
+            });
         }
 
         [TestMethod()]
@@ -288,6 +337,17 @@ namespace MultiPrecisionAlgebra.Tests {
             Assert.AreEqual(2, vector1.Y);
             Assert.AreEqual(2, vector2.X);
             Assert.AreEqual(2, vector2.Y);
+        }
+
+        [TestMethod()]
+        public void ToStringTest() {
+            Vector<Pow2.N4> vector1 = new(1, 2, 3);
+            Vector<Pow2.N4> vector2 = new(new double[0]);
+            Vector<Pow2.N4> vector3 = new(1);
+
+            Assert.AreEqual("1,2,3", vector1.ToString());
+            Assert.AreEqual(string.Empty, vector2.ToString());
+            Assert.AreEqual("1", vector3.ToString());
         }
     }
 }

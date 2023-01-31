@@ -24,7 +24,7 @@ namespace MultiPrecisionAlgebra {
 
         /// <summary>行列加算</summary>
         public static Matrix<N> operator +(Matrix<N> matrix1, Matrix<N> matrix2) {
-            if (!IsEqualSize(matrix1, matrix2)) {
+            if (matrix1.Shape != matrix2.Shape) {
                 throw new ArgumentException("mismatch size", $"{nameof(matrix1)},{nameof(matrix2)}");
             }
 
@@ -41,7 +41,7 @@ namespace MultiPrecisionAlgebra {
 
         /// <summary>行列減算</summary>
         public static Matrix<N> operator -(Matrix<N> matrix1, Matrix<N> matrix2) {
-            if (!IsEqualSize(matrix1, matrix2)) {
+            if (matrix1.Shape != matrix2.Shape) {
                 throw new ArgumentException("mismatch size", $"{nameof(matrix1)},{nameof(matrix2)}");
             }
 
@@ -58,7 +58,7 @@ namespace MultiPrecisionAlgebra {
 
         /// <summary>要素ごとに積算</summary>
         public static Matrix<N> ElementwiseMul(Matrix<N> matrix1, Matrix<N> matrix2) {
-            if (!IsEqualSize(matrix1, matrix2)) {
+            if (matrix1.Shape != matrix2.Shape) {
                 throw new ArgumentException("mismatch size", $"{nameof(matrix1)},{nameof(matrix2)}");
             }
 
@@ -75,7 +75,7 @@ namespace MultiPrecisionAlgebra {
 
         /// <summary>要素ごとに除算</summary>
         public static Matrix<N> ElementwiseDiv(Matrix<N> matrix1, Matrix<N> matrix2) {
-            if (!IsEqualSize(matrix1, matrix2)) {
+            if (matrix1.Shape != matrix2.Shape) {
                 throw new ArgumentException("mismatch size", $"{nameof(matrix1)},{nameof(matrix2)}");
             }
 
@@ -225,7 +225,7 @@ namespace MultiPrecisionAlgebra {
                 return false;
             }
 
-            if (!IsEqualSize(matrix1, matrix2)) {
+            if (matrix1.Shape != matrix2.Shape) {
                 return false;
             }
 
