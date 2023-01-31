@@ -220,6 +220,15 @@ namespace MultiPrecisionAlgebra.Tests {
         }
 
         [TestMethod()]
+        public void ArangeTest() {
+            Vector<Pow2.N4> vector = Vector<Pow2.N4>.Arange(8);
+
+            for (int i = 0; i < vector.Dim; i++) {
+                Assert.AreEqual(i, vector[i]);
+            }
+        }
+
+        [TestMethod()]
         public void InvalidTest() {
             Vector<Pow2.N4> vector = Vector<Pow2.N4>.Invalid(3);
 

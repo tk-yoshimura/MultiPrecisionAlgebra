@@ -209,6 +209,17 @@ namespace MultiPrecisionAlgebra {
             return new Vector<N>(v, cloning: false);
         }
 
+        /// <summary>連番ベクトル</summary>
+        public static Vector<N> Arange(int size) {
+            MultiPrecision<N>[] v = new MultiPrecision<N>[size];
+
+            for (int i = 0; i < v.Length; i++) {
+                v[i] = i;
+            }
+
+            return new Vector<N>(v, cloning: false);
+        }
+
         /// <summary>射影</summary>
         public static Vector<N> Func(Vector<N> vector, Func<MultiPrecision<N>, MultiPrecision<N>> f) {
             MultiPrecision<N>[] x = vector.v, v = new MultiPrecision<N>[vector.Dim];
