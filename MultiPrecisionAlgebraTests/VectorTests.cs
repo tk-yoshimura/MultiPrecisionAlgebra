@@ -193,6 +193,21 @@ namespace MultiPrecisionAlgebra.Tests {
         }
 
         [TestMethod()]
+        public void PolynomialTest() {
+            Vector<Pow2.N4> x = new(1, 2, 3, 4);
+            Vector<Pow2.N4> coef = new(5, 7, 11, 13, 17);
+
+            Assert.AreEqual(new Vector<Pow2.N4>(53, 439, 1853, 5393), Vector<Pow2.N4>.Polynomial(x, coef));
+            Assert.AreEqual(13, Vector<Pow2.N4>.Polynomial(-1, coef));
+
+            Assert.AreEqual(new Vector<Pow2.N4>(5, 5, 5, 5), Vector<Pow2.N4>.Polynomial(x, new Vector<Pow2.N4>(5)));
+            Assert.AreEqual(5, Vector<Pow2.N4>.Polynomial(-1, new Vector<Pow2.N4>(5)));
+
+            Assert.AreEqual(new Vector<Pow2.N4>(0, 0, 0, 0), Vector<Pow2.N4>.Polynomial(x, new Vector<Pow2.N4>(new double[0])));
+            Assert.AreEqual(0, Vector<Pow2.N4>.Polynomial(-1, new Vector<Pow2.N4>(new double[0])));
+        }
+
+        [TestMethod()]
         public void DistanceTest() {
             Vector<Pow2.N4> vector1 = new(1, 2);
             Vector<Pow2.N4> vector2 = new(2, 1);

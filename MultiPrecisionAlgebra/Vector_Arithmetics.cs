@@ -165,6 +165,40 @@ namespace MultiPrecisionAlgebra {
             return new Vector<N>(v, cloning: false);
         }
 
+        /// <summary>多項式</summary>
+        public static MultiPrecision<N> Polynomial(MultiPrecision<N> x, Vector<N> coef) {
+            if (coef.Dim < 1) {
+                return 0d;
+            }
+
+            MultiPrecision<N> y = coef[^1];
+
+            for (int i = coef.Dim - 2; i >= 0; i--) {
+                y = coef[i] + x * y;
+            }
+
+            return y;
+        }
+
+        /// <summary>多項式</summary>
+        public static Vector<N> Polynomial(Vector<N> x, Vector<N> coef) {
+            if (coef.Dim < 1) {
+                return Zero(x.Dim);
+            }
+
+            Vector<N> y = Fill(x.Dim, coef[^1]);
+
+            for (int i = coef.Dim - 2; i >= 0; i--) {
+                MultiPrecision<N> c = coef[i];
+
+                for (int j = 0, n = x.Dim; j < n; j++) {
+                    y[j] = c + x[j] * y[j];
+                }
+            }
+
+            return y;
+        }
+
         /// <summary>ベクトルが等しいか</summary>
         public static bool operator ==(Vector<N> vector1, Vector<N> vector2) {
             if (ReferenceEquals(vector1, vector2)) {
