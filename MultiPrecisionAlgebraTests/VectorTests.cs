@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MultiPrecision;
 using System;
+using System.Numerics;
 
 namespace MultiPrecisionAlgebra.Tests {
     [TestClass()]
@@ -178,6 +179,17 @@ namespace MultiPrecisionAlgebra.Tests {
             Assert.AreEqual(new Vector<Pow2.N4>(3, 8), vector1 * vector2);
             Assert.AreEqual(new Vector<Pow2.N4>(MultiPrecision<Pow2.N4>.Div(1, 3), 0.5), vector1 / vector2);
             Assert.AreEqual(new Vector<Pow2.N4>(3, 2), vector2 / vector1);
+        }
+
+        [TestMethod()]
+        public void CrossTest() {
+            Vector<Pow2.N4> vector1 = new(1, 2, 3);
+            Vector<Pow2.N4> vector2 = new(4, -5, -6);
+            Vector<Pow2.N4> vector3 = new(3, 1, 0);
+            Vector<Pow2.N4> vector4 = new(2, 5, 1);
+
+            Assert.AreEqual(Vector<Pow2.N4>.Zero(3), Vector<Pow2.N4>.Cross(vector1, vector2) + Vector<Pow2.N4>.Cross(vector2, vector1));
+            Assert.AreEqual(new Vector<Pow2.N4>(1, -3, 13), Vector<Pow2.N4>.Cross(vector3, vector4));
         }
 
         [TestMethod()]

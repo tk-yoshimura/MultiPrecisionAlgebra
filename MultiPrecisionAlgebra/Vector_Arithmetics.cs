@@ -148,6 +148,23 @@ namespace MultiPrecisionAlgebra {
             return (1 / r) * vector;
         }
 
+        /// <summary>クロス積</summary>
+        public static Vector<N> Cross(Vector<N> vector1, Vector<N> vector2) {
+            if (vector1.Dim != 3 || vector1.Dim != 3) {
+                throw new ArgumentException("invalid size", $"{nameof(vector1)},{nameof(vector2)}");
+            }
+
+            MultiPrecision<N> x1 = vector1.X, x2 = vector2.X, y1 = vector1.Y, y2 = vector2.Y, z1 = vector1.Z, z2 = vector2.Z;
+
+            MultiPrecision<N>[] v = new MultiPrecision<N>[] {
+                y1 * z2 - z1 * y2,
+                z1 * x2 - x1 * z2,
+                x1 * y2 - y1 * x2,
+            };
+
+            return new Vector<N>(v, cloning: false);
+        }
+
         /// <summary>ベクトルが等しいか</summary>
         public static bool operator ==(Vector<N> vector1, Vector<N> vector2) {
             if (ReferenceEquals(vector1, vector2)) {
