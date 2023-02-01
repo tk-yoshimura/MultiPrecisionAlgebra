@@ -10,31 +10,31 @@ namespace MultiPrecisionAlgebra {
                 throw new InvalidOperationException("not square matrix");
             }
 
-            Matrix<N> q = new(Size, Size), r = new(Size, Size);
+            int n = Size;
 
-            int i, j, n = Size;
+            Matrix<N> q = new(n, n), r = new(n, n);
 
             Vector<N>[] e = new Vector<N>[n], u = new Vector<N>[n];
-            for (i = 0; i < Size; i++) {
+            for (int i = 0; i < n; i++) {
                 e[i] = Vector<N>.Zero(n);
             }
 
-            for (i = 0; i < n; i++) {
+            for (int i = 0; i < n; i++) {
                 Vector<N> ai = Vertical(i);
 
                 u[i] = ai.Copy();
 
-                for (j = 0; j < i; j++) {
-                    u[i] -= u[j] * Vector<N>.InnerProduct(ai, u[j]) / u[j].SquareNorm;
+                for (int j = 0; j < i; j++) {
+                    u[i] -= u[j] * Vector<N>.Dot(ai, u[j]) / u[j].SquareNorm;
                 }
 
                 e[i] = u[i].Normal;
 
-                for (j = 0; j <= i; j++) {
-                    r.e[j, i] = Vector<N>.InnerProduct(ai, e[j]);
+                for (int j = 0; j <= i; j++) {
+                    r.e[j, i] = Vector<N>.Dot(ai, e[j]);
                 }
 
-                for (j = 0; j < n; j++) {
+                for (int j = 0; j < n; j++) {
                     q.e[j, i] = e[i].v[j];
                 }
             }

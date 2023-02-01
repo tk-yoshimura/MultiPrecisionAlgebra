@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
 
 namespace MultiPrecisionAlgebra {
     ///<summary>ベクトルクラス</summary>
@@ -11,7 +12,7 @@ namespace MultiPrecisionAlgebra {
     public partial class Vector<N> : ICloneable, IEnumerable<(int index, MultiPrecision<N> val)> where N : struct, IConstant {
         internal readonly MultiPrecision<N>[] v;
 
-        protected Vector(MultiPrecision<N>[] v, bool cloning) {
+        internal Vector(MultiPrecision<N>[] v, bool cloning) {
             this.v = cloning ? (MultiPrecision<N>[])v.Clone() : v;
         }
 
@@ -109,6 +110,7 @@ namespace MultiPrecisionAlgebra {
         public Matrix<N> Vertical {
             get {
                 Matrix<N> ret = Matrix<N>.Zero(Dim, 1);
+
                 for (int i = 0; i < Dim; i++) {
                     ret.e[i, 0] = v[i];
                 }
@@ -131,20 +133,6 @@ namespace MultiPrecisionAlgebra {
             return (vector1 - vector2).SquareNorm;
         }
 
-        /// <summary>ベクトル内積</summary>
-        public static MultiPrecision<N> InnerProduct(Vector<N> vector1, Vector<N> vector2) {
-            if (vector1.Dim != vector2.Dim) {
-                throw new ArgumentException("mismatch size", $"{nameof(vector1)},{nameof(vector2)}");
-            }
-
-            MultiPrecision<N> sum = MultiPrecision<N>.Zero;
-            for (int i = 0, dim = vector1.Dim; i < dim; i++) {
-                sum += vector1.v[i] * vector2.v[i];
-            }
-
-            return sum;
-        }
-
         /// <summary>ノルム</summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public MultiPrecision<N> Norm => MultiPrecision<N>.Sqrt(SquareNorm);
@@ -153,12 +141,12 @@ namespace MultiPrecisionAlgebra {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public MultiPrecision<N> SquareNorm {
             get {
-                MultiPrecision<N> norm = MultiPrecision<N>.Zero;
+                MultiPrecision<N> sum_sq = MultiPrecision<N>.Zero;
                 foreach (var vi in v) {
-                    norm += vi * vi;
+                    sum_sq += vi * vi;
                 }
 
-                return norm;
+                return sum_sq;
             }
         }
 
@@ -278,12 +266,7 @@ namespace MultiPrecisionAlgebra {
 
         /// <summary>不正なベクトル</summary>
         public static Vector<N> Invalid(int size) {
-            MultiPrecision<N>[] v = new MultiPrecision<N>[size];
-            for (int i = 0; i < size; i++) {
-                v[i] = MultiPrecision<N>.NaN;
-            }
-
-            return new Vector<N>(v);
+            return Fill(size, value: MultiPrecision<N>.NaN);
         }
 
         /// <summary>有効なベクトルか判定</summary>
@@ -334,13 +317,13 @@ namespace MultiPrecisionAlgebra {
                 return string.Empty;
             }
 
-            string str = $"{v[0]}";
+            StringBuilder str = new($"{v[0]}");
 
             for (int i = 1; i < Dim; i++) {
-                str += $",{v[i]}";
+                str.Append($",{v[i]}");
             }
 
-            return str;
+            return str.ToString();
         }
 
         /// <summary>精度変更</summary>

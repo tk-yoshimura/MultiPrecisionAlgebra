@@ -1,7 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MultiPrecision;
 using System;
-using System.Numerics;
 
 namespace MultiPrecisionAlgebra.Tests {
     [TestClass()]
@@ -182,6 +181,18 @@ namespace MultiPrecisionAlgebra.Tests {
         }
 
         [TestMethod()]
+        public void DotTest() {
+            Vector<Pow2.N4> vector1 = new(1, 2);
+            Vector<Pow2.N4> vector2 = new(3, 4);
+            Vector<Pow2.N4> vector3 = new(2, -1);
+
+            Assert.AreEqual(11, Vector<Pow2.N4>.Dot(vector1, vector2));
+            Assert.AreEqual(11, Vector<Pow2.N4>.Dot(vector2, vector1));
+            Assert.AreEqual(0, Vector<Pow2.N4>.Dot(vector1, vector3));
+            Assert.AreEqual(2, Vector<Pow2.N4>.Dot(vector2, vector3));
+        }
+
+        [TestMethod()]
         public void CrossTest() {
             Vector<Pow2.N4> vector1 = new(1, 2, 3);
             Vector<Pow2.N4> vector2 = new(4, -5, -6);
@@ -214,18 +225,6 @@ namespace MultiPrecisionAlgebra.Tests {
 
             Assert.AreEqual(MultiPrecision<Pow2.N4>.Sqrt(2), Vector<Pow2.N4>.Distance(vector1, vector2));
             Assert.AreEqual(2, Vector<Pow2.N4>.SquareDistance(vector1, vector2));
-        }
-
-        [TestMethod()]
-        public void InnerProductTest() {
-            Vector<Pow2.N4> vector1 = new(1, 2);
-            Vector<Pow2.N4> vector2 = new(3, 4);
-            Vector<Pow2.N4> vector3 = new(2, -1);
-
-            Assert.AreEqual(11, Vector<Pow2.N4>.InnerProduct(vector1, vector2));
-            Assert.AreEqual(11, Vector<Pow2.N4>.InnerProduct(vector2, vector1));
-            Assert.AreEqual(0, Vector<Pow2.N4>.InnerProduct(vector1, vector3));
-            Assert.AreEqual(2, Vector<Pow2.N4>.InnerProduct(vector2, vector3));
         }
 
         [TestMethod()]

@@ -10,7 +10,7 @@ namespace MultiPrecisionAlgebra {
             get {
                 (_, Matrix<N> upper) = LUDecompose();
 
-                MultiPrecision<N> prod = 1;
+                MultiPrecision<N> prod = MultiPrecision<N>.One;
                 foreach (var diagonal in upper.Diagonals) {
                     prod *= diagonal;
                 }

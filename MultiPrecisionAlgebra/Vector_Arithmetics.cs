@@ -12,12 +12,13 @@ namespace MultiPrecisionAlgebra {
 
         /// <summary>単項マイナス</summary>
         public static Vector<N> operator -(Vector<N> vector) {
-            MultiPrecision<N>[] v = new MultiPrecision<N>[vector.Dim];
+            MultiPrecision<N>[] ret = new MultiPrecision<N>[vector.Dim], v = vector.v;
 
-            for (int i = 0; i < vector.Dim; i++) {
-                v[i] = -vector.v[i];
+            for (int i = 0; i < ret.Length; i++) {
+                ret[i] = -v[i];
             }
-            return new Vector<N>(v);
+
+            return new Vector<N>(ret, cloning: false);
         }
 
         /// <summary>ベクトル加算</summary>
@@ -26,14 +27,13 @@ namespace MultiPrecisionAlgebra {
                 throw new ArgumentException("mismatch size", $"{nameof(vector1)},{nameof(vector2)}");
             }
 
-            int size = vector1.Dim;
-            MultiPrecision<N>[] v = new MultiPrecision<N>[size];
+            MultiPrecision<N>[] ret = new MultiPrecision<N>[vector1.Dim], v1 = vector1.v, v2 = vector2.v;
 
-            for (int i = 0; i < size; i++) {
-                v[i] = vector1.v[i] + vector2.v[i];
+            for (int i = 0; i < ret.Length; i++) {
+                ret[i] = v1[i] + v2[i];
             }
 
-            return new Vector<N>(v);
+            return new Vector<N>(ret, cloning: false);
         }
 
         /// <summary>ベクトル減算</summary>
@@ -42,14 +42,13 @@ namespace MultiPrecisionAlgebra {
                 throw new ArgumentException("mismatch size", $"{nameof(vector1)},{nameof(vector2)}");
             }
 
-            int size = vector1.Dim;
-            MultiPrecision<N>[] v = new MultiPrecision<N>[size];
+            MultiPrecision<N>[] ret = new MultiPrecision<N>[vector1.Dim], v1 = vector1.v, v2 = vector2.v;
 
-            for (int i = 0; i < size; i++) {
-                v[i] = vector1.v[i] - vector2.v[i];
+            for (int i = 0; i < ret.Length; i++) {
+                ret[i] = v1[i] - v2[i];
             }
 
-            return new Vector<N>(v);
+            return new Vector<N>(ret, cloning: false);
         }
 
         /// <summary>ベクトル乗算</summary>
@@ -58,14 +57,13 @@ namespace MultiPrecisionAlgebra {
                 throw new ArgumentException("mismatch size", $"{nameof(vector1)},{nameof(vector2)}");
             }
 
-            int size = vector1.Dim;
-            MultiPrecision<N>[] v = new MultiPrecision<N>[size];
+            MultiPrecision<N>[] ret = new MultiPrecision<N>[vector1.Dim], v1 = vector1.v, v2 = vector2.v;
 
-            for (int i = 0; i < size; i++) {
-                v[i] = vector1.v[i] * vector2.v[i];
+            for (int i = 0; i < ret.Length; i++) {
+                ret[i] = v1[i] * v2[i];
             }
 
-            return new Vector<N>(v);
+            return new Vector<N>(ret, cloning: false);
         }
 
         /// <summary>ベクトル除算</summary>
@@ -74,25 +72,24 @@ namespace MultiPrecisionAlgebra {
                 throw new ArgumentException("mismatch size", $"{nameof(vector1)},{nameof(vector2)}");
             }
 
-            int size = vector1.Dim;
-            MultiPrecision<N>[] v = new MultiPrecision<N>[size];
+            MultiPrecision<N>[] ret = new MultiPrecision<N>[vector1.Dim], v1 = vector1.v, v2 = vector2.v;
 
-            for (int i = 0; i < size; i++) {
-                v[i] = vector1.v[i] / vector2.v[i];
+            for (int i = 0; i < ret.Length; i++) {
+                ret[i] = v1[i] / v2[i];
             }
 
-            return new Vector<N>(v);
+            return new Vector<N>(ret, cloning: false);
         }
 
         /// <summary>スカラー加算</summary>
         public static Vector<N> operator +(MultiPrecision<N> r, Vector<N> vector) {
-            MultiPrecision<N>[] v = new MultiPrecision<N>[vector.Dim];
+            MultiPrecision<N>[] ret = new MultiPrecision<N>[vector.Dim], v = vector.v;
 
-            for (int i = 0; i < vector.Dim; i++) {
-                v[i] = r + vector.v[i];
+            for (int i = 0; i < ret.Length; i++) {
+                ret[i] = r + v[i];
             }
 
-            return new Vector<N>(v);
+            return new Vector<N>(ret, cloning: false);
         }
 
         /// <summary>スカラー加算</summary>
@@ -102,13 +99,13 @@ namespace MultiPrecisionAlgebra {
 
         /// <summary>スカラー減算</summary>
         public static Vector<N> operator -(MultiPrecision<N> r, Vector<N> vector) {
-            MultiPrecision<N>[] v = new MultiPrecision<N>[vector.Dim];
+            MultiPrecision<N>[] ret = new MultiPrecision<N>[vector.Dim], v = vector.v;
 
-            for (int i = 0; i < vector.Dim; i++) {
-                v[i] = r - vector.v[i];
+            for (int i = 0; i < ret.Length; i++) {
+                ret[i] = r - v[i];
             }
 
-            return new Vector<N>(v);
+            return new Vector<N>(ret, cloning: false);
         }
 
         /// <summary>スカラー減算</summary>
@@ -118,13 +115,13 @@ namespace MultiPrecisionAlgebra {
 
         /// <summary>スカラー倍</summary>
         public static Vector<N> operator *(MultiPrecision<N> r, Vector<N> vector) {
-            MultiPrecision<N>[] v = new MultiPrecision<N>[vector.Dim];
+            MultiPrecision<N>[] ret = new MultiPrecision<N>[vector.Dim], v = vector.v;
 
-            for (int i = 0; i < vector.Dim; i++) {
-                v[i] = r * vector.v[i];
+            for (int i = 0; i < ret.Length; i++) {
+                ret[i] = r * v[i];
             }
 
-            return new Vector<N>(v);
+            return new Vector<N>(ret, cloning: false);
         }
 
         /// <summary>スカラー倍</summary>
@@ -134,18 +131,33 @@ namespace MultiPrecisionAlgebra {
 
         /// <summary>スカラー除算</summary>
         public static Vector<N> operator /(MultiPrecision<N> r, Vector<N> vector) {
-            MultiPrecision<N>[] v = new MultiPrecision<N>[vector.Dim];
+            MultiPrecision<N>[] ret = new MultiPrecision<N>[vector.Dim], v = vector.v;
 
-            for (int i = 0; i < vector.Dim; i++) {
-                v[i] = r / vector.v[i];
+            for (int i = 0; i < ret.Length; i++) {
+                ret[i] = r / v[i];
             }
 
-            return new Vector<N>(v);
+            return new Vector<N>(ret, cloning: false);
         }
 
         /// <summary>スカラー除算</summary>
         public static Vector<N> operator /(Vector<N> vector, MultiPrecision<N> r) {
-            return (1 / r) * vector;
+            return (1d / r) * vector;
+        }
+
+        /// <summary>内積</summary>
+        public static MultiPrecision<N> Dot(Vector<N> vector1, Vector<N> vector2) {
+            if (vector1.Dim != vector2.Dim) {
+                throw new ArgumentException("mismatch size", $"{nameof(vector1)},{nameof(vector2)}");
+            }
+
+            MultiPrecision<N> sum = MultiPrecision<N>.Zero;
+
+            for (int i = 0, dim = vector1.Dim; i < dim; i++) {
+                sum += vector1.v[i] * vector2.v[i];
+            }
+
+            return sum;
         }
 
         /// <summary>クロス積</summary>
@@ -168,7 +180,7 @@ namespace MultiPrecisionAlgebra {
         /// <summary>多項式</summary>
         public static MultiPrecision<N> Polynomial(MultiPrecision<N> x, Vector<N> coef) {
             if (coef.Dim < 1) {
-                return 0d;
+                return MultiPrecision<N>.Zero;
             }
 
             MultiPrecision<N> y = coef[^1];

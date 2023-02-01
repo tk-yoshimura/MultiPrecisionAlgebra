@@ -41,7 +41,7 @@ namespace MultiPrecisionAlgebra {
 
             for (int i = 0; i < Size; i++) {
                 eigen_vectors[i] = Vector<N>.Invalid(Size);
-                x_init.v[i] = 1;
+                x_init.v[i] = MultiPrecision<N>.One;
             }
             x_init /= x_init.Norm;
 
