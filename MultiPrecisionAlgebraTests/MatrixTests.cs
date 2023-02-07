@@ -862,5 +862,16 @@ namespace MultiPrecisionAlgebra.Tests {
             Assert.AreEqual("[ [ 1 ], [ 2 ], [ 3 ] ]", matrix3.ToString());
             Assert.AreEqual("Invalid Matrix", matrix4.ToString());
         }
+
+        [TestMethod()]
+        public void SampleTest() {
+            // solve for v: Av=x
+            Matrix<Pow2.N4> a = new double[,] { { 1, 2 }, { 3, 4 } };
+            Vector<Pow2.N4> x = (4, 3);
+
+            Vector<Pow2.N4> v = Matrix<Pow2.N4>.Solve(a, x);
+
+            Console.WriteLine(v);
+        }
     }
 }

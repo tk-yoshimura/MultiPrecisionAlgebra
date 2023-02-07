@@ -88,7 +88,24 @@ namespace MultiPrecisionAlgebra {
         }
 
         /// <summary>キャスト</summary>
+        public static explicit operator double[](Vector<N> vector) {
+            MultiPrecision<N>[] v = vector.v;
+            double[] ret = new double[v.Length];
+
+            for (int i = 0; i < v.Length; i++) {
+                ret[i] = (double)v[i];
+            }
+
+            return ret;
+        }
+
+        /// <summary>キャスト</summary>
         public static implicit operator Vector<N>(MultiPrecision<N>[] arr) {
+            return new Vector<N>(arr);
+        }
+
+        /// <summary>キャスト</summary>
+        public static implicit operator Vector<N>(double[] arr) {
             return new Vector<N>(arr);
         }
 
@@ -97,6 +114,7 @@ namespace MultiPrecisionAlgebra {
         public Matrix<N> Horizontal {
             get {
                 Matrix<N> ret = Matrix<N>.Zero(1, Dim);
+
                 for (int i = 0; i < Dim; i++) {
                     ret.e[0, i] = v[i];
                 }
@@ -142,6 +160,7 @@ namespace MultiPrecisionAlgebra {
         public MultiPrecision<N> SquareNorm {
             get {
                 MultiPrecision<N> sum_sq = MultiPrecision<N>.Zero;
+
                 foreach (var vi in v) {
                     sum_sq += vi * vi;
                 }

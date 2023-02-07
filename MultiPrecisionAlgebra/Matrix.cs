@@ -79,7 +79,26 @@ namespace MultiPrecisionAlgebra {
         }
 
         /// <summary>キャスト</summary>
+        public static explicit operator double[,](Matrix<N> matrix) {
+            MultiPrecision<N>[,] e = matrix.e;
+            double[,] ret = new double[e.GetLength(0), e.GetLength(1)];
+
+            for (int i = 0; i < e.GetLength(0); i++) {
+                for (int j = 0; j < e.GetLength(1); j++) {
+                    ret[i, j] = (double)e[i, j];
+                }
+            }
+
+            return ret;
+        }
+
+        /// <summary>キャスト</summary>
         public static implicit operator Matrix<N>(MultiPrecision<N>[,] arr) {
+            return new Matrix<N>(arr);
+        }
+
+        /// <summary>キャスト</summary>
+        public static implicit operator Matrix<N>(double[,] arr) {
             return new Matrix<N>(arr);
         }
 
