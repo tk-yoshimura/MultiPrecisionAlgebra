@@ -1,5 +1,5 @@
 # MultiPrecisionAlgebra
- Float MultiPrecision Algebra 
+ Float MultiPrecision Algebra
 
 ## Requirement
 .NET 6.0
