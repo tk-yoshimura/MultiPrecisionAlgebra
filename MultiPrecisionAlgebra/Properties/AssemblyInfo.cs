@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("MultiPrecisionAlgebra")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("MultiPrecision Algebra Implements")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("MultiPrecisionAlgebra")]
