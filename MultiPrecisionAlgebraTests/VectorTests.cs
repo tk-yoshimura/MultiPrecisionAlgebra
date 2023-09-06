@@ -258,9 +258,9 @@ namespace MultiPrecisionAlgebra.Tests {
         public void InvalidTest() {
             Vector<Pow2.N4> vector = Vector<Pow2.N4>.Invalid(3);
 
-            Assert.IsTrue(vector.X.IsNaN);
-            Assert.IsTrue(vector.Y.IsNaN);
-            Assert.IsTrue(vector.Z.IsNaN);
+            Assert.IsTrue(MultiPrecision<Pow2.N4>.IsNaN(vector.X));
+            Assert.IsTrue(MultiPrecision<Pow2.N4>.IsNaN(vector.Y));
+            Assert.IsTrue(MultiPrecision<Pow2.N4>.IsNaN(vector.Z));
         }
 
         [TestMethod()]

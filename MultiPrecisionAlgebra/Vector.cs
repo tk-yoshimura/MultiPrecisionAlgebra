@@ -4,12 +4,23 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 
 namespace MultiPrecisionAlgebra {
     ///<summary>ベクトルクラス</summary>
     [DebuggerDisplay("{Convert<MultiPrecision.Pow2.N4>().ToString(),nq}")]
-    public partial class Vector<N> : ICloneable, IEnumerable<(int index, MultiPrecision<N> val)> where N : struct, IConstant {
+    public partial class Vector<N> :
+        ICloneable,
+        IEnumerable<(int index, MultiPrecision<N> val)>,
+        IAdditionOperators<Vector<N>, Vector<N>, Vector<N>>,
+        ISubtractionOperators<Vector<N>, Vector<N>, Vector<N>>,
+        IMultiplyOperators<Vector<N>, Vector<N>, Vector<N>>,
+        IDivisionOperators<Vector<N>, Vector<N>, Vector<N>>,
+        IUnaryPlusOperators<Vector<N>, Vector<N>>,
+        IUnaryNegationOperators<Vector<N>, Vector<N>>
+        where N : struct, IConstant {
+
         internal readonly MultiPrecision<N>[] v;
 
         internal Vector(MultiPrecision<N>[] v, bool cloning) {
@@ -180,7 +191,7 @@ namespace MultiPrecisionAlgebra {
                 long max_exponent = long.MinValue;
 
                 for (int i = 0; i < Dim; i++) {
-                    if (v[i].IsFinite) {
+                    if (MultiPrecision<N>.IsFinite(v[i])) {
                         max_exponent = Math.Max(v[i].Exponent, max_exponent);
                     }
                 }
@@ -291,7 +302,7 @@ namespace MultiPrecisionAlgebra {
         /// <summary>有効なベクトルか判定</summary>
         public static bool IsValid(Vector<N> vector) {
             for (int i = 0; i < vector.Dim; i++) {
-                if (!vector.v[i].IsFinite) {
+                if (!MultiPrecision<N>.IsFinite(vector.v[i])) {
                     return false;
                 }
             }
@@ -302,7 +313,7 @@ namespace MultiPrecisionAlgebra {
         /// <summary>ゼロベクトルか判定</summary>
         public static bool IsZero(Vector<N> vector) {
             for (int i = 0; i < vector.Dim; i++) {
-                if (!vector.v[i].IsZero) {
+                if (!MultiPrecision<N>.IsZero(vector.v[i])) {
                     return false;
                 }
             }

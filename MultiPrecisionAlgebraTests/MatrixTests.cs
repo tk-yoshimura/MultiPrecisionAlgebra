@@ -488,8 +488,8 @@ namespace MultiPrecisionAlgebra.Tests {
         public void InvalidTest() {
             Matrix<Pow2.N4> matrix = Matrix<Pow2.N4>.Invalid(2, 1);
 
-            Assert.IsTrue(matrix[0, 0].IsNaN);
-            Assert.IsTrue(matrix[1, 0].IsNaN);
+            Assert.IsTrue(MultiPrecision<Pow2.N4>.IsNaN(matrix[0, 0]));
+            Assert.IsTrue(MultiPrecision<Pow2.N4>.IsNaN(matrix[1, 0]));
         }
 
         [TestMethod()]

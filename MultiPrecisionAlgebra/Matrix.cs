@@ -3,12 +3,22 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Numerics;
 using System.Text;
 
 namespace MultiPrecisionAlgebra {
     /// <summary>行列クラス</summary>
     [DebuggerDisplay("{Convert<MultiPrecision.Pow2.N4>().ToString(),nq}")]
-    public partial class Matrix<N> : ICloneable, IEnumerable<(int row_index, int column_index, MultiPrecision<N> val)> where N : struct, IConstant {
+    public partial class Matrix<N> :
+        ICloneable,
+        IEnumerable<(int row_index, int column_index, MultiPrecision<N> val)>,
+        IAdditionOperators<Matrix<N>, Matrix<N>, Matrix<N>>,
+        ISubtractionOperators<Matrix<N>, Matrix<N>, Matrix<N>>,
+        IMultiplyOperators<Matrix<N>, Matrix<N>, Matrix<N>>,
+        IUnaryPlusOperators<Matrix<N>, Matrix<N>>,
+        IUnaryNegationOperators<Matrix<N>, Matrix<N>>
+        where N : struct, IConstant {
+
         internal readonly MultiPrecision<N>[,] e;
 
         /// <summary>コンストラクタ</summary>
@@ -183,7 +193,7 @@ namespace MultiPrecisionAlgebra {
 
                 for (int i = 0; i < Rows; i++) {
                     for (int j = 0; j < Columns; j++) {
-                        if (e[i, j].IsFinite) {
+                        if (MultiPrecision<N>.IsFinite(e[i, j])) {
                             max_exponent = Math.Max(e[i, j].Exponent, max_exponent);
                         }
                     }
@@ -380,7 +390,7 @@ namespace MultiPrecisionAlgebra {
         public static bool IsZero(Matrix<N> matrix) {
             for (int i = 0; i < matrix.Rows; i++) {
                 for (int j = 0; j < matrix.Columns; j++) {
-                    if (!matrix.e[i, j].IsZero) {
+                    if (!MultiPrecision<N>.IsZero(matrix.e[i, j])) {
                         return false;
                     }
                 }
@@ -438,7 +448,7 @@ namespace MultiPrecisionAlgebra {
 
             for (int i = 0; i < matrix.Rows; i++) {
                 for (int j = 0; j < matrix.Columns; j++) {
-                    if (!matrix.e[i, j].IsFinite) {
+                    if (!MultiPrecision<N>.IsFinite(matrix.e[i, j])) {
                         return false;
                     }
                 }
