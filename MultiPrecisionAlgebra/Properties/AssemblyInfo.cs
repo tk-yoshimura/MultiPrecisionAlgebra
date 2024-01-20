@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("MultiPrecisionAlgebra")]
-[assembly: AssemblyCopyright("Copyright © T.Yoshimura 2022-2023")]
+[assembly: AssemblyCopyright("Copyright © T.Yoshimura 2022-2024")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -14,4 +14,4 @@ using System.Runtime.InteropServices;
 
 [assembly: Guid("9EB746BC-DE47-4084-8337-D3179D17FED2")]
 
-[assembly: AssemblyVersion("1.3.0.*")]
+[assembly: AssemblyVersion("1.4.0.*")]
