@@ -840,6 +840,50 @@ namespace MultiPrecisionAlgebra.Tests {
         }
 
         [TestMethod()]
+        public void VConcatTest() {
+            Matrix<Pow2.N4> matrix = Matrix<Pow2.N4>.VConcat(
+                Vector<Pow2.N4>.Fill(3, 1),
+                Vector<Pow2.N4>.Fill(3, 2),
+                Vector<Pow2.N4>.Fill(3, 3),
+                Vector<Pow2.N4>.Fill(3, 4),
+                Vector<Pow2.N4>.Fill(3, 5)
+            );
+
+            Matrix<Pow2.N4> matrix_expected = new double[5, 3] {
+                { 1, 1, 1 },
+                { 2, 2, 2 },
+                { 3, 3, 3 },
+                { 4, 4, 4 },
+                { 5, 5, 5 },
+            };
+
+            Console.WriteLine(matrix);
+
+            Assert.AreEqual(matrix_expected, matrix);
+        }
+
+        [TestMethod()]
+        public void HConcatTest() {
+            Matrix<Pow2.N4> matrix = Matrix<Pow2.N4>.HConcat(
+                Vector<Pow2.N4>.Fill(3, 1),
+                Vector<Pow2.N4>.Fill(3, 2),
+                Vector<Pow2.N4>.Fill(3, 3),
+                Vector<Pow2.N4>.Fill(3, 4),
+                Vector<Pow2.N4>.Fill(3, 5)
+            );
+
+            Matrix<Pow2.N4> matrix_expected = new double[3, 5] {
+                { 1, 2, 3, 4, 5 },
+                { 1, 2, 3, 4, 5 },
+                { 1, 2, 3, 4, 5 }
+            };
+
+            Console.WriteLine(matrix);
+
+            Assert.AreEqual(matrix_expected, matrix);
+        }
+
+        [TestMethod()]
         public void CopyTest() {
             Matrix<Pow2.N4> matrix1 = Matrix<Pow2.N4>.Zero(2, 2);
             Matrix<Pow2.N4> matrix2 = matrix1.Copy();
