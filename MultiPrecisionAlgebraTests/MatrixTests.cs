@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MultiPrecision;
 using System;
+using System.Numerics;
 
 namespace MultiPrecisionAlgebra.Tests {
     [TestClass()]
@@ -707,6 +708,17 @@ namespace MultiPrecisionAlgebra.Tests {
             Assert.ThrowsException<ArgumentException>(() => {
                 Matrix<Pow2.N4>.Func((v1, v2, v3, v4) => v1 + 2 * v2 + 4 * v3 + 8 * v4, matrix5, matrix1, matrix2, matrix3);
             });
+        }
+
+        
+        [TestMethod()]
+        public void MapTest() {
+            Vector<Pow2.N4> vector1 = new(1, 2, 4, 8);
+            Vector<Pow2.N4> vector2 = new(2, 3, 5);
+
+            Matrix<Pow2.N4> m = ((v1, v2) => v1 + v2, vector1, vector2);
+            
+            Assert.AreEqual(new Matrix<Pow2.N4>(new double[,] { { 3, 4, 6 }, { 4, 5, 7 }, { 6, 7, 9 }, { 10, 11, 13 } }), m);
         }
 
         [TestMethod()]
