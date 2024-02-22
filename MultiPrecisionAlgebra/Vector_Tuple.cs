@@ -5,7 +5,7 @@ namespace MultiPrecisionAlgebra {
     ///<summary>ベクトルクラス</summary>
     public partial class Vector<N> where N : struct, IConstant {
         public static implicit operator Vector<N>((MultiPrecision<N> x, MultiPrecision<N> y) v) {
-            return new Vector<N>(new MultiPrecision<N>[] { v.x, v.y }, cloning: false);
+            return new Vector<N>([v.x, v.y], cloning: false);
         }
 
         public void Deconstruct(out MultiPrecision<N> x, out MultiPrecision<N> y) {
@@ -17,7 +17,7 @@ namespace MultiPrecisionAlgebra {
         }
 
         public static implicit operator Vector<N>((MultiPrecision<N> x, MultiPrecision<N> y, MultiPrecision<N> z) v) {
-            return new Vector<N>(new MultiPrecision<N>[] { v.x, v.y, v.z }, cloning: false);
+            return new Vector<N>([v.x, v.y, v.z], cloning: false);
         }
 
         public void Deconstruct(out MultiPrecision<N> x, out MultiPrecision<N> y, out MultiPrecision<N> z) {
@@ -29,7 +29,7 @@ namespace MultiPrecisionAlgebra {
         }
 
         public static implicit operator Vector<N>((MultiPrecision<N> x, MultiPrecision<N> y, MultiPrecision<N> z, MultiPrecision<N> w) v) {
-            return new Vector<N>(new MultiPrecision<N>[] { v.x, v.y, v.z, v.w }, cloning: false);
+            return new Vector<N>([v.x, v.y, v.z, v.w], cloning: false);
         }
 
         public void Deconstruct(out MultiPrecision<N> x, out MultiPrecision<N> y, out MultiPrecision<N> z, out MultiPrecision<N> w) {
@@ -41,7 +41,7 @@ namespace MultiPrecisionAlgebra {
         }
 
         public static implicit operator Vector<N>((MultiPrecision<N> e0, MultiPrecision<N> e1, MultiPrecision<N> e2, MultiPrecision<N> e3, MultiPrecision<N> e4) v) {
-            return new Vector<N>(new MultiPrecision<N>[] { v.e0, v.e1, v.e2, v.e3, v.e4 }, cloning: false);
+            return new Vector<N>([v.e0, v.e1, v.e2, v.e3, v.e4], cloning: false);
         }
 
         public void Deconstruct(out MultiPrecision<N> e0, out MultiPrecision<N> e1, out MultiPrecision<N> e2, out MultiPrecision<N> e3, out MultiPrecision<N> e4) {
@@ -53,7 +53,7 @@ namespace MultiPrecisionAlgebra {
         }
 
         public static implicit operator Vector<N>((MultiPrecision<N> e0, MultiPrecision<N> e1, MultiPrecision<N> e2, MultiPrecision<N> e3, MultiPrecision<N> e4, MultiPrecision<N> e5) v) {
-            return new Vector<N>(new MultiPrecision<N>[] { v.e0, v.e1, v.e2, v.e3, v.e4, v.e5 }, cloning: false);
+            return new Vector<N>([v.e0, v.e1, v.e2, v.e3, v.e4, v.e5], cloning: false);
         }
 
         public void Deconstruct(out MultiPrecision<N> e0, out MultiPrecision<N> e1, out MultiPrecision<N> e2, out MultiPrecision<N> e3, out MultiPrecision<N> e4, out MultiPrecision<N> e5) {
@@ -65,7 +65,7 @@ namespace MultiPrecisionAlgebra {
         }
 
         public static implicit operator Vector<N>((MultiPrecision<N> e0, MultiPrecision<N> e1, MultiPrecision<N> e2, MultiPrecision<N> e3, MultiPrecision<N> e4, MultiPrecision<N> e5, MultiPrecision<N> e6) v) {
-            return new Vector<N>(new MultiPrecision<N>[] { v.e0, v.e1, v.e2, v.e3, v.e4, v.e5, v.e6 }, cloning: false);
+            return new Vector<N>([v.e0, v.e1, v.e2, v.e3, v.e4, v.e5, v.e6], cloning: false);
         }
 
         public void Deconstruct(out MultiPrecision<N> e0, out MultiPrecision<N> e1, out MultiPrecision<N> e2, out MultiPrecision<N> e3, out MultiPrecision<N> e4, out MultiPrecision<N> e5, out MultiPrecision<N> e6) {
@@ -77,7 +77,7 @@ namespace MultiPrecisionAlgebra {
         }
 
         public static implicit operator Vector<N>((MultiPrecision<N> e0, MultiPrecision<N> e1, MultiPrecision<N> e2, MultiPrecision<N> e3, MultiPrecision<N> e4, MultiPrecision<N> e5, MultiPrecision<N> e6, MultiPrecision<N> e7) v) {
-            return new Vector<N>(new MultiPrecision<N>[] { v.e0, v.e1, v.e2, v.e3, v.e4, v.e5, v.e6, v.e7 }, cloning: false);
+            return new Vector<N>([v.e0, v.e1, v.e2, v.e3, v.e4, v.e5, v.e6, v.e7], cloning: false);
         }
 
         public void Deconstruct(out MultiPrecision<N> e0, out MultiPrecision<N> e1, out MultiPrecision<N> e2, out MultiPrecision<N> e3, out MultiPrecision<N> e4, out MultiPrecision<N> e5, out MultiPrecision<N> e6, out MultiPrecision<N> e7) {

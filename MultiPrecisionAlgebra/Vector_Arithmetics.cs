@@ -168,11 +168,11 @@ namespace MultiPrecisionAlgebra {
 
             MultiPrecision<N> x1 = vector1.X, x2 = vector2.X, y1 = vector1.Y, y2 = vector2.Y, z1 = vector1.Z, z2 = vector2.Z;
 
-            MultiPrecision<N>[] v = new MultiPrecision<N>[] {
+            MultiPrecision<N>[] v = [
                 y1 * z2 - z1 * y2,
                 z1 * x2 - x1 * z2,
                 x1 * y2 - y1 * x2,
-            };
+            ];
 
             return new Vector<N>(v, cloning: false);
         }

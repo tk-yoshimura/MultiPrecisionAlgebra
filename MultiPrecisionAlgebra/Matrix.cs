@@ -47,9 +47,7 @@ namespace MultiPrecisionAlgebra {
         /// <summary>コンストラクタ</summary>
         /// <param name="m">行列要素配列</param>
         public Matrix(double[,] m) : this(m.GetLength(0), m.GetLength(1)) {
-            if (m is null) {
-                throw new ArgumentNullException(nameof(m));
-            }
+            ArgumentNullException.ThrowIfNull(m);
 
             for (int i = 0; i < Rows; i++) {
                 for (int j = 0; j < Columns; j++) {
@@ -110,6 +108,26 @@ namespace MultiPrecisionAlgebra {
         /// <summary>キャスト</summary>
         public static implicit operator Matrix<N>(double[,] arr) {
             return new Matrix<N>(arr);
+        }
+
+        /// <summary>写像キャスト</summary>
+        public static implicit operator Matrix<N>((Func<MultiPrecision<N>, MultiPrecision<N>> func, Matrix<N> arg) sel) {
+            return Func(sel.func, sel.arg);
+        }
+
+        /// <summary>写像キャスト</summary>
+        public static implicit operator Matrix<N>((Func<MultiPrecision<N>, MultiPrecision<N>, MultiPrecision<N>> func, (Matrix<N> matrix1, Matrix<N> matrix2) args) sel) {
+            return Func(sel.func, sel.args.matrix1, sel.args.matrix2);
+        }
+
+        /// <summary>写像キャスト</summary>
+        public static implicit operator Matrix<N>((Func<MultiPrecision<N>, MultiPrecision<N>, MultiPrecision<N>, MultiPrecision<N>> func, (Matrix<N> matrix1, Matrix<N> matrix2, Matrix<N> matrix3) args) sel) {
+            return Func(sel.func, sel.args.matrix1, sel.args.matrix2, sel.args.matrix3);
+        }
+
+        /// <summary>写像キャスト</summary>
+        public static implicit operator Matrix<N>((Func<MultiPrecision<N>, MultiPrecision<N>, MultiPrecision<N>, MultiPrecision<N>, MultiPrecision<N>> func, (Matrix<N> matrix1, Matrix<N> matrix2, Matrix<N> matrix3, Matrix<N> matrix4) args) sel) {
+            return Func(sel.func, sel.args.matrix1, sel.args.matrix2, sel.args.matrix3, sel.args.matrix4);
         }
 
         /// <summary>転置</summary>
@@ -278,8 +296,8 @@ namespace MultiPrecisionAlgebra {
             return new Matrix<N>(v, cloning: false);
         }
 
-        /// <summary>射影</summary>
-        public static Matrix<N> Func(Matrix<N> matrix, Func<MultiPrecision<N>, MultiPrecision<N>> f) {
+        /// <summary>写像</summary>
+        public static Matrix<N> Func(Func<MultiPrecision<N>, MultiPrecision<N>> f, Matrix<N> matrix) {
             MultiPrecision<N>[,] x = matrix.e, v = new MultiPrecision<N>[matrix.Rows, matrix.Columns];
 
             for (int i = 0; i < v.GetLength(0); i++) {
@@ -291,8 +309,8 @@ namespace MultiPrecisionAlgebra {
             return new Matrix<N>(v, cloning: false);
         }
 
-        /// <summary>射影</summary>
-        public static Matrix<N> Func(Matrix<N> matrix1, Matrix<N> matrix2, Func<MultiPrecision<N>, MultiPrecision<N>, MultiPrecision<N>> f) {
+        /// <summary>写像</summary>
+        public static Matrix<N> Func(Func<MultiPrecision<N>, MultiPrecision<N>, MultiPrecision<N>> f, Matrix<N> matrix1, Matrix<N> matrix2) {
             if (matrix1.Shape != matrix2.Shape) {
                 throw new ArgumentException("mismatch size", $"{nameof(matrix1)},{nameof(matrix2)}");
             }
@@ -308,8 +326,8 @@ namespace MultiPrecisionAlgebra {
             return new Matrix<N>(v, cloning: false);
         }
 
-        /// <summary>射影</summary>
-        public static Matrix<N> Func(Matrix<N> matrix1, Matrix<N> matrix2, Matrix<N> matrix3, Func<MultiPrecision<N>, MultiPrecision<N>, MultiPrecision<N>, MultiPrecision<N>> f) {
+        /// <summary>写像</summary>
+        public static Matrix<N> Func(Func<MultiPrecision<N>, MultiPrecision<N>, MultiPrecision<N>, MultiPrecision<N>> f, Matrix<N> matrix1, Matrix<N> matrix2, Matrix<N> matrix3) {
             if (matrix1.Shape != matrix2.Shape || matrix1.Shape != matrix3.Shape) {
                 throw new ArgumentException("mismatch size", $"{nameof(matrix1)},{nameof(matrix2)},{nameof(matrix3)}");
             }
@@ -326,8 +344,8 @@ namespace MultiPrecisionAlgebra {
         }
 
 
-        /// <summary>射影</summary>
-        public static Matrix<N> Func(Matrix<N> matrix1, Matrix<N> matrix2, Matrix<N> matrix3, Matrix<N> matrix4, Func<MultiPrecision<N>, MultiPrecision<N>, MultiPrecision<N>, MultiPrecision<N>, MultiPrecision<N>> f) {
+        /// <summary>写像</summary>
+        public static Matrix<N> Func(Func<MultiPrecision<N>, MultiPrecision<N>, MultiPrecision<N>, MultiPrecision<N>, MultiPrecision<N>> f, Matrix<N> matrix1, Matrix<N> matrix2, Matrix<N> matrix3, Matrix<N> matrix4) {
             if (matrix1.Shape != matrix2.Shape || matrix1.Shape != matrix3.Shape || matrix1.Shape != matrix4.Shape) {
                 throw new ArgumentException("mismatch size", $"{nameof(matrix1)},{nameof(matrix2)},{nameof(matrix3)},{nameof(matrix4)}");
             }

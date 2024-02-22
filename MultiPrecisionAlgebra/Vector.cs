@@ -53,7 +53,7 @@ namespace MultiPrecisionAlgebra {
 
         /// <summary>コンストラクタ</summary>
         public Vector(IReadOnlyCollection<MultiPrecision<N>> v) {
-            this.v = v.ToArray();
+            this.v = [.. v];
         }
 
         /// <summary>コンストラクタ</summary>
@@ -118,6 +118,26 @@ namespace MultiPrecisionAlgebra {
         /// <summary>キャスト</summary>
         public static implicit operator Vector<N>(double[] arr) {
             return new Vector<N>(arr);
+        }
+
+        /// <summary>写像キャスト</summary>
+        public static implicit operator Vector<N>((Func<MultiPrecision<N>, MultiPrecision<N>> func, Vector<N> arg) sel) {
+            return Func(sel.func, sel.arg);
+        }
+
+        /// <summary>写像キャスト</summary>
+        public static implicit operator Vector<N>((Func<MultiPrecision<N>, MultiPrecision<N>, MultiPrecision<N>> func, (Vector<N> vector1, Vector<N> vector2) args) sel) {
+            return Func(sel.func, sel.args.vector1, sel.args.vector2);
+        }
+
+        /// <summary>写像キャスト</summary>
+        public static implicit operator Vector<N>((Func<MultiPrecision<N>, MultiPrecision<N>, MultiPrecision<N>, MultiPrecision<N>> func, (Vector<N> vector1, Vector<N> vector2, Vector<N> vector3) args) sel) {
+            return Func(sel.func, sel.args.vector1, sel.args.vector2, sel.args.vector3);
+        }
+
+        /// <summary>写像キャスト</summary>
+        public static implicit operator Vector<N>((Func<MultiPrecision<N>, MultiPrecision<N>, MultiPrecision<N>, MultiPrecision<N>, MultiPrecision<N>> func, (Vector<N> vector1, Vector<N> vector2, Vector<N> vector3, Vector<N> vector4) args) sel) {
+            return Func(sel.func, sel.args.vector1, sel.args.vector2, sel.args.vector3, sel.args.vector4);
         }
 
         /// <summary>行ベクトル</summary>
@@ -238,8 +258,8 @@ namespace MultiPrecisionAlgebra {
             return new Vector<N>(v, cloning: false);
         }
 
-        /// <summary>射影</summary>
-        public static Vector<N> Func(Vector<N> vector, Func<MultiPrecision<N>, MultiPrecision<N>> f) {
+        /// <summary>写像</summary>
+        public static Vector<N> Func(Func<MultiPrecision<N>, MultiPrecision<N>> f, Vector<N> vector) {
             MultiPrecision<N>[] x = vector.v, v = new MultiPrecision<N>[vector.Dim];
 
             for (int i = 0; i < v.Length; i++) {
@@ -249,8 +269,8 @@ namespace MultiPrecisionAlgebra {
             return new Vector<N>(v, cloning: false);
         }
 
-        /// <summary>射影</summary>
-        public static Vector<N> Func(Vector<N> vector1, Vector<N> vector2, Func<MultiPrecision<N>, MultiPrecision<N>, MultiPrecision<N>> f) {
+        /// <summary>写像</summary>
+        public static Vector<N> Func(Func<MultiPrecision<N>, MultiPrecision<N>, MultiPrecision<N>> f, Vector<N> vector1, Vector<N> vector2) {
             if (vector1.Dim != vector2.Dim) {
                 throw new ArgumentException("mismatch size", $"{nameof(vector1)},{nameof(vector2)}");
             }
@@ -264,8 +284,8 @@ namespace MultiPrecisionAlgebra {
             return new Vector<N>(v, cloning: false);
         }
 
-        /// <summary>射影</summary>
-        public static Vector<N> Func(Vector<N> vector1, Vector<N> vector2, Vector<N> vector3, Func<MultiPrecision<N>, MultiPrecision<N>, MultiPrecision<N>, MultiPrecision<N>> f) {
+        /// <summary>写像</summary>
+        public static Vector<N> Func(Func<MultiPrecision<N>, MultiPrecision<N>, MultiPrecision<N>, MultiPrecision<N>> f, Vector<N> vector1, Vector<N> vector2, Vector<N> vector3) {
             if (vector1.Dim != vector2.Dim || vector1.Dim != vector3.Dim) {
                 throw new ArgumentException("mismatch size", $"{nameof(vector1)},{nameof(vector2)},{nameof(vector3)}");
             }
@@ -279,8 +299,8 @@ namespace MultiPrecisionAlgebra {
             return new Vector<N>(v, cloning: false);
         }
 
-        /// <summary>射影</summary>
-        public static Vector<N> Func(Vector<N> vector1, Vector<N> vector2, Vector<N> vector3, Vector<N> vector4, Func<MultiPrecision<N>, MultiPrecision<N>, MultiPrecision<N>, MultiPrecision<N>, MultiPrecision<N>> f) {
+        /// <summary>写像</summary>
+        public static Vector<N> Func(Func<MultiPrecision<N>, MultiPrecision<N>, MultiPrecision<N>, MultiPrecision<N>, MultiPrecision<N>> f, Vector<N> vector1, Vector<N> vector2, Vector<N> vector3, Vector<N> vector4) {
             if (vector1.Dim != vector2.Dim || vector1.Dim != vector3.Dim || vector1.Dim != vector4.Dim) {
                 throw new ArgumentException("mismatch size", $"{nameof(vector1)},{nameof(vector2)},{nameof(vector3)},{nameof(vector4)}");
             }

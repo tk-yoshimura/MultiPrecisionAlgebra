@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MultiPrecision;
 using System;
+using System.Numerics;
 
 namespace MultiPrecisionAlgebra.Tests {
     [TestClass()]
@@ -214,8 +215,8 @@ namespace MultiPrecisionAlgebra.Tests {
             Assert.AreEqual(new Vector<Pow2.N4>(5, 5, 5, 5), Vector<Pow2.N4>.Polynomial(x, new Vector<Pow2.N4>(5)));
             Assert.AreEqual(5, Vector<Pow2.N4>.Polynomial(-1, new Vector<Pow2.N4>(5)));
 
-            Assert.AreEqual(new Vector<Pow2.N4>(0, 0, 0, 0), Vector<Pow2.N4>.Polynomial(x, new Vector<Pow2.N4>(new double[0])));
-            Assert.AreEqual(0, Vector<Pow2.N4>.Polynomial(-1, new Vector<Pow2.N4>(new double[0])));
+            Assert.AreEqual(new Vector<Pow2.N4>(0, 0, 0, 0), Vector<Pow2.N4>.Polynomial(x, new Vector<Pow2.N4>(Array.Empty<double>())));
+            Assert.AreEqual(0, Vector<Pow2.N4>.Polynomial(-1, new Vector<Pow2.N4>(Array.Empty<double>())));
         }
 
         [TestMethod()]
@@ -318,46 +319,46 @@ namespace MultiPrecisionAlgebra.Tests {
             Vector<Pow2.N4> vector4 = new(4, 5, 7, 11);
             Vector<Pow2.N4> vector5 = new(5, 6, 8, 12, 20);
 
-            Assert.AreEqual(new Vector<Pow2.N4>(2, 4, 8, 16), Vector<Pow2.N4>.Func(vector1, v => 2 * v));
-            Assert.AreEqual(new Vector<Pow2.N4>(5, 8, 14, 26), Vector<Pow2.N4>.Func(vector1, vector2, (v1, v2) => v1 + 2 * v2));
-            Assert.AreEqual(new Vector<Pow2.N4>(17, 24, 38, 66), Vector<Pow2.N4>.Func(vector1, vector2, vector3, (v1, v2, v3) => v1 + 2 * v2 + 4 * v3));
-            Assert.AreEqual(new Vector<Pow2.N4>(49, 64, 94, 154), Vector<Pow2.N4>.Func(vector1, vector2, vector3, vector4, (v1, v2, v3, v4) => v1 + 2 * v2 + 4 * v3 + 8 * v4));
-            Assert.AreEqual(new Vector<Pow2.N4>(49, 64, 94, 154), Vector<Pow2.N4>.Func(vector1, vector2, vector3, vector4, (v1, v2, v3, v4) => v1 + 2 * v2 + 4 * v3 + 8 * v4));
+            Assert.AreEqual(new Vector<Pow2.N4>(2, 4, 8, 16), Vector<Pow2.N4>.Func(v => 2 * v, vector1));
+            Assert.AreEqual(new Vector<Pow2.N4>(5, 8, 14, 26), Vector<Pow2.N4>.Func((v1, v2) => v1 + 2 * v2, vector1, vector2));
+            Assert.AreEqual(new Vector<Pow2.N4>(17, 24, 38, 66), Vector<Pow2.N4>.Func((v1, v2, v3) => v1 + 2 * v2 + 4 * v3, vector1, vector2, vector3));
+            Assert.AreEqual(new Vector<Pow2.N4>(49, 64, 94, 154), Vector<Pow2.N4>.Func((v1, v2, v3, v4) => v1 + 2 * v2 + 4 * v3 + 8 * v4, vector1, vector2, vector3, vector4));
+            Assert.AreEqual(new Vector<Pow2.N4>(49, 64, 94, 154), Vector<Pow2.N4>.Func((v1, v2, v3, v4) => v1 + 2 * v2 + 4 * v3 + 8 * v4, vector1, vector2, vector3, vector4));
 
             Assert.ThrowsException<ArgumentException>(() => {
-                Vector<Pow2.N4>.Func(vector1, vector5, (v1, v2) => v1 + 2 * v2);
+                Vector<Pow2.N4>.Func((v1, v2) => v1 + 2 * v2, vector1, vector5);
             });
 
             Assert.ThrowsException<ArgumentException>(() => {
-                Vector<Pow2.N4>.Func(vector5, vector1, (v1, v2) => v1 + 2 * v2);
+                Vector<Pow2.N4>.Func((v1, v2) => v1 + 2 * v2, vector5, vector1);
             });
 
             Assert.ThrowsException<ArgumentException>(() => {
-                Vector<Pow2.N4>.Func(vector1, vector2, vector5, (v1, v2, v3) => v1 + 2 * v2 + 4 * v3);
+                Vector<Pow2.N4>.Func((v1, v2, v3) => v1 + 2 * v2 + 4 * v3, vector1, vector2, vector5);
             });
 
             Assert.ThrowsException<ArgumentException>(() => {
-                Vector<Pow2.N4>.Func(vector1, vector5, vector2, (v1, v2, v3) => v1 + 2 * v2 + 4 * v3);
+                Vector<Pow2.N4>.Func((v1, v2, v3) => v1 + 2 * v2 + 4 * v3, vector1, vector5, vector2);
             });
 
             Assert.ThrowsException<ArgumentException>(() => {
-                Vector<Pow2.N4>.Func(vector5, vector1, vector2, (v1, v2, v3) => v1 + 2 * v2 + 4 * v3);
+                Vector<Pow2.N4>.Func((v1, v2, v3) => v1 + 2 * v2 + 4 * v3, vector5, vector1, vector2);
             });
 
             Assert.ThrowsException<ArgumentException>(() => {
-                Vector<Pow2.N4>.Func(vector1, vector2, vector3, vector5, (v1, v2, v3, v4) => v1 + 2 * v2 + 4 * v3 + 8 * v4);
+                Vector<Pow2.N4>.Func((v1, v2, v3, v4) => v1 + 2 * v2 + 4 * v3 + 8 * v4, vector1, vector2, vector3, vector5);
             });
 
             Assert.ThrowsException<ArgumentException>(() => {
-                Vector<Pow2.N4>.Func(vector1, vector2, vector5, vector3, (v1, v2, v3, v4) => v1 + 2 * v2 + 4 * v3 + 8 * v4);
+                Vector<Pow2.N4>.Func((v1, v2, v3, v4) => v1 + 2 * v2 + 4 * v3 + 8 * v4, vector1, vector2, vector5, vector3);
             });
 
             Assert.ThrowsException<ArgumentException>(() => {
-                Vector<Pow2.N4>.Func(vector1, vector5, vector2, vector3, (v1, v2, v3, v4) => v1 + 2 * v2 + 4 * v3 + 8 * v4);
+                Vector<Pow2.N4>.Func((v1, v2, v3, v4) => v1 + 2 * v2 + 4 * v3 + 8 * v4, vector1, vector5, vector2, vector3);
             });
 
             Assert.ThrowsException<ArgumentException>(() => {
-                Vector<Pow2.N4>.Func(vector5, vector1, vector2, vector3, (v1, v2, v3, v4) => v1 + 2 * v2 + 4 * v3 + 8 * v4);
+                Vector<Pow2.N4>.Func((v1, v2, v3, v4) => v1 + 2 * v2 + 4 * v3 + 8 * v4, vector5, vector1, vector2, vector3);
             });
         }
 
@@ -437,6 +438,97 @@ namespace MultiPrecisionAlgebra.Tests {
         }
 
         [TestMethod()]
+        public void MeshGridTest() {
+            Vector<Pow2.N4> x = new double[] { 1, 2, 3 };
+            Vector<Pow2.N4> y = new double[] { 4, 5, 6, 7 };
+            Vector<Pow2.N4> z = new double[] { 8, 9, 10, 11, 12 };
+            Vector<Pow2.N4> w = new double[] { 13, 14 };
+
+            Assert.AreEqual((
+                new Vector<Pow2.N4>(1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3),
+                new Vector<Pow2.N4>(4, 4, 4, 5, 5, 5, 6, 6, 6, 7, 7, 7)
+                ),
+                Vector<Pow2.N4>.MeshGrid(x, y)
+            );
+
+            Assert.AreEqual((
+                new Vector<Pow2.N4>(
+                    1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3,
+                    1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3,
+                    1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3,
+                    1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3,
+                    1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3),
+                new Vector<Pow2.N4>(
+                    4, 4, 4, 5, 5, 5, 6, 6, 6, 7, 7, 7,
+                    4, 4, 4, 5, 5, 5, 6, 6, 6, 7, 7, 7,
+                    4, 4, 4, 5, 5, 5, 6, 6, 6, 7, 7, 7,
+                    4, 4, 4, 5, 5, 5, 6, 6, 6, 7, 7, 7,
+                    4, 4, 4, 5, 5, 5, 6, 6, 6, 7, 7, 7),
+                new Vector<Pow2.N4>(
+                    8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
+                    9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9,
+                    10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10,
+                    11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11,
+                    12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12)
+                ),
+                Vector<Pow2.N4>.MeshGrid(x, y, z)
+            );
+
+            Assert.AreEqual((
+                new Vector<Pow2.N4>(
+                    1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3,
+                    1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3,
+                    1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3,
+                    1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3,
+                    1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3,
+                    1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3,
+                    1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3,
+                    1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3,
+                    1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3,
+                    1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3
+                ),
+                new Vector<Pow2.N4>(
+                    4, 4, 4, 5, 5, 5, 6, 6, 6, 7, 7, 7,
+                    4, 4, 4, 5, 5, 5, 6, 6, 6, 7, 7, 7,
+                    4, 4, 4, 5, 5, 5, 6, 6, 6, 7, 7, 7,
+                    4, 4, 4, 5, 5, 5, 6, 6, 6, 7, 7, 7,
+                    4, 4, 4, 5, 5, 5, 6, 6, 6, 7, 7, 7,
+                    4, 4, 4, 5, 5, 5, 6, 6, 6, 7, 7, 7,
+                    4, 4, 4, 5, 5, 5, 6, 6, 6, 7, 7, 7,
+                    4, 4, 4, 5, 5, 5, 6, 6, 6, 7, 7, 7,
+                    4, 4, 4, 5, 5, 5, 6, 6, 6, 7, 7, 7,
+                    4, 4, 4, 5, 5, 5, 6, 6, 6, 7, 7, 7
+                ),
+                new Vector<Pow2.N4>(
+                    8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
+                    9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9,
+                    10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10,
+                    11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11,
+                    12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12,
+                    8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
+                    9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9,
+                    10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10,
+                    11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11,
+                    12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12
+                ),
+                new Vector<Pow2.N4>(
+                    13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
+                    13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
+                    13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
+                    13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
+                    13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
+
+                    14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14,
+                    14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14,
+                    14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14,
+                    14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14,
+                    14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14)
+                ),
+                Vector<Pow2.N4>.MeshGrid(x, y, z, w)
+            );
+        }
+
+        [TestMethod()]
         public void CopyTest() {
             Vector<Pow2.N4> vector1 = new(1, 2);
             Vector<Pow2.N4> vector2 = vector1.Copy();
@@ -452,7 +544,7 @@ namespace MultiPrecisionAlgebra.Tests {
         [TestMethod()]
         public void ToStringTest() {
             Vector<Pow2.N4> vector1 = new(1, 2, 3);
-            Vector<Pow2.N4> vector2 = new(new double[0]);
+            Vector<Pow2.N4> vector2 = new(Array.Empty<double>());
             Vector<Pow2.N4> vector3 = new(1);
 
             Assert.AreEqual("1,2,3", vector1.ToString());
