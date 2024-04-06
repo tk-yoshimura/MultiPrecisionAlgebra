@@ -10,14 +10,13 @@ namespace MultiPrecisionAlgebra {
                 throw new ArgumentException("invalid size", nameof(m));
             }
 
-            int n = m.Rows;
+            int n = m.Size;
 
             if (!IsFinite(m)) {
                 return Invalid(n, n);
             }
 
             long exponent = m.MaxExponent;
-
             Matrix<N> v = Identity(m.Rows), u = ScaleB(m, -exponent);
 
             for (int i = 0; i < n; i++) {
@@ -101,7 +100,6 @@ namespace MultiPrecisionAlgebra {
             }
 
             long exponent = m.MaxExponent;
-
             Matrix<N> u = ScaleB(m, -exponent);
             v = v.Copy();
 

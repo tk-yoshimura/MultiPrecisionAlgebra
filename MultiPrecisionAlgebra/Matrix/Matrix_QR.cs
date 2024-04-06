@@ -29,7 +29,7 @@ namespace MultiPrecisionAlgebra {
                 }
                 MultiPrecision<N> vnorm = MultiPrecision<N>.Sqrt(vsum);
 
-                if (vnorm == 0d) {
+                if (MultiPrecision<N>.IsZero(vnorm)) {
                     continue;
                 }
 
