@@ -5,14 +5,20 @@ namespace MultiPrecisionAlgebra {
     /// <summary>行列クラス</summary>
     public partial class Matrix<N> where N : struct, IConstant {
         /// <summary>LU分解</summary>
-        public (Matrix<N> lower_matrix, Matrix<N> upper_matrix) LUDecompose() {
-            if (!IsSquare(this)) {
-                throw new InvalidOperationException("not square matrix");
+        public static (Matrix<N> l, Matrix<N> u) LU(Matrix<N> m) {
+            if (!IsSquare(m)) {
+                throw new ArgumentException("invalid size", nameof(m));
             }
 
-            int n = Size;
+            int n = m.Size;
 
-            Matrix<N> m = Copy();
+            if (!IsFinite(m)) {
+                return (Invalid(n, n), Invalid(n, n));
+            }
+
+            long exponent = m.MaxExponent;
+            m = ScaleB(m, -exponent);
+
             Matrix<N> l = Zero(n, n), u = Zero(n, n);
 
             //LU分解
@@ -29,7 +35,7 @@ namespace MultiPrecisionAlgebra {
 
             //三角行列格納
             for (int i = 0; i < n; i++) {
-                l.e[i, i] = 1;
+                l.e[i, i] = MultiPrecision<N>.One;
 
                 int j = 0;
                 for (; j < i; j++) {
@@ -39,6 +45,8 @@ namespace MultiPrecisionAlgebra {
                     u.e[i, j] = m.e[i, j];
                 }
             }
+
+            u = ScaleB(u, exponent);
 
             return (l, u);
         }

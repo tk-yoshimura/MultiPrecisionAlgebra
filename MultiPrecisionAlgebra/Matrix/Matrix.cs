@@ -3,14 +3,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Numerics;
-using System.Text;
 
 namespace MultiPrecisionAlgebra {
     /// <summary>行列クラス</summary>
     [DebuggerDisplay("{Convert<MultiPrecision.Pow2.N4>().ToString(),nq}")]
     public partial class Matrix<N> :
-        ICloneable,
+        ICloneable, IFormattable,
         IEnumerable<(int row_index, int column_index, MultiPrecision<N> val)>,
         IAdditionOperators<Matrix<N>, Matrix<N>, Matrix<N>>,
         ISubtractionOperators<Matrix<N>, Matrix<N>, Matrix<N>>,
@@ -47,7 +47,7 @@ namespace MultiPrecisionAlgebra {
         /// <summary>コンストラクタ</summary>
         /// <param name="m">行列要素配列</param>
         public Matrix(double[,] m) : this(m.GetLength(0), m.GetLength(1)) {
-            ArgumentNullException.ThrowIfNull(m);
+            ArgumentNullException.ThrowIfNull(m, nameof(m));
 
             for (int i = 0; i < Rows; i++) {
                 for (int j = 0; j < Columns; j++) {
@@ -74,7 +74,7 @@ namespace MultiPrecisionAlgebra {
         public int Size {
             get {
                 if (!IsSquare(this)) {
-                    throw new InvalidOperationException("not square matrix");
+                    throw new ArithmeticException("not square matrix");
                 }
 
                 return Rows;
@@ -110,71 +110,50 @@ namespace MultiPrecisionAlgebra {
             return new Matrix<N>(arr);
         }
 
-        /// <summary>写像キャスト</summary>
-        public static implicit operator Matrix<N>((Func<MultiPrecision<N>, MultiPrecision<N>> func, Matrix<N> arg) sel) {
-            return Func(sel.func, sel.arg);
-        }
-
-        /// <summary>写像キャスト</summary>
-        public static implicit operator Matrix<N>((Func<MultiPrecision<N>, MultiPrecision<N>, MultiPrecision<N>> func, (Matrix<N> matrix1, Matrix<N> matrix2) args) sel) {
-            return Func(sel.func, sel.args.matrix1, sel.args.matrix2);
-        }
-
-        /// <summary>写像キャスト</summary>
-        public static implicit operator Matrix<N>((Func<MultiPrecision<N>, MultiPrecision<N>, MultiPrecision<N>, MultiPrecision<N>> func, (Matrix<N> matrix1, Matrix<N> matrix2, Matrix<N> matrix3) args) sel) {
-            return Func(sel.func, sel.args.matrix1, sel.args.matrix2, sel.args.matrix3);
-        }
-
-        /// <summary>写像キャスト</summary>
-        public static implicit operator Matrix<N>((Func<MultiPrecision<N>, MultiPrecision<N>, MultiPrecision<N>, MultiPrecision<N>, MultiPrecision<N>> func, (Matrix<N> matrix1, Matrix<N> matrix2, Matrix<N> matrix3, Matrix<N> matrix4) args) sel) {
-            return Func(sel.func, sel.args.matrix1, sel.args.matrix2, sel.args.matrix3, sel.args.matrix4);
-        }
-
-        /// <summary>写像キャスト</summary>
-        public static implicit operator Matrix<N>((Func<MultiPrecision<N>, MultiPrecision<N>, MultiPrecision<N>> func, Vector<N> vector_row, Vector<N> vector_column) sel) {
-            return Map(sel.func, sel.vector_row, sel.vector_column);
-        }
-
         /// <summary>転置</summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public Matrix<N> Transpose {
-            get {
-                Matrix<N> ret = new(Columns, Rows);
+        public Matrix<N> T => Transpose(this);
 
-                for (int i = 0; i < Rows; i++) {
-                    for (int j = 0; j < Columns; j++) {
-                        ret.e[j, i] = e[i, j];
-                    }
+        /// <summary>転置</summary>
+        public static Matrix<N> Transpose(Matrix<N> m) {
+            Matrix<N> ret = new(m.Columns, m.Rows);
+
+            for (int i = 0; i < m.Rows; i++) {
+                for (int j = 0; j < m.Columns; j++) {
+                    ret.e[j, i] = m.e[i, j];
                 }
-
-                return ret;
             }
+
+            return ret;
         }
 
         /// <summary>逆行列</summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public Matrix<N> Inverse {
-            get {
-                if (IsZero(this) || !IsValid(this)) {
-                    return Invalid(Columns, Rows);
-                }
-                if (Rows == Columns) {
-                    return GaussianEliminate(this);
-                }
-                else if (Rows < Columns) {
-                    Matrix<N> m = this * Transpose;
-                    return Transpose * m.Inverse;
-                }
-                else {
-                    Matrix<N> m = Transpose * this;
-                    return m.Inverse * Transpose;
-                }
+        public Matrix<N> Inverse => Invert(this);
+
+        /// <summary>逆行列</summary>
+        public static Matrix<N> Invert(Matrix<N> m) {
+            if (IsZero(m) || !IsFinite(m)) {
+                return Invalid(m.Columns, m.Rows);
+            }
+            if (m.Rows == m.Columns) {
+                return GaussianEliminate(m);
+            }
+            else if (m.Rows < m.Columns) {
+                Matrix<N> mt = m.T, mr = m * mt;
+                return mt * mr.Inverse;
+            }
+            else {
+                Matrix<N> mt = m.T, mr = m.T * m;
+                return mr.Inverse * mt;
             }
         }
 
         /// <summary>ノルム</summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public MultiPrecision<N> Norm => MultiPrecision<N>.Sqrt(SquareNorm);
+        public MultiPrecision<N> Norm =>
+            IsFinite(this) ? (IsZero(this) ? MultiPrecision<N>.Zero : MultiPrecision<N>.Ldexp(MultiPrecision<N>.Sqrt(ScaleB(this, -MaxExponent).SquareNorm), MaxExponent))
+            : !IsValid(this) ? MultiPrecision<N>.NaN : MultiPrecision<N>.PositiveInfinity;
 
         /// <summary>ノルム2乗</summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -251,6 +230,9 @@ namespace MultiPrecisionAlgebra {
             return ret;
         }
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public Vector<N>[] Horizontals => (new Vector<N>[Rows]).Select((_, idx) => Horizontal(idx)).ToArray();
+
         /// <summary>列ベクトル</summary>
         /// <param name="column_index">列</param>
         public Vector<N> Vertical(int column_index) {
@@ -263,12 +245,15 @@ namespace MultiPrecisionAlgebra {
             return ret;
         }
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public Vector<N>[] Verticals => (new Vector<N>[Columns]).Select((_, idx) => Vertical(idx)).ToArray();
+
         /// <summary>対角成分</summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public MultiPrecision<N>[] Diagonals {
             get {
                 if (!IsSquare(this)) {
-                    throw new InvalidOperationException("not square matrix");
+                    throw new ArithmeticException("not square matrix");
                 }
 
                 MultiPrecision<N>[] diagonals = new MultiPrecision<N>[Size];
@@ -279,6 +264,21 @@ namespace MultiPrecisionAlgebra {
 
                 return diagonals;
             }
+        }
+
+
+        public static Matrix<N> FromDiagonals(MultiPrecision<N>[] vs) {
+            MultiPrecision<N>[,] v = new MultiPrecision<N>[vs.Length, vs.Length];
+
+            for (int i = 0; i < vs.Length; i++) {
+                for (int j = 0; j < vs.Length; j++) {
+                    v[i, j] = MultiPrecision<N>.Zero;
+                }
+
+                v[i, i] = vs[i];
+            }
+
+            return new Matrix<N>(v, cloning: false);
         }
 
         /// <summary>ゼロ行列</summary>
@@ -295,85 +295,6 @@ namespace MultiPrecisionAlgebra {
             for (int i = 0; i < rows; i++) {
                 for (int j = 0; j < columns; j++) {
                     v[i, j] = value;
-                }
-            }
-
-            return new Matrix<N>(v, cloning: false);
-        }
-
-        /// <summary>写像</summary>
-        public static Matrix<N> Func(Func<MultiPrecision<N>, MultiPrecision<N>> f, Matrix<N> matrix) {
-            MultiPrecision<N>[,] x = matrix.e, v = new MultiPrecision<N>[matrix.Rows, matrix.Columns];
-
-            for (int i = 0; i < v.GetLength(0); i++) {
-                for (int j = 0; j < v.GetLength(1); j++) {
-                    v[i, j] = f(x[i, j]);
-                }
-            }
-
-            return new Matrix<N>(v, cloning: false);
-        }
-
-        /// <summary>写像</summary>
-        public static Matrix<N> Func(Func<MultiPrecision<N>, MultiPrecision<N>, MultiPrecision<N>> f, Matrix<N> matrix1, Matrix<N> matrix2) {
-            if (matrix1.Shape != matrix2.Shape) {
-                throw new ArgumentException("mismatch size", $"{nameof(matrix1)},{nameof(matrix2)}");
-            }
-
-            MultiPrecision<N>[,] x = matrix1.e, y = matrix2.e, v = new MultiPrecision<N>[matrix1.Rows, matrix1.Columns];
-
-            for (int i = 0; i < v.GetLength(0); i++) {
-                for (int j = 0; j < v.GetLength(1); j++) {
-                    v[i, j] = f(x[i, j], y[i, j]);
-                }
-            }
-
-            return new Matrix<N>(v, cloning: false);
-        }
-
-        /// <summary>写像</summary>
-        public static Matrix<N> Func(Func<MultiPrecision<N>, MultiPrecision<N>, MultiPrecision<N>, MultiPrecision<N>> f, Matrix<N> matrix1, Matrix<N> matrix2, Matrix<N> matrix3) {
-            if (matrix1.Shape != matrix2.Shape || matrix1.Shape != matrix3.Shape) {
-                throw new ArgumentException("mismatch size", $"{nameof(matrix1)},{nameof(matrix2)},{nameof(matrix3)}");
-            }
-
-            MultiPrecision<N>[,] x = matrix1.e, y = matrix2.e, z = matrix3.e, v = new MultiPrecision<N>[matrix1.Rows, matrix1.Columns];
-
-            for (int i = 0; i < v.GetLength(0); i++) {
-                for (int j = 0; j < v.GetLength(1); j++) {
-                    v[i, j] = f(x[i, j], y[i, j], z[i, j]);
-                }
-            }
-
-            return new Matrix<N>(v, cloning: false);
-        }
-
-
-        /// <summary>写像</summary>
-        public static Matrix<N> Func(Func<MultiPrecision<N>, MultiPrecision<N>, MultiPrecision<N>, MultiPrecision<N>, MultiPrecision<N>> f, Matrix<N> matrix1, Matrix<N> matrix2, Matrix<N> matrix3, Matrix<N> matrix4) {
-            if (matrix1.Shape != matrix2.Shape || matrix1.Shape != matrix3.Shape || matrix1.Shape != matrix4.Shape) {
-                throw new ArgumentException("mismatch size", $"{nameof(matrix1)},{nameof(matrix2)},{nameof(matrix3)},{nameof(matrix4)}");
-            }
-
-            MultiPrecision<N>[,] x = matrix1.e, y = matrix2.e, z = matrix3.e, w = matrix4.e, v = new MultiPrecision<N>[matrix1.Rows, matrix1.Columns];
-
-            for (int i = 0; i < v.GetLength(0); i++) {
-                for (int j = 0; j < v.GetLength(1); j++) {
-                    v[i, j] = f(x[i, j], y[i, j], z[i, j], w[i, j]);
-                }
-            }
-
-            return new Matrix<N>(v, cloning: false);
-        }
-
-        /// <summary>写像</summary>
-        public static Matrix<N> Map(Func<MultiPrecision<N>, MultiPrecision<N>, MultiPrecision<N>> f, Vector<N> vector_row, Vector<N> vector_column) {
-            MultiPrecision<N>[] row = vector_row.v, col = vector_column.v;
-            MultiPrecision<N>[,] v = new MultiPrecision<N>[row.Length, col.Length];
-
-            for (int i = 0; i < v.GetLength(0); i++) {
-                for (int j = 0; j < v.GetLength(1); j++) {
-                    v[i, j] = f(row[i], col[j]);
                 }
             }
 
@@ -445,12 +366,12 @@ namespace MultiPrecisionAlgebra {
             for (int i = 0; i < matrix.Rows; i++) {
                 for (int j = 0; j < matrix.Columns; j++) {
                     if (i == j) {
-                        if (matrix.e[i, j] != 1) {
+                        if (matrix.e[i, j] != MultiPrecision<N>.One) {
                             return false;
                         }
                     }
                     else {
-                        if (matrix.e[i, j] != 0) {
+                        if (!MultiPrecision<N>.IsZero(matrix.e[i, j])) {
                             return false;
                         }
                     }
@@ -477,12 +398,8 @@ namespace MultiPrecisionAlgebra {
             return true;
         }
 
-        /// <summary>有効な行列か判定</summary>
-        public static bool IsValid(Matrix<N> matrix) {
-            if (matrix.Rows < 1 || matrix.Columns < 1) {
-                return false;
-            }
-
+        /// <summary>有限行列か判定</summary>
+        public static bool IsFinite(Matrix<N> matrix) {
             for (int i = 0; i < matrix.Rows; i++) {
                 for (int j = 0; j < matrix.Columns; j++) {
                     if (!MultiPrecision<N>.IsFinite(matrix.e[i, j])) {
@@ -494,9 +411,43 @@ namespace MultiPrecisionAlgebra {
             return true;
         }
 
+        /// <summary>無限要素を含む行列か判定</summary>
+        public static bool IsInfinity(Matrix<N> matrix) {
+            if (!IsValid(matrix)) {
+                return false;
+            }
+
+            for (int i = 0; i < matrix.Rows; i++) {
+                for (int j = 0; j < matrix.Columns; j++) {
+                    if (MultiPrecision<N>.IsInfinity(matrix.e[i, j])) {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>有効な行列か判定</summary>
+        public static bool IsValid(Matrix<N> matrix) {
+            if (matrix.Rows < 1 || matrix.Columns < 1) {
+                return false;
+            }
+
+            for (int i = 0; i < matrix.Rows; i++) {
+                for (int j = 0; j < matrix.Columns; j++) {
+                    if (MultiPrecision<N>.IsNaN(matrix.e[i, j])) {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+
         /// <summary>正則行列か判定</summary>
         public static bool IsRegular(Matrix<N> matrix) {
-            return IsValid(matrix.Inverse);
+            return IsFinite(Invert(matrix));
         }
 
         /// <summary>等しいか判定</summary>
@@ -519,30 +470,15 @@ namespace MultiPrecisionAlgebra {
             return new Matrix<N>(e);
         }
 
-        /// <summary>文字列化</summary>
-        public override string ToString() {
-            if (!IsValid(this)) {
-                return "Invalid Matrix";
-            }
-
-            StringBuilder str = new($"[ [ {e[0, 0]}");
-            for (int j = 1; j < Columns; j++) {
-                str.Append($", {e[0, j]}");
-            }
-            str.Append(" ]");
-
-            for (int i = 1; i < Rows; i++) {
-                str.Append($", [ {e[i, 0]}");
-                for (int j = 1; j < Columns; j++) {
-                    str.Append($", {e[i, j]}");
+        public IEnumerator<(int row_index, int column_index, MultiPrecision<N> val)> GetEnumerator() {
+            for (int i = 0; i < Rows; i++) {
+                for (int j = 0; j < Columns; j++) {
+                    yield return (i, j, e[i, j]);
                 }
-                str.Append(" ]");
             }
-
-            str.Append(" ]");
-
-            return str.ToString();
         }
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         /// <summary>精度変更</summary>
         public Matrix<M> Convert<M>() where M : struct, IConstant {
@@ -556,15 +492,5 @@ namespace MultiPrecisionAlgebra {
 
             return ret;
         }
-
-        public IEnumerator<(int row_index, int column_index, MultiPrecision<N> val)> GetEnumerator() {
-            for (int i = 0; i < Rows; i++) {
-                for (int j = 0; j < Columns; j++) {
-                    yield return (i, j, e[i, j]);
-                }
-            }
-        }
-
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 }

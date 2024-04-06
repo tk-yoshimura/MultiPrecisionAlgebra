@@ -4,18 +4,18 @@ using System.Diagnostics;
 namespace MultiPrecisionAlgebra {
     /// <summary>行列クラス</summary>
     public partial class Matrix<N> where N : struct, IConstant {
-        /// <summary>トレース</summary>
+        /// <summary>行列式</summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public MultiPrecision<N> Trace {
+        public MultiPrecision<N> Det {
             get {
-                (_, Matrix<N> upper) = LUDecompose();
+                (_, Matrix<N> upper) = LU(this);
 
-                MultiPrecision<N> sum = MultiPrecision<N>.Zero;
+                MultiPrecision<N> prod = MultiPrecision<N>.One;
                 foreach (var diagonal in upper.Diagonals) {
-                    sum += diagonal;
+                    prod *= diagonal;
                 }
 
-                return sum;
+                return prod;
             }
         }
     }

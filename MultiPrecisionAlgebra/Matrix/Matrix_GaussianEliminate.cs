@@ -1,5 +1,6 @@
 ﻿using MultiPrecision;
 using System;
+using System.Numerics;
 
 namespace MultiPrecisionAlgebra {
     /// <summary>行列クラス</summary>
@@ -10,8 +11,13 @@ namespace MultiPrecisionAlgebra {
                 throw new ArgumentException("invalid size", nameof(m));
             }
 
-            long exponent = m.MaxExponent;
             int n = m.Rows;
+
+            if (!IsFinite(m)) {
+                return Invalid(n, n);
+            }
+
+            long exponent = m.MaxExponent;
 
             Matrix<N> v = Identity(m.Rows), u = ScaleB(m, -exponent);
 
@@ -89,8 +95,13 @@ namespace MultiPrecisionAlgebra {
                 throw new ArgumentException("invalid size", $"{nameof(m)}, {nameof(v)}");
             }
 
+            int n = m.Size;
+
+            if (!IsFinite(m)) {
+                return Vector<N>.Invalid(n);
+            }
+
             long exponent = m.MaxExponent;
-            int n = m.Rows;
 
             Matrix<N> u = ScaleB(m, -exponent);
             v = v.Copy();

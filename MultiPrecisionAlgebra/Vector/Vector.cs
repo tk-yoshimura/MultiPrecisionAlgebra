@@ -5,13 +5,12 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
-using System.Text;
 
 namespace MultiPrecisionAlgebra {
     ///<summary>ベクトルクラス</summary>
     [DebuggerDisplay("{Convert<MultiPrecision.Pow2.N4>().ToString(),nq}")]
     public partial class Vector<N> :
-        ICloneable,
+        ICloneable, IFormattable,
         IEnumerable<(int index, MultiPrecision<N> val)>,
         IAdditionOperators<Vector<N>, Vector<N>, Vector<N>>,
         ISubtractionOperators<Vector<N>, Vector<N>, Vector<N>>,
@@ -120,26 +119,6 @@ namespace MultiPrecisionAlgebra {
             return new Vector<N>(arr);
         }
 
-        /// <summary>写像キャスト</summary>
-        public static implicit operator Vector<N>((Func<MultiPrecision<N>, MultiPrecision<N>> func, Vector<N> arg) sel) {
-            return Func(sel.func, sel.arg);
-        }
-
-        /// <summary>写像キャスト</summary>
-        public static implicit operator Vector<N>((Func<MultiPrecision<N>, MultiPrecision<N>, MultiPrecision<N>> func, (Vector<N> vector1, Vector<N> vector2) args) sel) {
-            return Func(sel.func, sel.args.vector1, sel.args.vector2);
-        }
-
-        /// <summary>写像キャスト</summary>
-        public static implicit operator Vector<N>((Func<MultiPrecision<N>, MultiPrecision<N>, MultiPrecision<N>, MultiPrecision<N>> func, (Vector<N> vector1, Vector<N> vector2, Vector<N> vector3) args) sel) {
-            return Func(sel.func, sel.args.vector1, sel.args.vector2, sel.args.vector3);
-        }
-
-        /// <summary>写像キャスト</summary>
-        public static implicit operator Vector<N>((Func<MultiPrecision<N>, MultiPrecision<N>, MultiPrecision<N>, MultiPrecision<N>, MultiPrecision<N>> func, (Vector<N> vector1, Vector<N> vector2, Vector<N> vector3, Vector<N> vector4) args) sel) {
-            return Func(sel.func, sel.args.vector1, sel.args.vector2, sel.args.vector3, sel.args.vector4);
-        }
-
         /// <summary>行ベクトル</summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Matrix<N> Horizontal {
@@ -184,7 +163,10 @@ namespace MultiPrecisionAlgebra {
 
         /// <summary>ノルム</summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public MultiPrecision<N> Norm => MultiPrecision<N>.Sqrt(SquareNorm);
+        public MultiPrecision<N> Norm =>
+            IsFinite(this)
+            ? (IsZero(this) ? MultiPrecision<N>.Zero : MultiPrecision<N>.Ldexp(MultiPrecision<N>.Sqrt(ScaleB(this, -MaxExponent).SquareNorm), MaxExponent))
+            : !IsValid(this) ? MultiPrecision<N>.NaN : MultiPrecision<N>.PositiveInfinity;
 
         /// <summary>ノルム2乗</summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -258,69 +240,24 @@ namespace MultiPrecisionAlgebra {
             return new Vector<N>(v, cloning: false);
         }
 
-        /// <summary>写像</summary>
-        public static Vector<N> Func(Func<MultiPrecision<N>, MultiPrecision<N>> f, Vector<N> vector) {
-            MultiPrecision<N>[] x = vector.v, v = new MultiPrecision<N>[vector.Dim];
-
-            for (int i = 0; i < v.Length; i++) {
-                v[i] = f(x[i]);
-            }
-
-            return new Vector<N>(v, cloning: false);
-        }
-
-        /// <summary>写像</summary>
-        public static Vector<N> Func(Func<MultiPrecision<N>, MultiPrecision<N>, MultiPrecision<N>> f, Vector<N> vector1, Vector<N> vector2) {
-            if (vector1.Dim != vector2.Dim) {
-                throw new ArgumentException("mismatch size", $"{nameof(vector1)},{nameof(vector2)}");
-            }
-
-            MultiPrecision<N>[] x = vector1.v, y = vector2.v, v = new MultiPrecision<N>[vector1.Dim];
-
-            for (int i = 0; i < v.Length; i++) {
-                v[i] = f(x[i], y[i]);
-            }
-
-            return new Vector<N>(v, cloning: false);
-        }
-
-        /// <summary>写像</summary>
-        public static Vector<N> Func(Func<MultiPrecision<N>, MultiPrecision<N>, MultiPrecision<N>, MultiPrecision<N>> f, Vector<N> vector1, Vector<N> vector2, Vector<N> vector3) {
-            if (vector1.Dim != vector2.Dim || vector1.Dim != vector3.Dim) {
-                throw new ArgumentException("mismatch size", $"{nameof(vector1)},{nameof(vector2)},{nameof(vector3)}");
-            }
-
-            MultiPrecision<N>[] x = vector1.v, y = vector2.v, z = vector3.v, v = new MultiPrecision<N>[vector1.Dim];
-
-            for (int i = 0; i < v.Length; i++) {
-                v[i] = f(x[i], y[i], z[i]);
-            }
-
-            return new Vector<N>(v, cloning: false);
-        }
-
-        /// <summary>写像</summary>
-        public static Vector<N> Func(Func<MultiPrecision<N>, MultiPrecision<N>, MultiPrecision<N>, MultiPrecision<N>, MultiPrecision<N>> f, Vector<N> vector1, Vector<N> vector2, Vector<N> vector3, Vector<N> vector4) {
-            if (vector1.Dim != vector2.Dim || vector1.Dim != vector3.Dim || vector1.Dim != vector4.Dim) {
-                throw new ArgumentException("mismatch size", $"{nameof(vector1)},{nameof(vector2)},{nameof(vector3)},{nameof(vector4)}");
-            }
-
-            MultiPrecision<N>[] x = vector1.v, y = vector2.v, z = vector3.v, w = vector4.v, v = new MultiPrecision<N>[vector1.Dim];
-
-            for (int i = 0; i < v.Length; i++) {
-                v[i] = f(x[i], y[i], z[i], w[i]);
-            }
-
-            return new Vector<N>(v, cloning: false);
-        }
-
         /// <summary>不正なベクトル</summary>
         public static Vector<N> Invalid(int size) {
             return Fill(size, value: MultiPrecision<N>.NaN);
         }
 
-        /// <summary>有効なベクトルか判定</summary>
-        public static bool IsValid(Vector<N> vector) {
+        /// <summary>ゼロベクトルか判定</summary>
+        public static bool IsZero(Vector<N> vector) {
+            for (int i = 0; i < vector.Dim; i++) {
+                if (vector.v[i] != 0d) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>有限ベクトルか判定</summary>
+        public static bool IsFinite(Vector<N> vector) {
             for (int i = 0; i < vector.Dim; i++) {
                 if (!MultiPrecision<N>.IsFinite(vector.v[i])) {
                     return false;
@@ -330,10 +267,29 @@ namespace MultiPrecisionAlgebra {
             return true;
         }
 
-        /// <summary>ゼロベクトルか判定</summary>
-        public static bool IsZero(Vector<N> vector) {
+        /// <summary>無限要素を含むベクトルか判定</summary>
+        public static bool IsInfinity(Vector<N> vector) {
+            if (!IsValid(vector)) {
+                return false;
+            }
+
             for (int i = 0; i < vector.Dim; i++) {
-                if (!MultiPrecision<N>.IsZero(vector.v[i])) {
+                if (MultiPrecision<N>.IsInfinity(vector.v[i])) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>有効なベクトルか判定</summary>
+        public static bool IsValid(Vector<N> vector) {
+            if (vector.Dim < 1) {
+                return false;
+            }
+
+            for (int i = 0; i < vector.Dim; i++) {
+                if (MultiPrecision<N>.IsNaN(vector.v[i])) {
                     return false;
                 }
             }
@@ -361,20 +317,13 @@ namespace MultiPrecisionAlgebra {
             return new Vector<N>(v);
         }
 
-        /// <summary>文字列化</summary>
-        public override string ToString() {
-            if (Dim <= 0) {
-                return string.Empty;
+        public IEnumerator<(int index, MultiPrecision<N> val)> GetEnumerator() {
+            for (int i = 0; i < Dim; i++) {
+                yield return (i, v[i]);
             }
-
-            StringBuilder str = new($"{v[0]}");
-
-            for (int i = 1; i < Dim; i++) {
-                str.Append($",{v[i]}");
-            }
-
-            return str.ToString();
         }
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         /// <summary>精度変更</summary>
         public Vector<M> Convert<M>() where M : struct, IConstant {
@@ -386,13 +335,5 @@ namespace MultiPrecisionAlgebra {
 
             return ret;
         }
-
-        public IEnumerator<(int index, MultiPrecision<N> val)> GetEnumerator() {
-            for (int i = 0; i < Dim; i++) {
-                yield return (i, v[i]);
-            }
-        }
-
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 }

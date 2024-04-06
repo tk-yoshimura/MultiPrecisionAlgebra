@@ -96,7 +96,7 @@ namespace MultiPrecisionAlgebra {
                 throw new ArgumentException($"mismatch {nameof(matrix1.Columns)} {nameof(matrix2.Rows)}", $"{nameof(matrix1)},{nameof(matrix2)}");
             }
 
-            MultiPrecision<N>[,] ret = new MultiPrecision<N>[matrix1.Rows, matrix2.Columns], e1 = matrix1.e, e2 = matrix2.Transpose.e;
+            MultiPrecision<N>[,] ret = new MultiPrecision<N>[matrix1.Rows, matrix2.Columns], e1 = matrix1.e, e2 = matrix2.T.e;
 
             for (int i = 0, c = matrix1.Columns; i < ret.GetLength(0); i++) {
                 for (int j = 0; j < ret.GetLength(1); j++) {
@@ -142,7 +142,7 @@ namespace MultiPrecisionAlgebra {
             }
 
             MultiPrecision<N>[] ret = new MultiPrecision<N>[matrix.Columns], v = vector.v;
-            MultiPrecision<N>[,] e = matrix.Transpose.e;
+            MultiPrecision<N>[,] e = matrix.T.e;
 
             for (int j = 0; j < matrix.Columns; j++) {
                 MultiPrecision<N> s = MultiPrecision<N>.Zero;

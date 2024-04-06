@@ -134,10 +134,12 @@ namespace MultiPrecisionAlgebra.Tests {
 
         [TestMethod()]
         public void NormTest() {
-            Vector<Pow2.N4> vector = new(-3, 4);
+            Vector<Pow2.N4> vector1 = new(-3, 4);
+            Vector<Pow2.N4> vector2 = new(0, 0);
 
-            Assert.AreEqual(5, vector.Norm);
-            Assert.AreEqual(25, vector.SquareNorm);
+            Assert.AreEqual(5, vector1.Norm);
+            Assert.AreEqual(0, vector2.Norm);
+            Assert.AreEqual(25, vector1.SquareNorm);
         }
 
         [TestMethod()]
@@ -546,9 +548,12 @@ namespace MultiPrecisionAlgebra.Tests {
             Vector<Pow2.N4> vector2 = new(Array.Empty<double>());
             Vector<Pow2.N4> vector3 = new(1);
 
-            Assert.AreEqual("1,2,3", vector1.ToString());
-            Assert.AreEqual(string.Empty, vector2.ToString());
-            Assert.AreEqual("1", vector3.ToString());
+            Assert.AreEqual("[ 1, 2, 3 ]", vector1.ToString());
+            Assert.AreEqual("invalid", vector2.ToString());
+            Assert.AreEqual("[ 1 ]", vector3.ToString());
+            Assert.AreEqual("[ 1, 2, 3 ]", vector1.ToString());
+            Assert.AreEqual("[ 1.0000e0, 2.0000e0, 3.0000e0 ]", vector1.ToString("e4"));
+            Assert.AreEqual("[ 1.0000e0, 2.0000e0, 3.0000e0 ]", $"{vector1:e4}");
         }
     }
 }
