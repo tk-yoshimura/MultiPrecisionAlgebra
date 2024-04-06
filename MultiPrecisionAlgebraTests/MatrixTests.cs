@@ -603,47 +603,95 @@ namespace MultiPrecisionAlgebra.Tests {
 
         [TestMethod()]
         public void QRDecomposeTest() {
-            Matrix<Pow2.N4> matrix = new double[,] { { 12, -51, 4 }, { 6, 167, -68 }, { -4, 24, -41 } };
+            {
+                Matrix<Pow2.N4> matrix = new double[,] { { 12, -51, 4 }, { 6, 167, -68 }, { -4, 24, -41 } };
 
-            (Matrix<Pow2.N4> q, Matrix<Pow2.N4> r) = Matrix<Pow2.N4>.QR(matrix);
+                (Matrix<Pow2.N4> q, Matrix<Pow2.N4> r) = Matrix<Pow2.N4>.QR(matrix);
 
-            Assert.AreEqual(new Matrix<Pow2.N4>(new double[,] { { 12, -51, 4 }, { 6, 167, -68 }, { -4, 24, -41 } }), matrix);
+                Assert.AreEqual(new Matrix<Pow2.N4>(new double[,] { { 12, -51, 4 }, { 6, 167, -68 }, { -4, 24, -41 } }), matrix);
 
-            Assert.AreEqual(0d, r[1, 0]);
-            Assert.AreEqual(0d, r[2, 0]);
-            Assert.AreEqual(0d, r[2, 1]);
+                Assert.AreEqual(0d, r[1, 0]);
+                Assert.AreEqual(0d, r[2, 0]);
+                Assert.AreEqual(0d, r[2, 1]);
 
-            Assert.IsTrue((matrix - q * r).Norm < 1e-12);
-            Assert.IsTrue((q * q.T - Matrix<Pow2.N4>.Identity(matrix.Size)).Norm < 1e-31);
+                Assert.IsTrue((matrix - q * r).Norm < 1e-12);
+                Assert.IsTrue((q * q.T - Matrix<Pow2.N4>.Identity(matrix.Size)).Norm < 1e-31);
+            }
+
+            {
+                Matrix<Pow2.N8> matrix = new double[,] { { 12, -51, 4 }, { 6, 167, -68 }, { -4, 24, -41 } };
+
+                (Matrix<Pow2.N8> q, Matrix<Pow2.N8> r) = Matrix<Pow2.N8>.QR(matrix);
+
+                Assert.AreEqual(new Matrix<Pow2.N8>(new double[,] { { 12, -51, 4 }, { 6, 167, -68 }, { -4, 24, -41 } }), matrix);
+
+                Assert.AreEqual(0d, r[1, 0]);
+                Assert.AreEqual(0d, r[2, 0]);
+                Assert.AreEqual(0d, r[2, 1]);
+
+                Assert.IsTrue((matrix - q * r).Norm < 1e-24);
+                Assert.IsTrue((q * q.T - Matrix<Pow2.N8>.Identity(matrix.Size)).Norm < 1e-62);
+            }
         }
 
         [TestMethod()]
         public void QRDecomposeTest2() {
-            Matrix<Pow2.N4> matrix = new double[,] { { 1, 2 }, { 3, 4 } };
+            {
+                Matrix<Pow2.N4> matrix = new double[,] { { 1, 2 }, { 3, 4 } };
 
-            (Matrix<Pow2.N4> q, Matrix<Pow2.N4> r) = Matrix<Pow2.N4>.QR(matrix);
+                (Matrix<Pow2.N4> q, Matrix<Pow2.N4> r) = Matrix<Pow2.N4>.QR(matrix);
 
-            Assert.AreEqual(0d, r[1, 0]);
+                Assert.AreEqual(0d, r[1, 0]);
 
-            Assert.IsTrue((matrix - q * r).Norm < 1e-12);
-            Assert.IsTrue((q * q.T - Matrix<Pow2.N4>.Identity(matrix.Size)).Norm < 1e-31);
+                Assert.IsTrue((matrix - q * r).Norm < 1e-12);
+                Assert.IsTrue((q * q.T - Matrix<Pow2.N4>.Identity(matrix.Size)).Norm < 1e-31);
+            }
+
+            {
+                Matrix<Pow2.N8> matrix = new double[,] { { 1, 2 }, { 3, 4 } };
+
+                (Matrix<Pow2.N8> q, Matrix<Pow2.N8> r) = Matrix<Pow2.N8>.QR(matrix);
+
+                Assert.AreEqual(0d, r[1, 0]);
+
+                Assert.IsTrue((matrix - q * r).Norm < 1e-24);
+                Assert.IsTrue((q * q.T - Matrix<Pow2.N8>.Identity(matrix.Size)).Norm < 1e-62);
+            }
         }
 
         [TestMethod()]
         public void QRDecomposeTest3() {
-            Matrix<Pow2.N4> matrix = new double[,] { { 12, -51, 4, 6 }, { 6, 167, -68, 3 }, { -4, 24, -41, 12 }, { 8, 13, 7, 2 } };
+            {
+                Matrix<Pow2.N4> matrix = new double[,] { { 12, -51, 4, 6 }, { 6, 167, -68, 3 }, { -4, 24, -41, 12 }, { 8, 13, 7, 2 } };
 
-            (Matrix<Pow2.N4> q, Matrix<Pow2.N4> r) = Matrix<Pow2.N4>.QR(matrix);
+                (Matrix<Pow2.N4> q, Matrix<Pow2.N4> r) = Matrix<Pow2.N4>.QR(matrix);
 
-            Assert.AreEqual(0d, r[1, 0]);
-            Assert.AreEqual(0d, r[2, 0]);
-            Assert.AreEqual(0d, r[3, 0]);
-            Assert.AreEqual(0d, r[2, 1]);
-            Assert.AreEqual(0d, r[3, 1]);
-            Assert.AreEqual(0d, r[3, 2]);
+                Assert.AreEqual(0d, r[1, 0]);
+                Assert.AreEqual(0d, r[2, 0]);
+                Assert.AreEqual(0d, r[3, 0]);
+                Assert.AreEqual(0d, r[2, 1]);
+                Assert.AreEqual(0d, r[3, 1]);
+                Assert.AreEqual(0d, r[3, 2]);
 
-            Assert.IsTrue((matrix - q * r).Norm < 1e-12);
-            Assert.IsTrue((q * q.T - Matrix<Pow2.N4>.Identity(matrix.Size)).Norm < 1e-31);
+                Assert.IsTrue((matrix - q * r).Norm < 1e-12);
+                Assert.IsTrue((q * q.T - Matrix<Pow2.N4>.Identity(matrix.Size)).Norm < 1e-31);
+            }
+
+            {
+                Matrix<Pow2.N8> matrix = new double[,] { { 12, -51, 4, 6 }, { 6, 167, -68, 3 }, { -4, 24, -41, 12 }, { 8, 13, 7, 2 } };
+
+                (Matrix<Pow2.N8> q, Matrix<Pow2.N8> r) = Matrix<Pow2.N8>.QR(matrix);
+
+                Assert.AreEqual(0d, r[1, 0]);
+                Assert.AreEqual(0d, r[2, 0]);
+                Assert.AreEqual(0d, r[3, 0]);
+                Assert.AreEqual(0d, r[2, 1]);
+                Assert.AreEqual(0d, r[3, 1]);
+                Assert.AreEqual(0d, r[3, 2]);
+
+                Assert.IsTrue((matrix - q * r).Norm < 1e-24);
+                Assert.IsTrue((q * q.T - Matrix<Pow2.N8>.Identity(matrix.Size)).Norm < 1e-62);
+            }
         }
 
         [TestMethod()]
@@ -668,13 +716,25 @@ namespace MultiPrecisionAlgebra.Tests {
 
         [TestMethod()]
         public void EigenValuesTest() {
-            Matrix<Pow2.N4> matrix = new double[,] { { 1, 2 }, { 4, 5 } };
-            MultiPrecision<Pow2.N4>[] eigen_values = Matrix<Pow2.N4>.EigenValues(matrix);
+            {
+                Matrix<Pow2.N4> matrix = new double[,] { { 1, 2 }, { 4, 5 } };
+                MultiPrecision<Pow2.N4>[] eigen_values = Matrix<Pow2.N4>.EigenValues(matrix);
 
-            Assert.AreEqual(new Matrix<Pow2.N4>(new double[,] { { 1, 2 }, { 4, 5 } }), matrix);
+                Assert.AreEqual(new Matrix<Pow2.N4>(new double[,] { { 1, 2 }, { 4, 5 } }), matrix);
 
-            Assert.IsTrue(MultiPrecision<Pow2.N4>.Abs(eigen_values[0] - (3 + 2 * MultiPrecision<Pow2.N4>.Sqrt(3))) < 1e-29);
-            Assert.IsTrue(MultiPrecision<Pow2.N4>.Abs(eigen_values[1] - (3 - 2 * MultiPrecision<Pow2.N4>.Sqrt(3))) < 1e-29);
+                Assert.IsTrue(MultiPrecision<Pow2.N4>.Abs(eigen_values[0] - (3 + 2 * MultiPrecision<Pow2.N4>.Sqrt(3))) < 1e-29);
+                Assert.IsTrue(MultiPrecision<Pow2.N4>.Abs(eigen_values[1] - (3 - 2 * MultiPrecision<Pow2.N4>.Sqrt(3))) < 1e-29);
+            }
+
+            {
+                Matrix<Pow2.N8> matrix = new double[,] { { 1, 2 }, { 4, 5 } };
+                MultiPrecision<Pow2.N8>[] eigen_values = Matrix<Pow2.N8>.EigenValues(matrix);
+
+                Assert.AreEqual(new Matrix<Pow2.N8>(new double[,] { { 1, 2 }, { 4, 5 } }), matrix);
+
+                Assert.IsTrue(MultiPrecision<Pow2.N8>.Abs(eigen_values[0] - (3 + 2 * MultiPrecision<Pow2.N8>.Sqrt(3))) < 1e-60);
+                Assert.IsTrue(MultiPrecision<Pow2.N8>.Abs(eigen_values[1] - (3 - 2 * MultiPrecision<Pow2.N8>.Sqrt(3))) < 1e-60);
+            }
         }
 
         [TestMethod()]
@@ -697,20 +757,40 @@ namespace MultiPrecisionAlgebra.Tests {
 
         [TestMethod()]
         public void EigenVectorTest() {
-            Matrix<Pow2.N4> matrix = new double[,] { { 1, 2, 3 }, { 4, 5, 6 }, { 8, 7, 9 } };
+            {
+                Matrix<Pow2.N4> matrix = new double[,] { { 1, 2, 3 }, { 4, 5, 6 }, { 8, 7, 9 } };
 
-            (MultiPrecision<Pow2.N4>[] eigen_values, Vector<Pow2.N4>[] eigen_vectors) = Matrix<Pow2.N4>.EigenValueVectors(matrix);
-            Vector<Pow2.N4> eigen_values_expected = Matrix<Pow2.N4>.EigenValues(matrix);
+                (MultiPrecision<Pow2.N4>[] eigen_values, Vector<Pow2.N4>[] eigen_vectors) = Matrix<Pow2.N4>.EigenValueVectors(matrix);
+                Vector<Pow2.N4> eigen_values_expected = Matrix<Pow2.N4>.EigenValues(matrix);
 
-            Assert.IsTrue((eigen_values - eigen_values_expected).Norm < 1e-30);
+                Assert.IsTrue((eigen_values - eigen_values_expected).Norm < 1e-30);
 
-            Assert.AreEqual(new Matrix<Pow2.N4>(new double[,] { { 1, 2, 3 }, { 4, 5, 6 }, { 8, 7, 9 } }), matrix);
+                Assert.AreEqual(new Matrix<Pow2.N4>(new double[,] { { 1, 2, 3 }, { 4, 5, 6 }, { 8, 7, 9 } }), matrix);
 
-            for (int i = 0; i < matrix.Size; i++) {
-                MultiPrecision<Pow2.N4> eigen_value = eigen_values[i];
-                Vector<Pow2.N4> eigen_vector = eigen_vectors[i];
+                for (int i = 0; i < matrix.Size; i++) {
+                    MultiPrecision<Pow2.N4> eigen_value = eigen_values[i];
+                    Vector<Pow2.N4> eigen_vector = eigen_vectors[i];
 
-                Assert.IsTrue((matrix * eigen_vector - eigen_value * eigen_vector).Norm < 1e-15);
+                    Assert.IsTrue((matrix * eigen_vector - eigen_value * eigen_vector).Norm < 1e-15);
+                }
+            }
+
+            {
+                Matrix<Pow2.N8> matrix = new double[,] { { 1, 2, 3 }, { 4, 5, 6 }, { 8, 7, 9 } };
+
+                (MultiPrecision<Pow2.N8>[] eigen_values, Vector<Pow2.N8>[] eigen_vectors) = Matrix<Pow2.N8>.EigenValueVectors(matrix);
+                Vector<Pow2.N8> eigen_values_expected = Matrix<Pow2.N8>.EigenValues(matrix);
+
+                Assert.IsTrue((eigen_values - eigen_values_expected).Norm < 1e-60);
+
+                Assert.AreEqual(new Matrix<Pow2.N8>(new double[,] { { 1, 2, 3 }, { 4, 5, 6 }, { 8, 7, 9 } }), matrix);
+
+                for (int i = 0; i < matrix.Size; i++) {
+                    MultiPrecision<Pow2.N8> eigen_value = eigen_values[i];
+                    Vector<Pow2.N8> eigen_vector = eigen_vectors[i];
+
+                    Assert.IsTrue((matrix * eigen_vector - eigen_value * eigen_vector).Norm < 1e-30);
+                }
             }
         }
 
