@@ -1,6 +1,5 @@
 ﻿using MultiPrecision;
 using System;
-using System.Numerics;
 
 namespace MultiPrecisionAlgebra {
     /// <summary>行列クラス</summary>
