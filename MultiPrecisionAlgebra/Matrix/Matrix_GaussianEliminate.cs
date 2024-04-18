@@ -1,13 +1,48 @@
 ﻿using MultiPrecision;
 using System;
+using System.Diagnostics;
 
 namespace MultiPrecisionAlgebra {
     /// <summary>行列クラス</summary>
     public partial class Matrix<N> where N : struct, IConstant {
+        private static Matrix<N> Invert2x2(Matrix<N> m) {
+            Debug.Assert(m.Shape == (2, 2));
+
+            long exponent = m.MaxExponent;
+            m = ScaleB(m, -exponent);
+
+            return new Matrix<N>(
+                new MultiPrecision<N>[,] {
+                    { m.e[1, 1], -m.e[0, 1] },
+                    { -m.e[1, 0], m.e[0, 0] }
+                }, cloning: false
+            ) / MultiPrecision<N>.Ldexp(Det2x2(m), exponent);
+        }
+
+        private static Matrix<N> Invert3x3(Matrix<N> m) {
+            Debug.Assert(m.Shape == (3, 3));
+
+            long exponent = m.MaxExponent;
+            m = ScaleB(m, -exponent);
+
+            return new Matrix<N>(
+                new MultiPrecision<N>[,] {
+                    { m.e[1, 1] * m.e[2, 2] - m.e[1, 2] * m.e[2, 1],
+                      m.e[0, 2] * m.e[2, 1] - m.e[0, 1] * m.e[2, 2],
+                      m.e[0, 1] * m.e[1, 2] - m.e[0, 2] * m.e[1, 1] },
+                    { m.e[1, 2] * m.e[2, 0] - m.e[1, 0] * m.e[2, 2],
+                      m.e[0, 0] * m.e[2, 2] - m.e[0, 2] * m.e[2, 0],
+                      m.e[0, 2] * m.e[1, 0] - m.e[0, 0] * m.e[1, 2] },
+                    { m.e[1, 0] * m.e[2, 1] - m.e[1, 1] * m.e[2, 0],
+                      m.e[0, 1] * m.e[2, 0] - m.e[0, 0] * m.e[2, 1],
+                      m.e[0, 0] * m.e[1, 1] - m.e[0, 1] * m.e[1, 0] }
+                }, cloning: false
+            ) / MultiPrecision<N>.Ldexp(Det3x3(m), exponent);
+        }
         /// <summary>ガウスの消去法</summary>
         public static Matrix<N> GaussianEliminate(Matrix<N> m) {
             if (!IsSquare(m)) {
-                throw new ArgumentException("invalid size", nameof(m));
+                throw new ArgumentException("not square matrix", nameof(m));
             }
 
             int n = m.Size;
