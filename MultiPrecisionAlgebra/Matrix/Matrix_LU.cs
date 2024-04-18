@@ -7,7 +7,7 @@ namespace MultiPrecisionAlgebra {
     public partial class Matrix<N> {
         private static (int[] pivot, int pivot_det, Matrix<N> l, Matrix<N> u) LUKernel(Matrix<N> m) {
             if (!IsSquare(m)) {
-                throw new ArgumentException("invalid size", nameof(m));
+                throw new ArgumentException("not square matrix", nameof(m));
             }
 
             int n = m.Size;

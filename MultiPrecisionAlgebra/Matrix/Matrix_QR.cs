@@ -7,7 +7,7 @@ namespace MultiPrecisionAlgebra {
         /// <summary>QR分解</summary>
         public static (Matrix<N> q, Matrix<N> r) QR(Matrix<N> m) {
             if (!IsSquare(m)) {
-                throw new ArgumentException("invalid size", nameof(m));
+                throw new ArgumentException("not square matrix", nameof(m));
             }
 
             int n = m.Size;
