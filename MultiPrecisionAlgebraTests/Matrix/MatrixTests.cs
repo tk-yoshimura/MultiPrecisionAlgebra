@@ -254,7 +254,7 @@ namespace MultiPrecisionAlgebraTests {
         public void DetTest() {
             Matrix<Pow2.N4> matrix1 = new double[,] { { 1, 2 }, { 3, 4 } };
             Matrix<Pow2.N4> matrix2 = new double[,] { { 1, 2 }, { 2, 4 } };
-            Matrix<Pow2.N4> matrix3 = new double[,] { { -7, -6, 4 }, { 0, 5, -6 }, { 6, -2,  6 } };
+            Matrix<Pow2.N4> matrix3 = new double[,] { { -7, -6, 4 }, { 0, 5, -6 }, { 6, -2, 6 } };
             Matrix<Pow2.N4> matrix4 = new double[,] { { 1, 1, -9 }, { -8, -10, -4 }, { 7, 10, 9 } };
             Matrix<Pow2.N4> matrix5 = new double[,] { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } };
 
