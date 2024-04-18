@@ -8,11 +8,17 @@ namespace MultiPrecisionAlgebra {
         /// <summary>固有値計算</summary>
         /// <param name="precision_level">精度(収束ループを回す回数)</param>
         public static MultiPrecision<N>[] EigenValues(Matrix<N> m, int precision_level = -1) {
-            if (!IsSquare(m) || m.Size <= 1) {
+            if (!IsSquare(m) || m.Size < 1) {
                 throw new ArgumentException("not square matrix", nameof(m));
             }
 
+            if (m.Size <= 1) {
+                return [m[0, 0]];
+            }
+
             precision_level = precision_level >= 0 ? precision_level : MultiPrecision<N>.DecimalDigits;
+
+
             for (int iter = 0; iter < precision_level; iter++) {
                 (Matrix<N> q, Matrix<N> r) = QR(m);
                 m = r * q;
@@ -26,8 +32,12 @@ namespace MultiPrecisionAlgebra {
         /// <param name="eigen_vectors">固有ベクトル</param>
         /// <param name="precision_level">精度(収束ループを回す回数)</param>
         public static (MultiPrecision<N>[] eigen_values, Vector<N>[] eigen_vectors) EigenValueVectors(Matrix<N> m, int precision_level = -1) {
-            if (!IsSquare(m) || m.Size <= 1) {
+            if (!IsSquare(m) || m.Size < 1) {
                 throw new ArgumentException("not square matrix", nameof(m));
+            }
+
+            if (m.Size <= 1) {
+                return ([m[0, 0]], [new Vector<N>(1)]);
             }
 
             precision_level = precision_level >= 0 ? precision_level : MultiPrecision<N>.DecimalDigits;
@@ -70,7 +80,7 @@ namespace MultiPrecisionAlgebra {
 
                     MultiPrecision<N> norm, norm_prev = MultiPrecision<N>.NaN;
                     Vector<N> x = Vector<N>.Fill(n, 0.125), x_prev = x;
-                    x[i] = 1d;
+                    x[i] = MultiPrecision<N>.One;
 
                     for (int iter_vector = 0; iter_vector < precision_level; iter_vector++) {
                         x = (gp * x).Normal;

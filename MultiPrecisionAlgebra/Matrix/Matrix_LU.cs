@@ -1,30 +1,56 @@
 ﻿using MultiPrecision;
 using System;
+using System.Linq;
 
 namespace MultiPrecisionAlgebra {
     /// <summary>行列クラス</summary>
-    public partial class Matrix<N> where N : struct, IConstant {
-        /// <summary>LU分解</summary>
-        public static (Matrix<N> l, Matrix<N> u) LU(Matrix<N> m) {
+    public partial class Matrix<N> {
+        private static (int[] pivot, int pivot_det, Matrix<N> l, Matrix<N> u) LUKernel(Matrix<N> m) {
             if (!IsSquare(m)) {
                 throw new ArgumentException("invalid size", nameof(m));
             }
 
             int n = m.Size;
 
+            int[] ps = (new int[n]).Select((_, idx) => idx).ToArray();
+            int pivot_det = 1;
+
             if (!IsFinite(m)) {
-                return (Invalid(n, n), Invalid(n, n));
+                return (ps, 1, Invalid(n), Invalid(n));
+            }
+            if (IsZero(m)) {
+                return (ps, 1, Zero(n), Zero(n));
             }
 
             long exponent = m.MaxExponent;
             m = ScaleB(m, -exponent);
 
-            Matrix<N> l = Zero(n, n), u = Zero(n, n);
+            Matrix<N> l = Zero(n), u = Zero(n);
 
             //LU分解
             for (int i = 0; i < n; i++) {
+                MultiPrecision<N> pivot = MultiPrecision<N>.Abs(m.e[i, i]);
+                int r = i;
+
                 for (int j = i + 1; j < n; j++) {
-                    MultiPrecision<N> mul = m.e[j, i] /= m.e[i, i];
+                    if (MultiPrecision<N>.Abs(m.e[j, i]) > pivot) {
+                        pivot = MultiPrecision<N>.Abs(m.e[j, i]);
+                        r = j;
+                    }
+                }
+
+                if (r != i) {
+                    for (int j = 0; j < n; j++) {
+                        (m.e[r, j], m.e[i, j]) = (m.e[i, j], m.e[r, j]);
+                    }
+
+                    (ps[r], ps[i]) = (ps[i], ps[r]);
+
+                    pivot_det = -pivot_det;
+                }
+
+                for (int j = i + 1; j < n; j++) {
+                    MultiPrecision<N> mul = m.e[j, i] / m.e[i, i];
                     m.e[j, i] = mul;
 
                     for (int k = i + 1; k < n; k++) {
@@ -48,7 +74,23 @@ namespace MultiPrecisionAlgebra {
 
             u = ScaleB(u, exponent);
 
-            return (l, u);
+            return (ps, pivot_det, l, u);
+        }
+
+        /// <summary>LU分解</summary>
+        public static (Matrix<N> p, Matrix<N> l, Matrix<N> u) LU(Matrix<N> m) {
+            (int[] ps, _, Matrix<N> l, Matrix<N> u) = LUKernel(m);
+
+            int n = m.Size;
+
+            Matrix<N> p = Zero(n, n);
+
+            // ピボット行列
+            for (int i = 0; i < n; i++) {
+                p[ps[i], i] = MultiPrecision<N>.One;
+            }
+
+            return (p, l, u);
         }
     }
 }

@@ -288,6 +288,12 @@ namespace MultiPrecisionAlgebra {
             return new Matrix<N>(rows, columns);
         }
 
+        /// <summary>ゼロ行列</summary>
+        /// <param name="size"行列サイズ</param>
+        public static Matrix<N> Zero(int size) {
+            return new Matrix<N>(size, size);
+        }
+
         /// <summary>定数行列</summary>
         public static Matrix<N> Fill(int rows, int columns, MultiPrecision<N> value) {
             MultiPrecision<N>[,] v = new MultiPrecision<N>[rows, columns];
@@ -299,6 +305,11 @@ namespace MultiPrecisionAlgebra {
             }
 
             return new Matrix<N>(v, cloning: false);
+        }
+
+        /// <summary>定数行列</summary>
+        public static Matrix<N> Fill(int size, MultiPrecision<N> value) {
+            return Fill(size, size, value);
         }
 
         /// <summary>単位行列</summary>
@@ -320,6 +331,12 @@ namespace MultiPrecisionAlgebra {
         /// <param name="columns">列数</param>
         public static Matrix<N> Invalid(int rows, int columns) {
             return Fill(rows, columns, value: MultiPrecision<N>.NaN);
+        }
+
+        /// <summary>不正な行列</summary>
+        /// <param name="size">行列サイズ</param>
+        public static Matrix<N> Invalid(int size) {
+            return Fill(size, value: MultiPrecision<N>.NaN);
         }
 
         /// <summary>正方行列か判定</summary>

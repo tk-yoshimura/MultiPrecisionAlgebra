@@ -8,10 +8,8 @@ namespace MultiPrecisionAlgebra {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public MultiPrecision<N> Trace {
             get {
-                (_, Matrix<N> u) = LU(this);
-
                 MultiPrecision<N> sum = MultiPrecision<N>.Zero;
-                foreach (var diagonal in u.Diagonals) {
+                foreach (var diagonal in Diagonals) {
                     sum += diagonal;
                 }
 

@@ -13,7 +13,10 @@ namespace MultiPrecisionAlgebra {
             int n = m.Size;
 
             if (!IsFinite(m)) {
-                return (Invalid(n, n), Invalid(n, n));
+                return (Invalid(n), Invalid(n));
+            }
+            if (IsZero(m)) {
+                return (Zero(n), Zero(n));
             }
 
             long exponent = m.MaxExponent;
@@ -23,7 +26,7 @@ namespace MultiPrecisionAlgebra {
             Vector<N> u = Vector<N>.Zero(n);
 
             for (int k = 0; k < n - 1; k++) {
-                MultiPrecision<N> vsum = 0d;
+                MultiPrecision<N> vsum = MultiPrecision<N>.Zero;
                 for (int i = k; i < n; i++) {
                     vsum += MultiPrecision<N>.Square(r.e[i, k]);
                 }

@@ -7,7 +7,7 @@ namespace MultiPrecisionAlgebra {
     public partial class Vector<N> where N : struct, IConstant {
         /// <summary>結合</summary>
         public static Vector<N> Concat(params object[] blocks) {
-            List<MultiPrecision<N>> v = new();
+            List<MultiPrecision<N>> v = [];
 
             foreach (object obj in blocks) {
                 if (obj is Vector<N> vector) {
@@ -34,6 +34,17 @@ namespace MultiPrecisionAlgebra {
                 else {
                     throw new ArgumentException($"unsupported type '{obj.GetType().Name}'", nameof(blocks));
                 }
+            }
+
+            return new Vector<N>(v);
+        }
+
+        /// <summary>結合</summary>
+        public static Vector<N> Concat(params Vector<N>[] blocks) {
+            List<MultiPrecision<N>> v = [];
+
+            foreach (Vector<N> vector in blocks) {
+                v.AddRange(vector.v);
             }
 
             return new Vector<N>(v);

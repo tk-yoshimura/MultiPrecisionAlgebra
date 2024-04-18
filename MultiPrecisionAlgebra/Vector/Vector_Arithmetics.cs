@@ -142,7 +142,7 @@ namespace MultiPrecisionAlgebra {
 
         /// <summary>スカラー除算</summary>
         public static Vector<N> operator /(Vector<N> vector, MultiPrecision<N> r) {
-            return (1d / r) * vector;
+            return (1 / r) * vector;
         }
 
         /// <summary>内積</summary>

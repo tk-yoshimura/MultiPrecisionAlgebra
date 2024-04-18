@@ -248,7 +248,7 @@ namespace MultiPrecisionAlgebra {
         /// <summary>ゼロベクトルか判定</summary>
         public static bool IsZero(Vector<N> vector) {
             for (int i = 0; i < vector.Dim; i++) {
-                if (vector.v[i] != 0d) {
+                if (!MultiPrecision<N>.IsZero(vector.v[i])) {
                     return false;
                 }
             }
