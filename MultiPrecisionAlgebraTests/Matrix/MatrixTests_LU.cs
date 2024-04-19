@@ -64,5 +64,20 @@ namespace MultiPrecisionAlgebraTests {
                 Assert.IsTrue((matrix - pivot * lower * upper).Norm < 1e-56);
             }
         }
+
+        [TestMethod()]
+        public void LUDecomposeSingularTest() {
+            foreach (Matrix<Pow2.N8> matrix in MatrixTestCases<Pow2.N8>.SingularMatrixs) {
+
+                Console.WriteLine($"test: {matrix}");
+
+                (Matrix<Pow2.N8> pivot, Matrix<Pow2.N8> lower, Matrix<Pow2.N8> upper) = Matrix<Pow2.N8>.LU(matrix);
+
+                Assert.IsTrue(Matrix<Pow2.N8>.IsFinite(pivot));
+                Assert.IsTrue(!Matrix<Pow2.N8>.IsValid(lower));
+                Assert.IsTrue(Matrix<Pow2.N8>.IsZero(upper));
+                Assert.AreEqual(0d, matrix.Det);
+            }
+        }
     }
 }

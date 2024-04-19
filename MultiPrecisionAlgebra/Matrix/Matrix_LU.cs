@@ -19,7 +19,7 @@ namespace MultiPrecisionAlgebra {
                 return (ps, 1, Invalid(n), Invalid(n));
             }
             if (IsZero(m)) {
-                return (ps, 1, Zero(n), Zero(n));
+                return (ps, 1, Invalid(n), Zero(n));
             }
 
             long exponent = m.MaxExponent;
@@ -37,6 +37,11 @@ namespace MultiPrecisionAlgebra {
                         pivot = MultiPrecision<N>.Abs(m.e[j, i]);
                         r = j;
                     }
+                }
+
+                //ピボットが閾値以下ならばMは正則行列でない
+                if (pivot.Exponent <= -MultiPrecision<N>.Bits + 4) {
+                    return (ps, 0, Invalid(n), Zero(n));
                 }
 
                 if (r != i) {
@@ -79,9 +84,13 @@ namespace MultiPrecisionAlgebra {
 
         /// <summary>LU分解</summary>
         public static (Matrix<N> p, Matrix<N> l, Matrix<N> u) LU(Matrix<N> m) {
-            (int[] ps, _, Matrix<N> l, Matrix<N> u) = LUKernel(m);
+            (int[] ps, int pivot_det, Matrix<N> l, Matrix<N> u) = LUKernel(m);
 
             int n = m.Size;
+
+            if (pivot_det == 0) {
+                return (Identity(n), l, u);
+            }
 
             Matrix<N> p = Zero(n, n);
 
