@@ -8,7 +8,7 @@ AVX2 suppoted CPU. (Intel:Haswell(2013)-, AMD:Excavator(2015)-)
 
 ## Install
 
-[Download DLL](https://github.com/tk-yoshimura/MultiPrecision/releases)  
+[Download DLL](https://github.com/tk-yoshimura/MultiPrecisionAlgebra/releases)  
 [Download Nuget](https://www.nuget.org/packages/tyoshimura.multiprecision.algebra/)
 
 ## Usage
