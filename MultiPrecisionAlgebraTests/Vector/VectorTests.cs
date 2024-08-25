@@ -75,6 +75,7 @@ namespace MultiPrecisionAlgebraTests {
             Vector<Pow2.N4> vector = new(1, 2, 3, 4);
 
             Assert.AreEqual(10, vector.Sum);
+            Assert.AreEqual(2.5, vector.Mean);
         }
 
         [TestMethod()]

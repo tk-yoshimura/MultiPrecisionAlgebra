@@ -81,6 +81,7 @@ namespace MultiPrecisionAlgebraTests {
             Matrix<Pow2.N4> matrix = new(new double[,] { { 1, 2 }, { 3, 4 } });
 
             Assert.AreEqual(10, matrix.Sum);
+            Assert.AreEqual(2.5, matrix.Mean);
         }
 
         [TestMethod()]

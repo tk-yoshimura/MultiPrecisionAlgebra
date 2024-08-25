@@ -197,6 +197,10 @@ namespace MultiPrecisionAlgebra {
             }
         }
 
+        /// <summary>平均</summary>
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public MultiPrecision<N> Mean => Sum / checked(Rows * Columns);
+
         /// <summary>最大指数</summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public long MaxExponent {
