@@ -1,5 +1,7 @@
 ﻿using MultiPrecision;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace MultiPrecisionAlgebra {
     ///<summary>ベクトルクラス</summary>
@@ -40,6 +42,34 @@ namespace MultiPrecisionAlgebra {
                     v[i + index] = value.v[i];
                 }
             }
+        }
+
+        /// <summary>配列インデクサ</summary>
+        public Vector<N> this[int[] indexes] {
+            get {
+                MultiPrecision<N>[] ret = new MultiPrecision<N>[indexes.Length];
+                for (int i = 0; i < indexes.Length; i++) {
+                    ret[i] = v[indexes[i]];
+                }
+
+                return new(ret);
+            }
+
+            set {
+                if (value.Dim != indexes.Length) {
+                    throw new ArgumentException("invalid size", nameof(indexes));
+                }
+
+                for (int i = 0; i < indexes.Length; i++) {
+                    v[indexes[i]] = value.v[i];
+                }
+            }
+        }
+
+        /// <summary>配列インデクサ</summary>
+        public Vector<N> this[IEnumerable<int> indexes] {
+            get => this[indexes.ToArray()];
+            set => this[indexes.ToArray()] = value;
         }
     }
 }
