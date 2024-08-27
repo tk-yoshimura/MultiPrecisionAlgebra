@@ -295,6 +295,18 @@ namespace MultiPrecisionAlgebra {
             return new Matrix<N>(v, cloning: false);
         }
 
+        public static Vector<N> Flatten(Matrix<N> matrix) {
+            MultiPrecision<N>[] v = new MultiPrecision<N>[matrix.Rows * matrix.Columns];
+
+            for (int i = 0, idx = 0; i < matrix.Rows; i++) {
+                for (int j = 0; j < matrix.Columns; j++, idx++) {
+                    v[idx] = matrix.e[i, j];
+                }
+            }
+
+            return new Vector<N>(v, cloning: false);
+        }
+
         /// <summary>ゼロ行列</summary>
         /// <param name="rows">行数</param>
         /// <param name="columns">列数</param>

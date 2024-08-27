@@ -120,6 +120,15 @@ namespace MultiPrecisionAlgebraTests {
         }
 
         [TestMethod()]
+        public void FlattenTest() {
+            Matrix<Pow2.N4> matrix = new double[,] { { 1, 2, 3 }, { 4, 5, 6 } };
+
+            Vector<Pow2.N4> vector = Matrix<Pow2.N4>.Flatten(matrix);
+
+            Assert.AreEqual(new Vector<Pow2.N4>(1, 2, 3, 4, 5, 6), vector);
+        }
+
+        [TestMethod()]
         public void ZeroTest() {
             Matrix<Pow2.N4> matrix = Matrix<Pow2.N4>.Zero(2, 2);
 
