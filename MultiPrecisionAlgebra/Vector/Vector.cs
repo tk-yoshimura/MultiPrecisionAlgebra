@@ -244,6 +244,23 @@ namespace MultiPrecisionAlgebra {
             return new Vector<N>(v, cloning: false);
         }
 
+        /// <summary>連番ベクトル</summary>
+        public static Vector<N> Arange(int start, int stop) {
+            if (unchecked(stop - start) < 0) {
+                throw new ArgumentException("invalid index", $"{nameof(start)}, {nameof(stop)}");
+            }
+
+            int size = stop - start;
+
+            MultiPrecision<N>[] v = new MultiPrecision<N>[size];
+
+            for (int i = 0; i < v.Length; i++) {
+                v[i] = i + start;
+            }
+
+            return new Vector<N>(v, cloning: false);
+        }
+
         /// <summary>不正なベクトル</summary>
         public static Vector<N> Invalid(int size) {
             return Fill(size, value: MultiPrecision<N>.NaN);
