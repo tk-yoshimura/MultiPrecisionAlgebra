@@ -96,7 +96,7 @@ namespace MultiPrecisionAlgebra {
 
             // ピボット行列
             for (int i = 0; i < n; i++) {
-                p[ps[i], i] = MultiPrecision<N>.One;
+                p[i, ps[i]] = MultiPrecision<N>.One;
             }
 
             return (p, l, u);

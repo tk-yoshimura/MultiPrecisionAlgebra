@@ -16,7 +16,7 @@ namespace MultiPrecisionAlgebraTests {
                     Assert.AreEqual(1, diagonal);
                 }
 
-                Assert.IsTrue((matrix - pivot * lower * upper).Norm < 1e-28);
+                Assert.IsTrue((pivot * matrix - lower * upper).Norm < 1e-28);
             }
         }
 
@@ -31,7 +31,7 @@ namespace MultiPrecisionAlgebraTests {
                     Assert.AreEqual(1, diagonal);
                 }
 
-                Assert.IsTrue((matrix - pivot * lower * upper).Norm < 1e-28);
+                Assert.IsTrue((pivot * matrix - lower * upper).Norm < 1e-28);
             }
         }
 
@@ -46,7 +46,7 @@ namespace MultiPrecisionAlgebraTests {
                     Assert.AreEqual(1, diagonal);
                 }
 
-                Assert.IsTrue((matrix - pivot * lower * upper).Norm < 1e-56);
+                Assert.IsTrue((pivot * matrix - lower * upper).Norm < 1e-56);
             }
         }
 
@@ -61,7 +61,7 @@ namespace MultiPrecisionAlgebraTests {
                     Assert.AreEqual(1, diagonal);
                 }
 
-                Assert.IsTrue((matrix - pivot * lower * upper).Norm < 1e-56);
+                Assert.IsTrue((pivot * matrix - lower * upper).Norm < 1e-56);
             }
         }
 
