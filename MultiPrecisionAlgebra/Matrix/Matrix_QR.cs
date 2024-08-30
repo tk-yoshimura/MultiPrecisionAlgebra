@@ -44,7 +44,7 @@ namespace MultiPrecisionAlgebra {
                     u.v[i] = r.e[i, k];
                     usum += MultiPrecision<N>.Square(u.v[i]);
                 }
-                MultiPrecision<N> c = 2d / usum;
+                MultiPrecision<N> c = 2 / usum;
 
                 Matrix<N> h = Identity(n);
                 for (int i = k; i < n; i++) {
