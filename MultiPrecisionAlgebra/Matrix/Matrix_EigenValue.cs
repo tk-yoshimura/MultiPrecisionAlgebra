@@ -256,7 +256,7 @@ namespace MultiPrecisionAlgebra {
         }
 
         private static MultiPrecision<N>[] SortEigenByNorm(MultiPrecision<N>[] eigen_values) {
-            MultiPrecision<N>[] eigen_values_sorted = eigen_values.OrderBy(MultiPrecision<N>.Abs).ToArray();
+            MultiPrecision<N>[] eigen_values_sorted = [.. eigen_values.OrderByDescending(MultiPrecision<N>.Abs)];
 
             return eigen_values_sorted;
         }
@@ -265,7 +265,7 @@ namespace MultiPrecisionAlgebra {
             Debug.Assert(eigens.eigen_values.Length == eigens.eigen_vectors.Length);
 
             IOrderedEnumerable<(MultiPrecision<N> val, Vector<N> vec)> eigens_sorted =
-                eigens.eigen_values.Zip(eigens.eigen_vectors).OrderBy(item => MultiPrecision<N>.Abs(item.First));
+                eigens.eigen_values.Zip(eigens.eigen_vectors).OrderByDescending(item => MultiPrecision<N>.Abs(item.First));
 
             MultiPrecision<N>[] eigen_values_sorted = eigens_sorted.Select(item => item.val).ToArray();
             Vector<N>[] eigen_vectors_sorted = eigens_sorted.Select(item => item.vec).ToArray();

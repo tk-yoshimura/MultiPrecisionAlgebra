@@ -71,11 +71,11 @@ namespace MultiPrecisionAlgebraTests {
 
         [TestMethod()]
         public void EigenVectorEyeEpsN4Test() {
-            Matrix<Pow2.N4> matrix = new double[,] { { 1, 1e-30, 0 }, { 0, 1, 2e-30 }, { -1e-30, 1e-30, 1 } };
+            Matrix<Pow2.N4> matrix = new double[,] { { 1, 1e-30, 0 }, { 1e-30, 1, 2e-30 }, { 0, 1e-30, 1 } };
 
             (MultiPrecision<Pow2.N4>[] eigen_values, Vector<Pow2.N4>[] eigen_vectors) = Matrix<Pow2.N4>.EigenValueVectors(matrix);
 
-            Assert.AreEqual(new double[,] { { 1, 1e-30, 0 }, { 0, 1, 2e-30 }, { -1e-30, 1e-30, 1 } }, matrix);
+            Assert.AreEqual(new double[,] { { 1, 1e-30, 0 }, { 1e-30, 1, 2e-30 }, { 0, 1e-30, 1 } }, matrix);
 
             for (int i = 0; i < matrix.Size; i++) {
                 MultiPrecision<Pow2.N4> eigen_value = eigen_values[i];
@@ -151,11 +151,11 @@ namespace MultiPrecisionAlgebraTests {
 
         [TestMethod()]
         public void EigenVectorEyeEpsN8Test() {
-            Matrix<Pow2.N8> matrix = new double[,] { { 1, 1e-60, 0 }, { 0, 1, 2e-60 }, { -1e-60, 1e-60, 1 } };
+            Matrix<Pow2.N8> matrix = new double[,] { { 1, 1e-60, 0 }, { 1e-60, 1, 2e-60 }, { 0, 1e-60, 1 } };
 
             (MultiPrecision<Pow2.N8>[] eigen_values, Vector<Pow2.N8>[] eigen_vectors) = Matrix<Pow2.N8>.EigenValueVectors(matrix);
 
-            Assert.AreEqual(new double[,] { { 1, 1e-60, 0 }, { 0, 1, 2e-60 }, { -1e-60, 1e-60, 1 } }, matrix);
+            Assert.AreEqual(new double[,] { { 1, 1e-60, 0 }, { 1e-60, 1, 2e-60 }, { 0, 1e-60, 1 } }, matrix);
 
             for (int i = 0; i < matrix.Size; i++) {
                 MultiPrecision<Pow2.N8> eigen_value = eigen_values[i];
