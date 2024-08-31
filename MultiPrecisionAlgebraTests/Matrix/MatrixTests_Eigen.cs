@@ -34,7 +34,7 @@ namespace MultiPrecisionAlgebraTests {
 
         [TestMethod()]
         public void EigenVectorN4Test() {
-            foreach (Matrix<Pow2.N4> matrix in MatrixTestCases<Pow2.N4>.PositiveMatrixs[30..]) {
+            foreach (Matrix<Pow2.N4> matrix in MatrixTestCases<Pow2.N4>.PositiveMatrixs) {
                 Console.WriteLine($"test: {matrix}");
 
                 Matrix<Pow2.N4> matrix_scaled = Matrix<Pow2.N4>.ScaleB(matrix, -matrix.MaxExponent);
@@ -48,7 +48,7 @@ namespace MultiPrecisionAlgebraTests {
                     MultiPrecision<Pow2.N4> eigen_value = eigen_values[i];
                     Vector<Pow2.N4> eigen_vector = eigen_vectors[i];
 
-                    Assert.IsTrue((matrix_scaled * eigen_vector - eigen_value * eigen_vector).Norm < 1e-1);
+                    Assert.IsTrue((matrix_scaled * eigen_vector - eigen_value * eigen_vector).Norm < 1e-28);
                 }
             }
         }
@@ -128,7 +128,7 @@ namespace MultiPrecisionAlgebraTests {
                     MultiPrecision<Pow2.N8> eigen_value = eigen_values[i];
                     Vector<Pow2.N8> eigen_vector = eigen_vectors[i];
 
-                    Assert.IsTrue((matrix_scaled * eigen_vector - eigen_value * eigen_vector).Norm < 1e-2);
+                    Assert.IsTrue((matrix_scaled * eigen_vector - eigen_value * eigen_vector).Norm < 1e-58);
                 }
             }
         }
