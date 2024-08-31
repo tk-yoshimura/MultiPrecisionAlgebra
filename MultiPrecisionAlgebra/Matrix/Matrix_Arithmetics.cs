@@ -232,7 +232,7 @@ namespace MultiPrecisionAlgebra {
         /// <summary>対角成分について加算</summary>
         public static Matrix<N> DiagonalAdd(Matrix<N> matrix, MultiPrecision<N> r) {
             int n = int.Min(matrix.Rows, matrix.Columns);
-            
+
             Matrix<N> ret = matrix.Copy();
 
             for (int i = 0; i < n; i++) {
