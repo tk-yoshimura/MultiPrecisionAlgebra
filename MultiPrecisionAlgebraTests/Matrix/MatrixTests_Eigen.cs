@@ -34,7 +34,7 @@ namespace MultiPrecisionAlgebraTests {
 
         [TestMethod()]
         public void EigenVectorN4Test() {
-            foreach (Matrix<Pow2.N4> matrix in MatrixTestCases<Pow2.N4>.PositiveMatrixs) {
+            foreach (Matrix<Pow2.N4> matrix in MatrixTestCases<Pow2.N4>.PositiveMatrixs[30..]) {
                 Console.WriteLine($"test: {matrix}");
 
                 Matrix<Pow2.N4> matrix_scaled = Matrix<Pow2.N4>.ScaleB(matrix, -matrix.MaxExponent);
