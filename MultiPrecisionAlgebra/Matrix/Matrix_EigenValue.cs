@@ -1,5 +1,6 @@
 ﻿using MultiPrecision;
 using System;
+using System.Diagnostics;
 using System.Linq;
 
 namespace MultiPrecisionAlgebra {
@@ -15,16 +16,82 @@ namespace MultiPrecisionAlgebra {
             if (m.Size <= 1) {
                 return [m[0, 0]];
             }
-
-            precision_level = precision_level >= 0 ? precision_level : MultiPrecision<N>.DecimalDigits;
-
-
-            for (int iter = 0; iter < precision_level; iter++) {
-                (Matrix<N> q, Matrix<N> r) = QR(m);
-                m = r * q;
+            if (m.Size == 2) {
+                return SortEigenByNorm(EigenValues2x2(m));
             }
 
-            return m.Diagonals;
+            precision_level = precision_level >= 0 ? precision_level : MultiPrecision<N>.Length * m.Size;
+
+            int n = m.Size, notconverged = n;
+            long exponent = m.MaxExponent;
+            Matrix<N> u = ScaleB(m, -exponent);
+            MultiPrecision<N> eps = MultiPrecision<N>.Ldexp(1, -MultiPrecision<N>.Bits + 8);
+
+            Vector<N> eigen_values = Vector<N>.Fill(n, 1);
+            Vector<N> eigen_values_prev = eigen_values.Copy();
+
+            Vector<N> eigen_diffnorms = Vector<N>.Fill(n, MultiPrecision<N>.PositiveInfinity);
+            Vector<N> eigen_diffnorms_prev = eigen_diffnorms.Copy();
+
+            Matrix<N> d = u;
+
+            for (int iter_qr = 0; iter_qr <= precision_level; iter_qr++) {
+                if (d.Size > 2) {
+                    MultiPrecision<N>[] mu2x2 = EigenValues2x2(d[^2.., ^2..]);
+                    MultiPrecision<N> d_kk = d[^1, ^1];
+                    MultiPrecision<N> mu = MultiPrecision<N>.Abs(d_kk - mu2x2[0]) < MultiPrecision<N>.Abs(d_kk - mu2x2[1])
+                        ? mu2x2[0] : mu2x2[1];
+
+                    if (MultiPrecision<N>.IsFinite(mu)) {
+                        (Matrix<N> q, Matrix<N> r) = QR(DiagonalAdd(d, -mu));
+                        d = DiagonalAdd(r * q, mu);
+                    }
+                    else {
+                        (Matrix<N> q, Matrix<N> r) = QR(d);
+                        d = r * q;
+                    }
+
+                    eigen_values[..d.Size] = d.Diagonals[..d.Size];
+                }
+                else {
+                    eigen_values[..2] = EigenValues(d);
+                }
+
+                for (int i = notconverged - 1; i >= 0; i--) {
+                    MultiPrecision<N> eigen_diffnorm = MultiPrecision<N>.Abs(eigen_values[i] - eigen_values_prev[i]);
+                    eigen_diffnorms[i] = eigen_diffnorm;
+                }
+
+                for (int i = notconverged - 1; i >= 0; i--) {
+                    if (i >= 2 && iter_qr < precision_level) {
+                        if (eigen_diffnorms[i].Exponent > -MultiPrecision<N>.Bits + 8 || eigen_diffnorms_prev[i] > eigen_diffnorms[i]) {
+                            break;
+                        }
+                    }
+
+                    notconverged--;
+                }
+
+                if (notconverged <= 0) {
+                    break;
+                }
+
+                if (d.Size > 2) {
+                    Vector<N> lower = d[^1, ..^1];
+                    MultiPrecision<N> eigen = d[^1, ^1];
+
+                    if (lower.MaxExponent < eigen.Exponent - MultiPrecision<N>.Bits) {
+                        d = d[..^1, ..^1];
+                    }
+                }
+
+                eigen_values_prev[..notconverged] = eigen_values[..notconverged];
+                eigen_diffnorms_prev[..notconverged] = eigen_diffnorms[..notconverged];
+            }
+
+            eigen_values = Vector<N>.ScaleB(eigen_values, exponent);
+
+            return SortEigenByNorm(eigen_values);
         }
 
         /// <summary>固有値・固有ベクトル</summary>
@@ -39,78 +106,171 @@ namespace MultiPrecisionAlgebra {
             if (m.Size <= 1) {
                 return ([m[0, 0]], [new Vector<N>(1)]);
             }
+            if (m.Size == 2) {
+                return SortEigenByNorm(EigenValueVectors2x2(m));
+            }
 
-            precision_level = precision_level >= 0 ? precision_level : MultiPrecision<N>.DecimalDigits;
+            precision_level = precision_level >= 0 ? precision_level : MultiPrecision<N>.Length * m.Size;
 
-            int n = m.Size;
-            bool[] is_convergenced = new bool[n];
-            MultiPrecision<N>[] eigen_values = Vector<N>.Fill(n, 1);
+            int n = m.Size, notconverged = n;
+            long exponent = m.MaxExponent;
+            Matrix<N> u = ScaleB(m, -exponent);
+            MultiPrecision<N> eps = MultiPrecision<N>.Ldexp(1, -MultiPrecision<N>.Bits + 8);
+
+            Vector<N> eigen_values = Vector<N>.Fill(n, 1);
+            Vector<N> eigen_values_prev = eigen_values.Copy();
+
+            Vector<N> eigen_diffnorms = Vector<N>.Fill(n, MultiPrecision<N>.PositiveInfinity);
+            Vector<N> eigen_diffnorms_prev = eigen_diffnorms.Copy();
+
             Vector<N>[] eigen_vectors = Identity(n).Horizontals;
 
-            Matrix<N> d = m, identity = Identity(n);
+            Matrix<N> d = u;
 
-            Matrix<N>[] gs_prev = new Matrix<N>[n];
+            for (int iter_qr = 0; iter_qr <= precision_level; iter_qr++) {
+                if (d.Size > 2) {
+                    MultiPrecision<N>[] mu2x2 = EigenValues2x2(d[^2.., ^2..]);
+                    MultiPrecision<N> d_kk = d[^1, ^1];
+                    MultiPrecision<N> mu = MultiPrecision<N>.Abs(d_kk - mu2x2[0]) < MultiPrecision<N>.Abs(d_kk - mu2x2[1])
+                        ? mu2x2[0] : mu2x2[1];
 
-            for (int iter_qr = 0; iter_qr < precision_level; iter_qr++) {
-                (Matrix<N> q, Matrix<N> r) = QR(d);
-                d = r * q;
-
-                eigen_values = d.Diagonals;
-
-                for (int i = 0; i < n; i++) {
-                    if (is_convergenced[i]) {
-                        continue;
+                    if (MultiPrecision<N>.IsFinite(mu)) {
+                        (Matrix<N> q, Matrix<N> r) = QR(DiagonalAdd(d, -mu));
+                        d = DiagonalAdd(r * q, mu);
+                    }
+                    else {
+                        (Matrix<N> q, Matrix<N> r) = QR(d);
+                        d = r * q;
                     }
 
-                    if (iter_qr < precision_level - 1) {
-                        Matrix<N> h = m - eigen_values[i] * identity;
-                        Matrix<N> g = h.Inverse;
-                        if (IsFinite(g) && g.Norm < MultiPrecision<N>.Ldexp(h.Norm, MultiPrecision<N>.Bits - 2)) {
-                            gs_prev[i] = g;
-                            continue;
-                        }
+                    eigen_values[..d.Size] = d.Diagonals[..d.Size];
+                }
+                else {
+                    eigen_values[..2] = EigenValues(d);
+                }
 
-                        if (gs_prev[i] is null) {
-                            is_convergenced[i] = true;
-                            continue;
+                for (int i = notconverged - 1; i >= 0; i--) {
+                    MultiPrecision<N> eigen_diffnorm = MultiPrecision<N>.Abs(eigen_values[i] - eigen_values_prev[i]);
+                    eigen_diffnorms[i] = eigen_diffnorm;
+                }
+
+                for (int i = notconverged - 1; i >= 0; i--) {
+                    if (i >= 2 && iter_qr < precision_level) {
+                        if (eigen_diffnorms[i].Exponent > -MultiPrecision<N>.Bits + 8 || eigen_diffnorms_prev[i] > eigen_diffnorms[i]) {
+                            break;
                         }
                     }
 
-                    Matrix<N> gp = ScaleB(gs_prev[i], -gs_prev[i].MaxExponent);
+                    MultiPrecision<N> eigen_val = eigen_values[i];
+                    Matrix<N> g = DiagonalAdd(u, -eigen_val + eps).Inverse;
 
                     MultiPrecision<N> norm, norm_prev = MultiPrecision<N>.NaN;
-                    Vector<N> x = Vector<N>.Fill(n, 0.125), x_prev = x;
+                    Vector<N> x = Vector<N>.Fill(n, 0.125);
                     x[i] = MultiPrecision<N>.One;
 
                     for (int iter_vector = 0; iter_vector < precision_level; iter_vector++) {
-                        x = (gp * x).Normal;
+                        x = (g * x).Normal;
 
-                        if (MultiPrecision<N>.IsNegative(Vector<N>.Dot(x, x_prev))) {
-                            x = -x;
-                        }
+                        norm = (u * x - eigen_val * x).Norm;
 
-                        norm = (x - x_prev).Norm;
-
-                        if (norm.Exponent < -MultiPrecision<N>.Bits ||
-                            (norm.Exponent < -MultiPrecision<N>.Bits + 8 && norm >= norm_prev)) {
-
+                        if (norm.Exponent < -MultiPrecision<N>.Bits / 2 && norm >= norm_prev) {
                             break;
                         }
 
-                        x_prev = x;
                         norm_prev = norm;
                     }
 
                     eigen_vectors[i] = x;
-                    is_convergenced[i] = true;
+                    notconverged--;
                 }
 
-                if (is_convergenced.All(b => b)) {
+                if (notconverged <= 0) {
                     break;
                 }
+
+                if (d.Size > 2) {
+                    Vector<N> lower = d[^1, ..^1];
+                    MultiPrecision<N> eigen = d[^1, ^1];
+
+                    if (lower.MaxExponent < eigen.Exponent - MultiPrecision<N>.Bits) {
+                        d = d[..^1, ..^1];
+                    }
+                }
+
+                eigen_values_prev[..notconverged] = eigen_values[..notconverged];
+                eigen_diffnorms_prev[..notconverged] = eigen_diffnorms[..notconverged];
             }
 
-            return (eigen_values, eigen_vectors);
+            eigen_values = Vector<N>.ScaleB(eigen_values, exponent);
+
+            return SortEigenByNorm((eigen_values, eigen_vectors));
+        }
+
+        private static MultiPrecision<N>[] EigenValues2x2(Matrix<N> m) {
+            Debug.Assert(m.Size == 2);
+
+            MultiPrecision<N> b = m[0, 0] + m[1, 1], c = m[0, 0] - m[1, 1];
+
+            MultiPrecision<N> d = MultiPrecision<N>.Sqrt(c * c + 4 * m[0, 1] * m[1, 0]);
+
+            MultiPrecision<N> val0 = (b + d) / 2;
+            MultiPrecision<N> val1 = (b - d) / 2;
+
+            return [val0, val1];
+        }
+
+        private static (MultiPrecision<N>[] eigen_values, Vector<N>[] eigen_vectors) EigenValueVectors2x2(Matrix<N> m) {
+            Debug.Assert(m.Size == 2);
+
+            long diagonal_scale = long.Max(m[0, 0].Exponent, m[1, 1].Exponent);
+
+            long m10_scale = m[1, 0].Exponent;
+
+            if (diagonal_scale - m10_scale < MultiPrecision<N>.Bits) {
+                MultiPrecision<N> b = m[0, 0] + m[1, 1], c = m[0, 0] - m[1, 1];
+
+                MultiPrecision<N> d = MultiPrecision<N>.Sqrt(c * c + 4 * m[0, 1] * m[1, 0]);
+
+                MultiPrecision<N> val0 = (b + d) / 2;
+                MultiPrecision<N> val1 = (b - d) / 2;
+
+                Vector<N> vec0 = new Vector<N>((c + d) / (2 * m[1, 0]), 1).Normal;
+                Vector<N> vec1 = new Vector<N>((c - d) / (2 * m[1, 0]), 1).Normal;
+
+                return (new MultiPrecision<N>[] { val0, val1 }, new Vector<N>[] { vec0, vec1 });
+            }
+            else {
+                MultiPrecision<N> val0 = m[0, 0];
+                MultiPrecision<N> val1 = m[1, 1];
+
+                if (val0 != val1) {
+                    Vector<N> vec0 = (1, 0);
+                    Vector<N> vec1 = new Vector<N>(m[0, 1] / (val1 - val0), 1).Normal;
+
+                    return (new MultiPrecision<N>[] { val0, val1 }, new Vector<N>[] { vec0, vec1 });
+                }
+                else {
+                    return (new MultiPrecision<N>[] { val0, val1 }, new Vector<N>[] { (1, 0), (0, 1) });
+                }
+            }
+        }
+
+        private static MultiPrecision<N>[] SortEigenByNorm(MultiPrecision<N>[] eigen_values) {
+            MultiPrecision<N>[] eigen_values_sorted = [.. eigen_values.OrderByDescending(MultiPrecision<N>.Abs)];
+
+            return eigen_values_sorted;
+        }
+
+        private static (MultiPrecision<N>[] eigen_values, Vector<N>[] eigen_vectors) SortEigenByNorm((MultiPrecision<N>[] eigen_values, Vector<N>[] eigen_vectors) eigens) {
+            Debug.Assert(eigens.eigen_values.Length == eigens.eigen_vectors.Length);
+
+            IOrderedEnumerable<(MultiPrecision<N> val, Vector<N> vec)> eigens_sorted =
+                eigens.eigen_values.Zip(eigens.eigen_vectors).OrderByDescending(item => MultiPrecision<N>.Abs(item.First));
+
+            MultiPrecision<N>[] eigen_values_sorted = eigens_sorted.Select(item => item.val).ToArray();
+            Vector<N>[] eigen_vectors_sorted = eigens_sorted.Select(item => item.vec).ToArray();
+
+            return (eigen_values_sorted, eigen_vectors_sorted);
         }
     }
 }
