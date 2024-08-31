@@ -25,7 +25,6 @@ namespace MultiPrecisionAlgebra {
             int n = m.Size, notconverged = n;
             long exponent = m.MaxExponent;
             Matrix<N> u = ScaleB(m, -exponent);
-            MultiPrecision<N> eps = MultiPrecision<N>.Ldexp(1, -MultiPrecision<N>.Bits + 8);
 
             Vector<N> eigen_values = Vector<N>.Fill(n, 1);
             Vector<N> eigen_values_prev = eigen_values.Copy();
@@ -115,7 +114,7 @@ namespace MultiPrecisionAlgebra {
             int n = m.Size, notconverged = n;
             long exponent = m.MaxExponent;
             Matrix<N> u = ScaleB(m, -exponent);
-            MultiPrecision<N> eps = MultiPrecision<N>.Ldexp(1, -MultiPrecision<N>.Bits + 8);
+            MultiPrecision<N> eps = MultiPrecision<N>.Ldexp(1, -MultiPrecision<N>.Bits + 32);
 
             Vector<N> eigen_values = Vector<N>.Fill(n, 1);
             Vector<N> eigen_values_prev = eigen_values.Copy();
