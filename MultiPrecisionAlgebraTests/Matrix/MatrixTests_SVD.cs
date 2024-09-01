@@ -86,7 +86,7 @@ namespace MultiPrecisionAlgebraTests {
         }
 
         [TestMethod()]
-        public void SVDDecompose3x4N4Test() {
+        public void SVDDecompose4x3N4Test() {
             Matrix<Pow2.N4> matrix = new double[,] { { 12, -51, 4 }, { 6, 167, -68 }, { -4, 24, -41 }, { 8, 13, 7 } };
 
             (Matrix<Pow2.N4> u, Vector<Pow2.N4> s, Matrix<Pow2.N4> v) = Matrix<Pow2.N4>.SVD(matrix);
@@ -101,7 +101,7 @@ namespace MultiPrecisionAlgebraTests {
         }
 
         [TestMethod()]
-        public void SVDDecompose4x3N4Test() {
+        public void SVDDecompose3x4N4Test() {
             Matrix<Pow2.N4> matrix = new double[,] { { 12, -51, 4, 6 }, { 6, 167, -68, 3 }, { -4, 24, -41, 12 } };
 
             (Matrix<Pow2.N4> u, Vector<Pow2.N4> s, Matrix<Pow2.N4> v) = Matrix<Pow2.N4>.SVD(matrix);
@@ -245,7 +245,7 @@ namespace MultiPrecisionAlgebraTests {
         }
 
         [TestMethod()]
-        public void SVDDecompose3x4N8Test() {
+        public void SVDDecompose4x3N8Test() {
             Matrix<Pow2.N8> matrix = new double[,] { { 12, -51, 4 }, { 6, 167, -68 }, { -4, 24, -41 }, { 8, 13, 7 } };
 
             (Matrix<Pow2.N8> u, Vector<Pow2.N8> s, Matrix<Pow2.N8> v) = Matrix<Pow2.N8>.SVD(matrix);
@@ -260,7 +260,7 @@ namespace MultiPrecisionAlgebraTests {
         }
 
         [TestMethod()]
-        public void SVDDecompose4x3N8Test() {
+        public void SVDDecompose3x4N8Test() {
             Matrix<Pow2.N8> matrix = new double[,] { { 12, -51, 4, 6 }, { 6, 167, -68, 3 }, { -4, 24, -41, 12 } };
 
             (Matrix<Pow2.N8> u, Vector<Pow2.N8> s, Matrix<Pow2.N8> v) = Matrix<Pow2.N8>.SVD(matrix);
