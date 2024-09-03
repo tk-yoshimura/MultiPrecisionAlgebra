@@ -162,7 +162,7 @@ namespace MultiPrecisionAlgebra {
                         : diagonal.OrderBy(v => MultiPrecision<N>.Abs(v.val - eigen_val)).First().index;
 
                     Vector<N> v = u[.., nearest_diagonal_index], h = u[nearest_diagonal_index, ..];
-                    MultiPrecision<N> nondiagonal_absmax = 0;
+                    MultiPrecision<N> nondiagonal_absmax = MultiPrecision<N>.Zero;
                     for (int k = 0; k < v.Dim; k++) {
                         if (k == nearest_diagonal_index) {
                             continue;
