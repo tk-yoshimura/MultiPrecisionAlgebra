@@ -2,7 +2,6 @@
 using System;
 using System.Diagnostics;
 using System.Linq;
-using System.Numerics;
 
 namespace MultiPrecisionAlgebra {
     /// <summary>行列クラス</summary>
@@ -37,10 +36,7 @@ namespace MultiPrecisionAlgebra {
 
             for (int iter_qr = 0; iter_qr <= precision_level; iter_qr++) {
                 if (d.Size > 2) {
-                    MultiPrecision<N>[] mu2x2 = EigenValues2x2(d[^2.., ^2..]);
-                    MultiPrecision<N> d_kk = d[^1, ^1];
-                    MultiPrecision<N> mu = MultiPrecision<N>.Abs(d_kk - mu2x2[0]) < MultiPrecision<N>.Abs(d_kk - mu2x2[1])
-                        ? mu2x2[0] : mu2x2[1];
+                    MultiPrecision<N> mu = EigenValues2x2(d[^2.., ^2..])[1];
 
                     if (MultiPrecision<N>.IsFinite(mu)) {
                         (Matrix<N> q, Matrix<N> r) = QR(DiagonalAdd(d, -mu));
@@ -116,6 +112,8 @@ namespace MultiPrecisionAlgebra {
             long exponent = m.MaxExponent;
             Matrix<N> u = ScaleB(m, -exponent);
 
+            Vector<N> diagonal = u.Diagonals;
+
             Vector<N> eigen_values = Vector<N>.Fill(n, 1);
             Vector<N> eigen_values_prev = eigen_values.Copy();
 
@@ -128,10 +126,7 @@ namespace MultiPrecisionAlgebra {
 
             for (int iter_qr = 0; iter_qr <= precision_level; iter_qr++) {
                 if (d.Size > 2) {
-                    MultiPrecision<N>[] mu2x2 = EigenValues2x2(d[^2.., ^2..]);
-                    MultiPrecision<N> d_kk = d[^1, ^1];
-                    MultiPrecision<N> mu = MultiPrecision<N>.Abs(d_kk - mu2x2[0]) < MultiPrecision<N>.Abs(d_kk - mu2x2[1])
-                        ? mu2x2[0] : mu2x2[1];
+                    MultiPrecision<N> mu = EigenValues2x2(d[^2.., ^2..])[1];
 
                     if (MultiPrecision<N>.IsFinite(mu)) {
                         (Matrix<N> q, Matrix<N> r) = QR(DiagonalAdd(d, -mu));
@@ -161,10 +156,15 @@ namespace MultiPrecisionAlgebra {
                     }
 
                     MultiPrecision<N> eigen_val = eigen_values[i];
-                    Vector<N> v = u[.., i], h = u[i, ..];
+
+                    int nearest_diagonal_index = eigen_val == diagonal[i] 
+                        ? i
+                        : diagonal.OrderBy(v => MultiPrecision<N>.Abs(v.val - eigen_val)).First().index;
+
+                    Vector<N> v = u[.., nearest_diagonal_index], h = u[nearest_diagonal_index, ..];
                     MultiPrecision<N> nondiagonal_absmax = 0;
                     for (int k = 0; k < v.Dim; k++) {
-                        if (k == i) {
+                        if (k == nearest_diagonal_index) {
                             continue;
                         }
 
@@ -183,7 +183,7 @@ namespace MultiPrecisionAlgebra {
                     if (IsFinite(g)) {
                         MultiPrecision<N> norm, norm_prev = MultiPrecision<N>.NaN;
                         x = Vector<N>.Fill(n, 0.125);
-                        x[i] = MultiPrecision<N>.One;
+                        x[nearest_diagonal_index] = MultiPrecision<N>.One;
 
                         for (int iter_vector = 0; iter_vector < precision_level; iter_vector++) {
                             x = (g * x).Normal;
@@ -199,7 +199,7 @@ namespace MultiPrecisionAlgebra {
                     }
                     else {
                         x = Vector<N>.Zero(n);
-                        x[i] = 1d;
+                        x[nearest_diagonal_index] = 1d;
                     }
 
                     eigen_vectors[i] = x;
@@ -238,7 +238,12 @@ namespace MultiPrecisionAlgebra {
             MultiPrecision<N> val0 = (b + d) / 2;
             MultiPrecision<N> val1 = (b - d) / 2;
 
-            return [val0, val1];
+            if (MultiPrecision<N>.Abs(val0 - m[1, 1]) >= MultiPrecision<N>.Abs(val1 - m[1, 1])) {
+                return [val0, val1];
+            }
+            else { 
+                return [val1, val0];
+            }
         }
 
         private static (MultiPrecision<N>[] eigen_values, Vector<N>[] eigen_vectors) EigenValueVectors2x2(Matrix<N> m) {

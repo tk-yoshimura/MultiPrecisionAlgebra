@@ -63,6 +63,7 @@ namespace MultiPrecisionAlgebraTests {
 
             new Matrix<N>(new double[,]{ { 1, 0, 0, 0 }, { 0, 1, 0, 0 }, { 0, 0, 1, 0 }, { 0, 0, 0, 1 } }),
             new Matrix<N>(new double[,]{ { 2, 0, 0, 0 }, { 0, 3, 0, 0 }, { 0, 0, 4, 0 }, { 0, 0, 0, 5 } }),
+            new Matrix<N>(new double[,]{ { 2, 0, 0, 0 }, { 0, 4, 0, 0 }, { 0, 0, 5, 0 }, { 0, 0, 0, 3 } }),
             new Matrix<N>(new double[,]{ { 0, 1, 0, 0 }, { 1, 0, 0, 0 }, { 0, 0, 1, 0 }, { 0, 0, 0, 1 } }),
             new Matrix<N>(new double[,]{ { 0, 0, 1, 0 }, { 0, 1, 0, 0 }, { 0, 0, 0, 1 }, { 1, 0, 0, 0 } }),
             new Matrix<N>(new double[,]{ { 0, 0, 0, 1 }, { 0, 0, 1, 0 }, { 0, 1, 0, 0 }, { 1, 0, 0, 0 } }),
