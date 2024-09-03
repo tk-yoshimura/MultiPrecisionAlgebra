@@ -231,17 +231,20 @@ namespace MultiPrecisionAlgebra {
         private static MultiPrecision<N>[] EigenValues2x2(Matrix<N> m) {
             Debug.Assert(m.Size == 2);
 
-            MultiPrecision<N> b = m[0, 0] + m[1, 1], c = m[0, 0] - m[1, 1];
+            MultiPrecision<N> m00 = m[0, 0], m11 = m[1, 1];
+            MultiPrecision<N> m01 = m[0, 1], m10 = m[1, 0];
 
-            MultiPrecision<N> d = MultiPrecision<N>.Sqrt(c * c + 4 * m[0, 1] * m[1, 0]);
+            MultiPrecision<N> b = m00 + m11, c = m00 - m11;
+
+            MultiPrecision<N> d = MultiPrecision<N>.Sqrt(c * c + 4 * m01 * m10);
 
             MultiPrecision<N> val0 = (b + d) / 2;
             MultiPrecision<N> val1 = (b - d) / 2;
 
-            if (MultiPrecision<N>.Abs(val0 - m[1, 1]) >= MultiPrecision<N>.Abs(val1 - m[1, 1])) {
+            if (MultiPrecision<N>.Abs(val0 - m11) >= MultiPrecision<N>.Abs(val1 - m11)) {
                 return [val0, val1];
             }
-            else { 
+            else {
                 return [val1, val0];
             }
         }
@@ -249,35 +252,40 @@ namespace MultiPrecisionAlgebra {
         private static (MultiPrecision<N>[] eigen_values, Vector<N>[] eigen_vectors) EigenValueVectors2x2(Matrix<N> m) {
             Debug.Assert(m.Size == 2);
 
-            long diagonal_scale = long.Max(m[0, 0].Exponent, m[1, 1].Exponent);
+            MultiPrecision<N> m00 = m[0, 0], m11 = m[1, 1];
+            MultiPrecision<N> m01 = m[0, 1], m10 = m[1, 0];
+
+            long diagonal_scale = long.Max(m00.Exponent, m11.Exponent);
 
             long m10_scale = m[1, 0].Exponent;
 
             if (diagonal_scale - m10_scale < MultiPrecision<N>.Bits) {
-                MultiPrecision<N> b = m[0, 0] + m[1, 1], c = m[0, 0] - m[1, 1];
+                MultiPrecision<N> b = m00 + m11, c = m00 - m11;
 
-                MultiPrecision<N> d = MultiPrecision<N>.Sqrt(c * c + 4 * m[0, 1] * m[1, 0]);
+                MultiPrecision<N> d = MultiPrecision<N>.Sqrt(c * c + 4 * m01 * m10);
 
                 MultiPrecision<N> val0 = (b + d) / 2;
                 MultiPrecision<N> val1 = (b - d) / 2;
 
-                Vector<N> vec0 = new Vector<N>((c + d) / (2 * m[1, 0]), 1).Normal;
-                Vector<N> vec1 = new Vector<N>((c - d) / (2 * m[1, 0]), 1).Normal;
+                Vector<N> vec0 = new Vector<N>((c + d) / (2 * m10), 1).Normal;
+                Vector<N> vec1 = new Vector<N>((c - d) / (2 * m10), 1).Normal;
 
-                return (new MultiPrecision<N>[] { val0, val1 }, new Vector<N>[] { vec0, vec1 });
-            }
-            else {
-                MultiPrecision<N> val0 = m[0, 0];
-                MultiPrecision<N> val1 = m[1, 1];
-
-                if (val0 != val1) {
-                    Vector<N> vec0 = (1, 0);
-                    Vector<N> vec1 = new Vector<N>(m[0, 1] / (val1 - val0), 1).Normal;
-
+                if (MultiPrecision<N>.Abs(val0 - m11) >= MultiPrecision<N>.Abs(val1 - m11)) {
                     return (new MultiPrecision<N>[] { val0, val1 }, new Vector<N>[] { vec0, vec1 });
                 }
                 else {
-                    return (new MultiPrecision<N>[] { val0, val1 }, new Vector<N>[] { (1, 0), (0, 1) });
+                    return (new MultiPrecision<N>[] { val1, val0 }, new Vector<N>[] { vec1, vec0 });
+                }
+            }
+            else {
+                if (m00 != m11) {
+                    Vector<N> vec0 = (1, 0);
+                    Vector<N> vec1 = new Vector<N>(m01 / (m11 - m00), 1).Normal;
+
+                    return (new MultiPrecision<N>[] { m00, m11 }, new Vector<N>[] { vec0, vec1 });
+                }
+                else {
+                    return (new MultiPrecision<N>[] { m00, m11 }, new Vector<N>[] { (1, 0), (0, 1) });
                 }
             }
         }
