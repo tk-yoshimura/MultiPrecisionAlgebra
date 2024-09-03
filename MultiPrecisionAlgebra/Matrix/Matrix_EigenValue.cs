@@ -2,6 +2,7 @@
 using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Numerics;
 
 namespace MultiPrecisionAlgebra {
     /// <summary>行列クラス</summary>
@@ -114,7 +115,6 @@ namespace MultiPrecisionAlgebra {
             int n = m.Size, notconverged = n;
             long exponent = m.MaxExponent;
             Matrix<N> u = ScaleB(m, -exponent);
-            MultiPrecision<N> eps = MultiPrecision<N>.Ldexp(1, -MultiPrecision<N>.Bits + 32);
 
             Vector<N> eigen_values = Vector<N>.Fill(n, 1);
             Vector<N> eigen_values_prev = eigen_values.Copy();
@@ -161,22 +161,45 @@ namespace MultiPrecisionAlgebra {
                     }
 
                     MultiPrecision<N> eigen_val = eigen_values[i];
-                    Matrix<N> g = DiagonalAdd(u, -eigen_val + eps).Inverse;
-
-                    MultiPrecision<N> norm, norm_prev = MultiPrecision<N>.NaN;
-                    Vector<N> x = Vector<N>.Fill(n, 0.125);
-                    x[i] = MultiPrecision<N>.One;
-
-                    for (int iter_vector = 0; iter_vector < precision_level; iter_vector++) {
-                        x = (g * x).Normal;
-
-                        norm = (u * x - eigen_val * x).Norm;
-
-                        if (norm.Exponent < -MultiPrecision<N>.Bits / 2 && norm >= norm_prev) {
-                            break;
+                    Vector<N> v = u[.., i], h = u[i, ..];
+                    MultiPrecision<N> nondiagonal_absmax = 0;
+                    for (int k = 0; k < v.Dim; k++) {
+                        if (k == i) {
+                            continue;
                         }
 
-                        norm_prev = norm;
+                        nondiagonal_absmax = 
+                            MultiPrecision<N>.Max(MultiPrecision<N>.Max(
+                                nondiagonal_absmax, MultiPrecision<N>.Abs(v[k])), MultiPrecision<N>.Abs(h[k])
+                            );
+                    }
+
+                    MultiPrecision<N> eps = MultiPrecision<N>.Ldexp(nondiagonal_absmax, -MultiPrecision<N>.Bits + 32);
+
+                    Matrix<N> g = DiagonalAdd(u, -eigen_val + eps).Inverse;
+
+                    Vector<N> x;
+
+                    if (IsFinite(g)) {
+                        MultiPrecision<N> norm, norm_prev = MultiPrecision<N>.NaN;
+                        x = Vector<N>.Fill(n, 0.125);
+                        x[i] = MultiPrecision<N>.One;
+
+                        for (int iter_vector = 0; iter_vector < precision_level; iter_vector++) {
+                            x = (g * x).Normal;
+
+                            norm = (u * x - eigen_val * x).Norm;
+
+                            if (norm.Exponent < -MultiPrecision<N>.Bits / 2 && norm >= norm_prev) {
+                                break;
+                            }
+
+                            norm_prev = norm;
+                        }
+                    }
+                    else {
+                        x = Vector<N>.Zero(n);
+                        x[i] = 1d;
                     }
 
                     eigen_vectors[i] = x;

@@ -10,6 +10,7 @@ namespace MultiPrecisionAlgebraTests {
             new Matrix<N>(new double[,]{ { -1 } }),
 
             new Matrix<N>(new double[,]{ { 1, 0 }, { 0, 1 } }),
+            new Matrix<N>(new double[,]{ { 2, 0 }, { 0, 3 } }),
             new Matrix<N>(new double[,]{ { 0, 1 }, { 1, 0 } }),
             new Matrix<N>(new double[,]{ { -1, 0 }, { 0, -1 } }),
             new Matrix<N>(new double[,]{ { 0, -1 }, { -1, 0 } }),
@@ -30,9 +31,10 @@ namespace MultiPrecisionAlgebraTests {
             new Matrix<N>(new double[,]{ { -10, -1 }, { 0, -7 } }),
             new Matrix<N>(new double[,]{ { -6, 9 }, { -10, 1 } }),
             new Matrix<N>(new double[,]{ { -3, -9 }, { -7, -2 } }),
-
             new Matrix<N>(new double[,]{ { 1, 2 }, { -3, -4 } }),
+
             new Matrix<N>(new double[,]{ { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 } }),
+            new Matrix<N>(new double[,]{ { 2, 0, 0 }, { 0, 3, 0 }, { 0, 0, 4 } }),
             new Matrix<N>(new double[,]{ { -1, 0, 0 }, { 0, -1, 0 }, { 0, 0, -1 } }),
             new Matrix<N>(new double[,]{ { 0, 1, 0 }, { 1, 0, 0 }, { 0, 0, 1 } }),
             new Matrix<N>(new double[,]{ { 0, 0, 1 }, { 0, 1, 0 }, { 1, 0, 0 } }),
@@ -60,6 +62,7 @@ namespace MultiPrecisionAlgebraTests {
             new Matrix<N>(new double[,]{ { 4, -5, 6 }, { -10, 8, -1 }, { -3, -10, -1 } }),
 
             new Matrix<N>(new double[,]{ { 1, 0, 0, 0 }, { 0, 1, 0, 0 }, { 0, 0, 1, 0 }, { 0, 0, 0, 1 } }),
+            new Matrix<N>(new double[,]{ { 2, 0, 0, 0 }, { 0, 3, 0, 0 }, { 0, 0, 4, 0 }, { 0, 0, 0, 5 } }),
             new Matrix<N>(new double[,]{ { 0, 1, 0, 0 }, { 1, 0, 0, 0 }, { 0, 0, 1, 0 }, { 0, 0, 0, 1 } }),
             new Matrix<N>(new double[,]{ { 0, 0, 1, 0 }, { 0, 1, 0, 0 }, { 0, 0, 0, 1 }, { 1, 0, 0, 0 } }),
             new Matrix<N>(new double[,]{ { 0, 0, 0, 1 }, { 0, 0, 1, 0 }, { 0, 1, 0, 0 }, { 1, 0, 0, 0 } }),
