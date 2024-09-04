@@ -1,4 +1,5 @@
-﻿using MultiPrecision;
+﻿using Microsoft.ApplicationInsights;
+using MultiPrecision;
 using MultiPrecisionAlgebra;
 using System.Linq;
 
@@ -67,6 +68,8 @@ namespace MultiPrecisionAlgebraTests {
             new Matrix<N>(new double[,]{ { 0, 1, 0, 0 }, { 1, 0, 0, 0 }, { 0, 0, 1, 0 }, { 0, 0, 0, 1 } }),
             new Matrix<N>(new double[,]{ { 0, 0, 1, 0 }, { 0, 1, 0, 0 }, { 0, 0, 0, 1 }, { 1, 0, 0, 0 } }),
             new Matrix<N>(new double[,]{ { 0, 0, 0, 1 }, { 0, 0, 1, 0 }, { 0, 1, 0, 0 }, { 1, 0, 0, 0 } }),
+            new Matrix<N>(new double[,]{ { 1, 0, 0, 0 }, { 0, 1, 0, 0 }, { 2, 3, 1, 0 }, { 0, 0, 0, 1 } }),
+            new Matrix<N>(new double[,]{ { 0, 0, 0, 1 }, { 0, 0, 1, 0 }, { 0, 1, 2, 3 }, { 1, 0, 0, 0 } }),
             new Matrix<N>(new double[,]{ { -1, 0, 0, 0 }, { 0, -1, 0, 0 }, { 0, 0, -1, 0 }, { 0, 0, 0, -1 } }),
             new Matrix<N>(new double[,]{ { 0, -1, 0, 0 }, { -1, 0, 0, 0 }, { 0, 0, 1, 0 }, { 0, 0, 0, 1 } }),
             new Matrix<N>(new double[,]{ { 0, 0, 1, 0 }, { 0, 1, 0, 0 }, { 0, 0, 0, -1 }, { 1, 0, 0, 0 } }),
