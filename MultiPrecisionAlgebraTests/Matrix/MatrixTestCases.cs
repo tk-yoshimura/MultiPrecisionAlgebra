@@ -1,5 +1,4 @@
-﻿using Microsoft.ApplicationInsights;
-using MultiPrecision;
+﻿using MultiPrecision;
 using MultiPrecisionAlgebra;
 using System.Linq;
 

@@ -1,8 +1,7 @@
 ﻿using MultiPrecision;
 using System.Collections.Generic;
-using System;
-using System.Linq;
 using System.Diagnostics;
+using System.Linq;
 
 namespace MultiPrecisionAlgebra {
     /// <summary>行列クラス</summary>

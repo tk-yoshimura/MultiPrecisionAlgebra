@@ -174,7 +174,7 @@ namespace MultiPrecisionAlgebra {
                             continue;
                         }
 
-                        nondiagonal_absmax = 
+                        nondiagonal_absmax =
                             MultiPrecision<N>.Max(MultiPrecision<N>.Max(
                                 nondiagonal_absmax, MultiPrecision<N>.Abs(v[k])), MultiPrecision<N>.Abs(h[k])
                             );
