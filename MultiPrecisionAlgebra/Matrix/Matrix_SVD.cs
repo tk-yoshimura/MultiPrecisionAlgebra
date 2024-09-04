@@ -114,7 +114,9 @@ namespace MultiPrecisionAlgebra {
             }
 
             // reorder by eigen value
-            int[] order = sigmas.Select((d, idx) => (d, idx)).OrderByDescending(item => MultiPrecision<N>.Abs(item.d)).Select(item => item.idx).ToArray();
+            int[] order = sigmas.Select((d, idx) => (d, idx))
+                .OrderByDescending(item => MultiPrecision<N>.Abs(item.d))
+                .Select(item => item.idx).ToArray();
 
             sigmas = order.Select(idx => sigmas[idx]).ToArray();
             us = order.Select(idx => us[idx]).ToList();
