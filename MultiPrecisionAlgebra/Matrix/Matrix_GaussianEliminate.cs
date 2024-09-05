@@ -39,8 +39,9 @@ namespace MultiPrecisionAlgebra {
                 }, cloning: false
             ) / MultiPrecision<N>.Ldexp(Det3x3(m), exponent);
         }
+
         /// <summary>ガウスの消去法</summary>
-        public static Matrix<N> GaussianEliminate(Matrix<N> m) {
+        private static Matrix<N> GaussianEliminate(Matrix<N> m) {
             if (!IsSquare(m)) {
                 throw new ArgumentException("not square matrix", nameof(m));
             }
