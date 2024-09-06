@@ -1,5 +1,5 @@
 # MultiPrecisionAlgebra
- MultiPrecision Algebra
+ MultiPrecision Algebra 
 
 ## Requirement
 .NET 8.0  
