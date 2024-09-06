@@ -151,11 +151,11 @@ namespace MultiPrecisionAlgebra {
             }
             else if (m.Rows < m.Columns) {
                 Matrix<N> mt = m.T, mr = m * mt;
-                return mt * mr.Inverse;
+                return mt * InversePositiveSymmetric(mr, enable_check_symmetric: false);
             }
             else {
-                Matrix<N> mt = m.T, mr = m.T * m;
-                return mr.Inverse * mt;
+                Matrix<N> mt = m.T, mr = mt * m;
+                return InversePositiveSymmetric(mr, enable_check_symmetric: false) * mt;
             }
         }
 

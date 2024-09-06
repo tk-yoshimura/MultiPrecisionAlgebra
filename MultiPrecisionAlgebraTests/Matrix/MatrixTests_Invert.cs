@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.ApplicationInsights;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MultiPrecision;
 using MultiPrecisionAlgebra;
 using System;
@@ -83,6 +84,65 @@ namespace MultiPrecisionAlgebraTests {
 
                 Assert.IsTrue(MultiPrecision<Pow2.N4>.Abs(matrix.Det * matrix_inv.Det - 1) < 1e-25);
                 Assert.IsTrue((matrix * matrix_inv - Matrix<Pow2.N4>.Identity(matrix.Size)).Norm < 1e-28);
+            }
+        }
+
+        [TestMethod()]
+        public void InverseCaseNxMTest() {
+            foreach (Matrix<Pow2.N4> matrix in MatrixTestCases<Pow2.N4>.RegularMatrixs) {
+                if (matrix.Size < 4) {
+                    continue;
+                }
+
+                Matrix<Pow2.N4> matrix_c = matrix[1.., ..];
+
+                Console.WriteLine($"test: {matrix_c}");
+
+                Matrix<Pow2.N4> matrix_c_inv = matrix_c.Inverse;
+
+                Assert.IsTrue((matrix_c * matrix_c_inv * matrix_c - matrix_c).Norm < 1e-28);
+            }
+
+            foreach (Matrix<Pow2.N4> matrix in MatrixTestCases<Pow2.N4>.RegularMatrixs) {
+                if (matrix.Size < 4) {
+                    continue;
+                }
+
+                Matrix<Pow2.N4> matrix_c = matrix[.., 1..];
+
+                Console.WriteLine($"test: {matrix_c}");
+
+                Matrix<Pow2.N4> matrix_c_inv = matrix_c.Inverse;
+
+                Assert.IsTrue((matrix_c * matrix_c_inv * matrix_c - matrix_c).Norm < 1e-28);
+            }
+
+            foreach (Matrix<Pow2.N4> matrix in MatrixTestCases<Pow2.N4>.RegularMatrixs) {
+                if (matrix.Size < 4) {
+                    continue;
+                }
+
+                Matrix<Pow2.N4> matrix_c = matrix[2.., ..];
+
+                Console.WriteLine($"test: {matrix_c}");
+
+                Matrix<Pow2.N4> matrix_c_inv = matrix_c.Inverse;
+
+                Assert.IsTrue((matrix_c * matrix_c_inv * matrix_c - matrix_c).Norm < 1e-28);
+            }
+
+            foreach (Matrix<Pow2.N4> matrix in MatrixTestCases<Pow2.N4>.RegularMatrixs) {
+                if (matrix.Size < 4) {
+                    continue;
+                }
+
+                Matrix<Pow2.N4> matrix_c = matrix[.., 2..];
+
+                Console.WriteLine($"test: {matrix_c}");
+
+                Matrix<Pow2.N4> matrix_c_inv = matrix_c.Inverse;
+
+                Assert.IsTrue((matrix_c * matrix_c_inv * matrix_c - matrix_c).Norm < 1e-28);
             }
         }
 
