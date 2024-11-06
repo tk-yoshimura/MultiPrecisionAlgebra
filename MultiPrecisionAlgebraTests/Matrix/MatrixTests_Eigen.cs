@@ -51,6 +51,24 @@ namespace MultiPrecisionAlgebraTests {
                     Assert.IsTrue((matrix_scaled * eigen_vector - eigen_value * eigen_vector).Norm < 1e-28);
                 }
             }
+
+            foreach (Matrix<Pow2.N4> matrix in MatrixTestCases<Pow2.N4>.SingularMatrixs[..12]) {
+                Console.WriteLine($"test: {matrix}");
+
+                Matrix<Pow2.N4> matrix_scaled = Matrix<Pow2.N4>.ScaleB(matrix, -matrix.MaxExponent);
+
+                (MultiPrecision<Pow2.N4>[] eigen_values, Vector<Pow2.N4>[] eigen_vectors) = Matrix<Pow2.N4>.EigenValueVectors(matrix_scaled);
+                Vector<Pow2.N4> eigen_values_expected = Matrix<Pow2.N4>.EigenValues(matrix_scaled);
+
+                Assert.IsTrue((eigen_values - eigen_values_expected).Norm < 1e-25);
+
+                for (int i = 0; i < matrix_scaled.Size; i++) {
+                    MultiPrecision<Pow2.N4> eigen_value = eigen_values[i];
+                    Vector<Pow2.N4> eigen_vector = eigen_vectors[i];
+
+                    Assert.IsTrue((matrix_scaled * eigen_vector - eigen_value * eigen_vector).Norm < 1e-28);
+                }
+            }
         }
 
         [TestMethod()]
@@ -115,6 +133,24 @@ namespace MultiPrecisionAlgebraTests {
         [TestMethod()]
         public void EigenVectorN8Test() {
             foreach (Matrix<Pow2.N8> matrix in MatrixTestCases<Pow2.N8>.PositiveMatrixs) {
+                Console.WriteLine($"test: {matrix}");
+
+                Matrix<Pow2.N8> matrix_scaled = Matrix<Pow2.N8>.ScaleB(matrix, -matrix.MaxExponent);
+
+                (MultiPrecision<Pow2.N8>[] eigen_values, Vector<Pow2.N8>[] eigen_vectors) = Matrix<Pow2.N8>.EigenValueVectors(matrix_scaled);
+                Vector<Pow2.N8> eigen_values_expected = Matrix<Pow2.N8>.EigenValues(matrix_scaled);
+
+                Assert.IsTrue((eigen_values - eigen_values_expected).Norm < 1e-58);
+
+                for (int i = 0; i < matrix_scaled.Size; i++) {
+                    MultiPrecision<Pow2.N8> eigen_value = eigen_values[i];
+                    Vector<Pow2.N8> eigen_vector = eigen_vectors[i];
+
+                    Assert.IsTrue((matrix_scaled * eigen_vector - eigen_value * eigen_vector).Norm < 1e-58);
+                }
+            }
+
+            foreach (Matrix<Pow2.N8> matrix in MatrixTestCases<Pow2.N8>.SingularMatrixs[..12]) {
                 Console.WriteLine($"test: {matrix}");
 
                 Matrix<Pow2.N8> matrix_scaled = Matrix<Pow2.N8>.ScaleB(matrix, -matrix.MaxExponent);
