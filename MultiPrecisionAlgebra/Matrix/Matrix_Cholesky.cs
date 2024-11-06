@@ -11,7 +11,7 @@ namespace MultiPrecisionAlgebra {
             }
 
             int n = m.Size;
-            
+
             if ((enable_check_symmetric && !IsSymmetric(m)) || !IsFinite(m)) {
                 return Invalid(n);
             }
@@ -32,7 +32,7 @@ namespace MultiPrecisionAlgebra {
                     for (int k = 0; k < j; k++) {
                         v_ij -= v[i, k] * v[j, k];
                     }
-                    v[i, j] = v_ij / v[j, j]; 
+                    v[i, j] = v_ij / v[j, j];
                 }
 
                 MultiPrecision<N> v_ii = u[i, i];
@@ -50,7 +50,7 @@ namespace MultiPrecisionAlgebra {
 
             return l;
         }
-                
+
         /// <summary>正定値対称行列に対する逆行列</summary>
         public static Matrix<N> InversePositiveSymmetric(Matrix<N> m, bool enable_check_symmetric = true) {
             if (!IsSquare(m)) {
