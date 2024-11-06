@@ -326,7 +326,7 @@ namespace MultiPrecisionAlgebra {
 
             int[] indexes = rates.Select(item => (item.index, item.val)).OrderBy(item => item.val).Select(item => item.index).ToArray();
 
-            Matrix<N> m_perm = m[indexes, ..][.., indexes];
+            Matrix<N> m_perm = m[indexes, indexes];
 
             int[] indexes_invert = new int[n];
 
