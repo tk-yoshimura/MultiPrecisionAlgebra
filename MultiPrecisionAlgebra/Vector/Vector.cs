@@ -206,7 +206,7 @@ namespace MultiPrecisionAlgebra {
 
                 for (int i = 0; i < Dim; i++) {
                     if (MultiPrecision<N>.IsFinite(v[i])) {
-                        max_exponent = Math.Max(v[i].Exponent, max_exponent);
+                        max_exponent = long.Max(v[i].Exponent, max_exponent);
                     }
                 }
 
