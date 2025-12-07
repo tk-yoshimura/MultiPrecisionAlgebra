@@ -74,7 +74,7 @@ namespace MultiPrecisionAlgebraTests {
                 (Matrix<Pow2.N8> pivot, Matrix<Pow2.N8> lower, Matrix<Pow2.N8> upper) = Matrix<Pow2.N8>.LU(matrix);
 
                 Assert.IsTrue(Matrix<Pow2.N8>.IsFinite(pivot));
-                Assert.IsTrue(!Matrix<Pow2.N8>.IsValid(lower));
+                Assert.IsFalse(Matrix<Pow2.N8>.IsValid(lower));
                 Assert.IsTrue(Matrix<Pow2.N8>.IsZero(upper));
                 Assert.AreEqual(0d, matrix.Det);
             }

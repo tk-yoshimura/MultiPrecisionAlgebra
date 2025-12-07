@@ -19,39 +19,39 @@ namespace MultiPrecisionAlgebraTests {
             Assert.AreEqual(new Vector<Pow2.N4>(49, 64, 94, 154), Vector<Pow2.N4>.Func((v1, v2, v3, v4) => v1 + 2 * v2 + 4 * v3 + 8 * v4, vector1, vector2, vector3, vector4));
             Assert.AreEqual(new Vector<Pow2.N4>(49, 64, 94, 154), Vector<Pow2.N4>.Func((v1, v2, v3, v4) => v1 + 2 * v2 + 4 * v3 + 8 * v4, vector1, vector2, vector3, vector4));
 
-            Assert.ThrowsException<ArgumentException>(() => {
+            Assert.ThrowsExactly<ArgumentException>(() => {
                 Vector<Pow2.N4>.Func((v1, v2) => v1 + 2 * v2, vector1, vector5);
             });
 
-            Assert.ThrowsException<ArgumentException>(() => {
+            Assert.ThrowsExactly<ArgumentException>(() => {
                 Vector<Pow2.N4>.Func((v1, v2) => v1 + 2 * v2, vector5, vector1);
             });
 
-            Assert.ThrowsException<ArgumentException>(() => {
+            Assert.ThrowsExactly<ArgumentException>(() => {
                 Vector<Pow2.N4>.Func((v1, v2, v3) => v1 + 2 * v2 + 4 * v3, vector1, vector2, vector5);
             });
 
-            Assert.ThrowsException<ArgumentException>(() => {
+            Assert.ThrowsExactly<ArgumentException>(() => {
                 Vector<Pow2.N4>.Func((v1, v2, v3) => v1 + 2 * v2 + 4 * v3, vector1, vector5, vector2);
             });
 
-            Assert.ThrowsException<ArgumentException>(() => {
+            Assert.ThrowsExactly<ArgumentException>(() => {
                 Vector<Pow2.N4>.Func((v1, v2, v3) => v1 + 2 * v2 + 4 * v3, vector5, vector1, vector2);
             });
 
-            Assert.ThrowsException<ArgumentException>(() => {
+            Assert.ThrowsExactly<ArgumentException>(() => {
                 Vector<Pow2.N4>.Func((v1, v2, v3, v4) => v1 + 2 * v2 + 4 * v3 + 8 * v4, vector1, vector2, vector3, vector5);
             });
 
-            Assert.ThrowsException<ArgumentException>(() => {
+            Assert.ThrowsExactly<ArgumentException>(() => {
                 Vector<Pow2.N4>.Func((v1, v2, v3, v4) => v1 + 2 * v2 + 4 * v3 + 8 * v4, vector1, vector2, vector5, vector3);
             });
 
-            Assert.ThrowsException<ArgumentException>(() => {
+            Assert.ThrowsExactly<ArgumentException>(() => {
                 Vector<Pow2.N4>.Func((v1, v2, v3, v4) => v1 + 2 * v2 + 4 * v3 + 8 * v4, vector1, vector5, vector2, vector3);
             });
 
-            Assert.ThrowsException<ArgumentException>(() => {
+            Assert.ThrowsExactly<ArgumentException>(() => {
                 Vector<Pow2.N4>.Func((v1, v2, v3, v4) => v1 + 2 * v2 + 4 * v3 + 8 * v4, vector5, vector1, vector2, vector3);
             });
         }

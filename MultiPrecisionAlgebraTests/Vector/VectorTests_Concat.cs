@@ -20,7 +20,7 @@ namespace MultiPrecisionAlgebraTests {
             Assert.AreEqual(new Vector<Pow2.N4>(-1, -2, -2, 5, -3, -3, -3, -3), Vector<Pow2.N4>.Concat(vector1, vector2, 5f, vector4));
             Assert.AreEqual(new Vector<Pow2.N4>(-1, -2, -2, "6.2", -3, -3, -3, -3), Vector<Pow2.N4>.Concat(vector1, vector2, "6.2", vector4));
 
-            Assert.ThrowsException<ArgumentException>(() => {
+            Assert.ThrowsExactly<ArgumentException>(() => {
                 Vector<Pow2.N4>.Concat(vector1, vector2, 'b', vector4);
             });
         }

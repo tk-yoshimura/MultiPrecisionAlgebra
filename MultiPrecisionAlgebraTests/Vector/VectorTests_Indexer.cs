@@ -67,12 +67,12 @@ namespace MultiPrecisionAlgebraTests {
             vector_dst[0..^2] = vector_src[1..^1];
             Assert.AreEqual(new Vector<Pow2.N4>(2, 3, 4, 0, 0), vector_dst);
 
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => {
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => {
                 vector_dst = Vector<Pow2.N4>.Zero(vector_src.Dim);
                 vector_dst[0..^2] = vector_src[1..^2];
             });
 
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => {
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => {
                 vector_dst = Vector<Pow2.N4>.Zero(vector_src.Dim);
                 vector_dst[0..^2] = vector_src[1..];
             });

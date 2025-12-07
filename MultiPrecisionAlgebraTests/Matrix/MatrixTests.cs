@@ -54,7 +54,7 @@ namespace MultiPrecisionAlgebraTests {
 
             Assert.AreEqual(2, Matrix<Pow2.N4>.Zero(2, 2).Size);
 
-            Assert.ThrowsException<ArithmeticException>(() => {
+            Assert.ThrowsExactly<ArithmeticException>(() => {
                 int n = Matrix<Pow2.N4>.Zero(2, 3).Size;
             });
 
